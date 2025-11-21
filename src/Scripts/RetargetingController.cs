@@ -1,0 +1,328 @@
+using System;
+using System.Net.Sockets;
+using System.Threading;
+using UnityEngine;
+using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.LinearAlgebra.Double;
+
+namespace WeArt.Components
+{
+    public class RetargetingController : MonoBehaviour
+    {
+        [Header("Human configuration")]
+        public Transform h_palm;
+        public Transform[] h_joints;
+        public Transform[] h_refPoints;     // ph
+        private Vector3[] _h_prevPos;
+
+        [Header("Robot configuration")]
+        public Transform r_palm;
+        public Transform[] r_joints;        // qr
+        public Kinematics.JointType[] r_jointTypes;
+        public Transform[] r_refPoints;     // pr
+
+        [Header("Network")]
+        public string ipAddress = "127.0.0.1";
+        public int port = 65432;
+
+        [Header("Virtual spheres")]
+        [SerializeField] private VirtualSphere h_sphere;
+        [SerializeField] private VirtualSphere r_sphere;
+
+        [Header("Dynamics")]
+        public float velocityGain = 5f;
+        public double damping = 0.01;
+
+        [Header("Redundancy resolution")]
+        public bool useNullSpace = true;
+        public float nullSpaceGain = 0.5f;
+        public Vector3[] limitsMin;
+        public Vector3[] limitsMax;
+
+        private int _dof;
+        private TcpClient _client;
+        private NetworkStream _stream;
+        private Thread _netThread;
+        private float[] _synergyInput = new float[4]; // z
+        private Vector<double> _incomingAngles;
+        private volatile bool _hasData = false;
+        private volatile bool _active = true;
+        private readonly object _lock = new object();
+
+        void Start()
+        {
+            _dof = Kinematics.GetDoF(r_joints, r_jointTypes);
+            _incomingAngles = Vector<double>.Build.Dense(45);
+            
+            _h_prevPos = new Vector3[h_refPoints.Length];
+            for (int i=0; i < h_refPoints.Length; i++)
+                if (h_refPoints[i] != null) _h_prevPos[i] = h_palm.InverseTransformPoint(h_refPoints[i].position);
+
+            AssignSphereRefs();
+            _netThread = new Thread(NetworkLoop) { IsBackground = true };
+            _netThread.Start();
+        }
+
+        void Update()
+        {
+            ProcessInput();
+            
+            if (_hasData)
+            {
+                Vector<double> angles;
+                lock (_lock)
+                {
+                    angles = _incomingAngles.Clone();
+                    _hasData = false;
+                }
+                ApplyHumanPose(angles);
+            }
+
+            // compute ph_dot
+            var v_h = Vector<double>.Build.Dense(h_refPoints.Length * 3);
+            if (Time.deltaTime > 1e-5)
+            {
+                for (int i=0; i < h_refPoints.Length; i++)
+                {
+                    if (h_refPoints[i] == null) continue;
+                    Vector3 curr = h_palm.InverseTransformPoint(h_refPoints[i].position);
+                    Vector3 vel = (curr - _h_prevPos[i]) / Time.deltaTime;
+                    v_h[i*3] = vel.x;
+                    v_h[i*3 + 1] = vel.y;
+                    v_h[i*3 + 2] = vel.z;
+                }
+            }
+
+            // compute Ah and sphere motion
+            Matrix<double> A_h = h_sphere.ComputeMatrixA(h_palm);
+            Vector<double> sphereMotion = PInvTall(A_h) * v_h;
+
+            // compute Ar and Jr
+            Matrix<double> J_r = Kinematics.GetJacobian(r_joints, r_refPoints, r_palm, r_jointTypes);
+            Matrix<double> J_r_pinv = PInv(J_r);
+            Matrix<double> A_r = r_sphere.ComputeMatrixA(r_palm);
+
+            // scaling matrix Kc
+            float k = (h_sphere.Radius > 1e-5f) ? r_sphere.Radius / h_sphere.Radius : 1.0f;
+            Matrix<double> K_c = Matrix<double>.Build.DenseIdentity(7, 7);
+            K_c[0, 0] = k;
+            K_c[1, 1] = k;
+            K_c[2, 2] = k;
+
+            // map to target robot velocity (pr_dot)
+            Vector<double> v_r_local = A_r*(K_c*sphereMotion);
+            Vector<double> v_r_world = Vector<double>.Build.Dense(v_r_local.Count);
+
+            for (int i=0; i < r_refPoints.Length; i++)
+            {
+                if (r_refPoints[i] == null || i*3 + 2 >= v_r_local.Count) continue;
+                Vector3 loc = new Vector3((float)v_r_local[i*3], (float)v_r_local[i*3 + 1], (float)v_r_local[i*3 + 2]);
+                Vector3 wld = r_palm.TransformDirection(loc);
+                v_r_world[i*3] = wld.x;
+                v_r_world[i*3 + 1] = wld.y;
+                v_r_world[i*3 + 2] = wld.z;
+            }
+
+            // solve for joint velocities (qr_dot)
+            Vector<double> dq_particular = J_r_pinv * v_r_world;
+            Vector<double> dq_final;
+
+            if (useNullSpace)
+            {
+                Vector<double> dq_0 = ComputeGradient();
+                Matrix<double> I = Matrix<double>.Build.DenseIdentity(_dof);
+                Matrix<double> N = I - (J_r_pinv * J_r);
+                dq_final = dq_particular + N*dq_0;
+            }
+            else dq_final = dq_particular;
+
+            IntegrateVelocities(dq_final, Time.deltaTime);
+        }
+
+        void LateUpdate()
+        {
+            h_sphere.UpdateSphere(h_palm);
+            r_sphere.UpdateSphere(r_palm);
+
+            ClampJoints();
+
+            if (h_refPoints.Length > 0 && h_palm != null)
+            {
+                for (int i=0; i < h_refPoints.Length; i++)
+                {
+                    if (h_refPoints[i] != null) _h_prevPos[i] = h_palm.InverseTransformPoint(h_refPoints[i].position);
+                }
+            }
+        }
+
+        private void ApplyHumanPose(Vector<double> data)
+        {
+            if (data == null) return;
+            for (int i=0; i < h_joints.Length; i++)
+            {
+                if (h_joints[i] == null) continue;
+                int idx = i*3;
+                Vector3 euler = new Vector3((float)data[idx], (float)data[idx + 1], (float)data[idx + 2]);
+                h_joints[i].rotation = h_palm.rotation * Quaternion.Euler(euler);
+            }
+        }
+
+        private void IntegrateVelocities(Vector<double> dq, float dt)
+        {
+            if (dq == null || dq.Count != _dof) return;
+            int idx = 0;
+            for (int i=0; i < r_joints.Length; i++)
+            {
+                if (r_joints[i] == null) continue;
+                var type = r_jointTypes[i];
+                float vx=0, vy=0, vz=0;
+
+                if ((type == Kinematics.JointType.HingeX || type == Kinematics.JointType.HingeXY || type == Kinematics.JointType.Ball) && idx < dq.Count)
+                    vx = (float)dq[idx++] * velocityGain;
+                
+                if ((type == Kinematics.JointType.HingeY || type == Kinematics.JointType.HingeXY || type == Kinematics.JointType.Ball) && idx < dq.Count)
+                    vy = (float)dq[idx++] * velocityGain;
+                
+                if ((type == Kinematics.JointType.HingeZ || type == Kinematics.JointType.Ball) && idx < dq.Count)
+                    vz = (float)dq[idx++] * velocityGain;
+
+                r_joints[i].Rotate(r_joints[i].right, vx*Mathf.Rad2Deg*dt, Space.World);
+                r_joints[i].Rotate(r_joints[i].up, vy*Mathf.Rad2Deg*dt, Space.World);
+                r_joints[i].Rotate(r_joints[i].forward, vz*Mathf.Rad2Deg*dt, Space.World);
+            }
+        }
+
+        private Vector<double> ComputeGradient()
+        {
+            var grad = Vector<double>.Build.Dense(_dof);
+            Vector<double> q = Kinematics.GetJointAngles(r_joints, r_jointTypes);
+            int idx = 0;
+            for (int i=0; i < r_joints.Length; i++)
+            {
+                if (r_joints[i] == null || i >= limitsMin.Length || i >= limitsMax.Length) continue;
+                
+                var type = r_jointTypes[i];
+                Vector3 min = limitsMin[i] * Mathf.Deg2Rad;
+                Vector3 max = limitsMax[i] * Mathf.Deg2Rad;
+                Vector3 mid = (max + min) / 2.0f;
+
+                if ((type == Kinematics.JointType.HingeX || type == Kinematics.JointType.HingeXY || type == Kinematics.JointType.Ball) && idx < grad.Count)
+                {
+                    grad[idx] = -nullSpaceGain * (q[idx] - mid.x);
+                    idx++;
+                }
+
+                if ((type == Kinematics.JointType.HingeY || type == Kinematics.JointType.HingeXY || type == Kinematics.JointType.Ball) && idx < grad.Count)
+                {
+                    grad[idx] = -nullSpaceGain * (q[idx] - mid.y);
+                    idx++;
+                }
+
+                if ((type == Kinematics.JointType.HingeZ || type == Kinematics.JointType.Ball) && idx < grad.Count)
+                {
+                    grad[idx] = -nullSpaceGain * (q[idx] - mid.z);
+                    idx++;
+                }
+            }
+            return grad;
+        }
+
+        void ClampJoints()
+        {
+            for (int i=0; i < r_joints.Length; i++)
+            {
+                if (r_joints[i] == null || i >= limitsMin.Length || i >= limitsMax.Length) continue;
+                Vector3 e = r_joints[i].localEulerAngles;
+
+                float x = e.x > 180 ? e.x - 360 : e.x;
+                float y = e.y > 180 ? e.y - 360 : e.y;
+                float z = e.z > 180 ? e.z - 360 : e.z;
+
+                x = Mathf.Clamp(x, limitsMin[i].x, limitsMax[i].x);
+                y = Mathf.Clamp(y, limitsMin[i].y, limitsMax[i].y);
+                z = Mathf.Clamp(z, limitsMin[i].z, limitsMax[i].z);
+
+                r_joints[i].localRotation = Quaternion.Euler(x, y, z);
+            }
+        }
+
+        private void ProcessInput()
+        {
+            float dt = Time.deltaTime;
+            if (Input.GetKey(KeyCode.T)) _synergyInput[0] += dt; 
+            if (Input.GetKey(KeyCode.G)) _synergyInput[0] -= dt;
+            if (Input.GetKey(KeyCode.I)) _synergyInput[1] += dt; 
+            if (Input.GetKey(KeyCode.K)) _synergyInput[1] -= dt;
+            if (Input.GetKey(KeyCode.M)) _synergyInput[2] += dt; 
+            if (Input.GetKey(KeyCode.L)) _synergyInput[2] -= dt;
+            if (Input.GetKey(KeyCode.A)) _synergyInput[3] += dt; 
+            if (Input.GetKey(KeyCode.S)) _synergyInput[3] -= dt;
+            for (int i = 0; i < 4; i++) _synergyInput[i] = Mathf.Clamp01(_synergyInput[i]);
+        }
+
+        void AssignSphereRefs()
+        {
+            if (h_sphere) h_sphere.referencePoints = h_refPoints;
+            if (r_sphere) r_sphere.referencePoints = r_refPoints;
+        }
+
+        private Matrix<double> PInv(Matrix<double> M) 
+        {
+            var Mt = M.Transpose();
+            var I = Matrix<double>.Build.DenseIdentity(M.RowCount);
+            return Mt * (M * Mt + damping*damping*I).Inverse();
+        }
+
+        private Matrix<double> PInvTall(Matrix<double> M)
+        {
+            var Mt = M.Transpose();
+            var I = Matrix<double>.Build.DenseIdentity(M.ColumnCount);
+            return (Mt * M + damping*damping*I).Inverse() * Mt;
+        }
+
+        private void NetworkLoop()
+        {
+            byte[] sendBuf = new byte[16]; 
+            byte[] recvBuf = new byte[45 * 4]; 
+            float[] floats = new float[45]; 
+            
+            while (_active) { 
+                try { 
+                    _client = new TcpClient(); 
+                    _client.Connect(ipAddress, port); 
+                    _stream = _client.GetStream(); 
+                    
+                    while (_active && _client.Connected) { 
+                        Buffer.BlockCopy(_synergyInput, 0, sendBuf, 0, 16); 
+                        _stream.Write(sendBuf, 0, 16); 
+                        
+                        int read = 0; 
+                        while (read < recvBuf.Length && _active) { 
+                            int chunk = _stream.Read(recvBuf, read, recvBuf.Length - read); 
+                            if (chunk == 0) throw new Exception("Disconnect"); 
+                            read += chunk; 
+                        } 
+                        
+                        Buffer.BlockCopy(recvBuf, 0, floats, 0, recvBuf.Length); 
+                        var vec = Vector<double>.Build.DenseOfArray(Array.ConvertAll(floats, x => (double)x)); 
+                        
+                        lock (_lock) { 
+                            _incomingAngles = vec; 
+                            _hasData = true; 
+                        } 
+                    } 
+                } 
+                catch { if (_active) Thread.Sleep(2000); } 
+                finally { _stream?.Close(); _client?.Close(); } 
+            } 
+        }
+
+        void OnApplicationQuit()
+        {
+            _active = false;
+            _stream?.Close();
+            _client?.Close();
+            if (_netThread != null && _netThread.IsAlive) _netThread.Join(500);
+        }
+    }
+}

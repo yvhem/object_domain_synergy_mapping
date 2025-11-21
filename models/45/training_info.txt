@@ -1,0 +1,86 @@
+Model: Transformer
+PCA Variance: 0.999999995
+Z-score Threshold: 2.5
+Epochs: 300
+Batch Size: 64
+Fixed Indices: [0, 1, 2, 3, 4, 5, 6, 7, 8, 13, 14, 16, 17, 25, 26, 34, 43]
+Number of Fixed Indices: 17
+Input Dimension: 4
+Output Dimension: 62
+Dataset: dataset/hand_dataset_all_fingers.csv
+Closure Columns: ['ThumbClosure', 'IndexClosure', 'MiddleClosure', 'ThumbAbduction']
+Training Start Time: 2025-06-10 18:09:07
+PCA Components: 45
+Explained Variance: 0.999999995
+Final Output Dimension: 45
+Scaler Path: models/45/scaler.save
+PCA Path: models/45/pca.save
+Model Architecture: HandPoseTransformer(
+  (input_embedding): Sequential(
+    (0): Linear(in_features=4, out_features=64, bias=True)
+    (1): GELU(approximate='none')
+    (2): Linear(in_features=64, out_features=128, bias=True)
+    (3): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+  )
+  (pos_encoder): PositionalEncoding(
+    (dropout): Dropout(p=0.1, inplace=False)
+  )
+  (transformer): TransformerEncoder(
+    (layers): ModuleList(
+      (0-2): 3 x TransformerEncoderLayer(
+        (self_attn): MultiheadAttention(
+          (out_proj): NonDynamicallyQuantizableLinear(in_features=128, out_features=128, bias=True)
+        )
+        (linear1): Linear(in_features=128, out_features=512, bias=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+        (linear2): Linear(in_features=512, out_features=128, bias=True)
+        (norm1): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+        (dropout1): Dropout(p=0.1, inplace=False)
+        (dropout2): Dropout(p=0.1, inplace=False)
+      )
+    )
+  )
+  (output_heads): ModuleDict(
+    (thumb): FingerHead(
+      (decoder): Sequential(
+        (0): Linear(in_features=128, out_features=64, bias=True)
+        (1): GELU(approximate='none')
+        (2): Linear(in_features=64, out_features=18, bias=True)
+      )
+    )
+    (index): FingerHead(
+      (decoder): Sequential(
+        (0): Linear(in_features=128, out_features=64, bias=True)
+        (1): GELU(approximate='none')
+        (2): Linear(in_features=64, out_features=13, bias=True)
+      )
+    )
+    (middle): FingerHead(
+      (decoder): Sequential(
+        (0): Linear(in_features=128, out_features=64, bias=True)
+        (1): GELU(approximate='none')
+        (2): Linear(in_features=64, out_features=11, bias=True)
+      )
+    )
+    (ring): FingerHead(
+      (decoder): Sequential(
+        (0): Linear(in_features=128, out_features=64, bias=True)
+        (1): GELU(approximate='none')
+        (2): Linear(in_features=64, out_features=10, bias=True)
+      )
+    )
+    (pinky): FingerHead(
+      (decoder): Sequential(
+        (0): Linear(in_features=128, out_features=64, bias=True)
+        (1): GELU(approximate='none')
+        (2): Linear(in_features=64, out_features=10, bias=True)
+      )
+    )
+  )
+  (last): Linear(in_features=62, out_features=45, bias=True)
+)
+Training Duration: 0:18:46.066265
+Best Test Loss: 0.0059636019938018245
+Final Learning Rate: 1.52587890625e-08
+Model Save Path: models/45/Transformer_45_PCA.pth

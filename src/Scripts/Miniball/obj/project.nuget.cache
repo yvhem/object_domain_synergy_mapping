@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "HerUY633cKvAzyBS84QeFBqLxeMkJfC8IgsCEJDu4a66EG9lzAqvJ6NWuzgFJqGwoPAL9HmHpbYQBwx6LSdkMg==",
+  "success": true,
+  "projectFilePath": "/home/fe/OneDrive/Uni/AIRO/Medical Robotics/project/Motion_Retargeting_For_Grasping_Tasks/src/Scripts/Miniball/miniball.csproj",
+  "expectedPackageFiles": [
+    "/home/fe/.nuget/packages/microsoft.netcore.app.ref/7.0.20/microsoft.netcore.app.ref.7.0.20.nupkg.sha512",
+    "/home/fe/.nuget/packages/microsoft.aspnetcore.app.ref/7.0.20/microsoft.aspnetcore.app.ref.7.0.20.nupkg.sha512"
+  ],
+  "logs": []
+}
