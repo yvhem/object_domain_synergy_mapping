@@ -4,6 +4,7 @@ using System.Threading;
 using UnityEngine;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
+using System.Collections.Generic;
 
 namespace WeArt.Components
 {
@@ -20,6 +21,8 @@ namespace WeArt.Components
         public Transform[] r_joints;        // qr
         public Kinematics.JointType[] r_jointTypes;
         public Transform[] r_refPoints;     // pr
+
+        private ArticulationBody[] _r_bodies; // physics bodies cache
 
         [Header("Network")]
         public string ipAddress = "127.0.0.1";
@@ -51,6 +54,14 @@ namespace WeArt.Components
 
         void Start()
         {
+            // cache physics bodies
+            _r_bodies = new ArticulationBody[r_joints.Length];
+            for (int i = 0; i < r_joints.Length; i++)
+            {
+                if (r_joints[i] != null)
+                    _r_bodies[i] = r_joints[i].GetComponent<ArticulationBody>();
+            }
+
             _dof = Kinematics.GetDoF(r_joints, r_jointTypes);
             _incomingAngles = Vector<double>.Build.Dense(45);
             
@@ -105,9 +116,7 @@ namespace WeArt.Components
             // scaling matrix Kc
             float k = (h_sphere.Radius > 1e-5f) ? r_sphere.Radius / h_sphere.Radius : 1.0f;
             Matrix<double> K_c = Matrix<double>.Build.DenseIdentity(7, 7);
-            K_c[0, 0] = k;
-            K_c[1, 1] = k;
-            K_c[2, 2] = k;
+            K_c[0, 0] = k; K_c[1, 1] = k; K_c[2, 2] = k;
 
             // map to target robot velocity (pr_dot)
             Vector<double> v_r_local = A_r*(K_c*sphereMotion);
@@ -144,8 +153,6 @@ namespace WeArt.Components
             h_sphere.UpdateSphere(h_palm);
             r_sphere.UpdateSphere(r_palm);
 
-            ClampJoints();
-
             if (h_refPoints.Length > 0 && h_palm != null)
             {
                 for (int i=0; i < h_refPoints.Length; i++)
@@ -171,11 +178,19 @@ namespace WeArt.Components
         {
             if (dq == null || dq.Count != _dof) return;
             int idx = 0;
+
             for (int i=0; i < r_joints.Length; i++)
             {
                 if (r_joints[i] == null) continue;
                 var type = r_jointTypes[i];
-                float vx=0, vy=0, vz=0;
+                var body = _r_bodies[i];
+
+                if (body == null) {
+                     idx += (type == Kinematics.JointType.HingeXY) ? 2 : (type == Kinematics.JointType.Ball ? 3 : 1);
+                     continue; 
+                }
+
+                float vx = 0, vy = 0, vz = 0;
 
                 if ((type == Kinematics.JointType.HingeX || type == Kinematics.JointType.HingeXY || type == Kinematics.JointType.Ball) && idx < dq.Count)
                     vx = (float)dq[idx++] * velocityGain;
@@ -186,64 +201,67 @@ namespace WeArt.Components
                 if ((type == Kinematics.JointType.HingeZ || type == Kinematics.JointType.Ball) && idx < dq.Count)
                     vz = (float)dq[idx++] * velocityGain;
 
-                r_joints[i].Rotate(r_joints[i].right, vx*Mathf.Rad2Deg*dt, Space.World);
-                r_joints[i].Rotate(r_joints[i].up, vy*Mathf.Rad2Deg*dt, Space.World);
-                r_joints[i].Rotate(r_joints[i].forward, vz*Mathf.Rad2Deg*dt, Space.World);
+                // drive physics motor
+                if (body.jointType == ArticulationJointType.RevoluteJoint)
+                {
+                    float deltaSpeed = (vx + vy + vz);
+                    float deltaDeg = deltaSpeed * Mathf.Rad2Deg * dt;
+
+                    var drive = body.xDrive;
+                    drive.target += deltaDeg;
+                    body.xDrive = drive;
+                }
+                else if (body.jointType == ArticulationJointType.SphericalJoint)
+                {
+                    var xDrive = body.xDrive; xDrive.target += vx * Mathf.Rad2Deg * dt; body.xDrive = xDrive;
+                    var yDrive = body.yDrive; yDrive.target += vy * Mathf.Rad2Deg * dt; body.yDrive = yDrive;
+                    var zDrive = body.zDrive; zDrive.target += vz * Mathf.Rad2Deg * dt; body.zDrive = zDrive;
+                }
             }
         }
 
         private Vector<double> ComputeGradient()
         {
             var grad = Vector<double>.Build.Dense(_dof);
-            Vector<double> q = Kinematics.GetJointAngles(r_joints, r_jointTypes);
+            
             int idx = 0;
             for (int i=0; i < r_joints.Length; i++)
             {
                 if (r_joints[i] == null || i >= limitsMin.Length || i >= limitsMax.Length) continue;
                 
                 var type = r_jointTypes[i];
+                var body = _r_bodies[i];
+
+                // read current angles from physics (radians)
+                float currentQ_X = (body != null && body.dofCount > 0) ? body.jointPosition[0] : 0;
+                float currentQ_Y = (body != null && body.dofCount > 1) ? body.jointPosition[1] : 0;
+                float currentQ_Z = (body != null && body.dofCount > 2) ? body.jointPosition[2] : 0;
+
                 Vector3 min = limitsMin[i] * Mathf.Deg2Rad;
                 Vector3 max = limitsMax[i] * Mathf.Deg2Rad;
                 Vector3 mid = (max + min) / 2.0f;
 
                 if ((type == Kinematics.JointType.HingeX || type == Kinematics.JointType.HingeXY || type == Kinematics.JointType.Ball) && idx < grad.Count)
                 {
-                    grad[idx] = -nullSpaceGain * (q[idx] - mid.x);
+                    grad[idx] = -nullSpaceGain * (currentQ_X - mid.x);
                     idx++;
                 }
 
                 if ((type == Kinematics.JointType.HingeY || type == Kinematics.JointType.HingeXY || type == Kinematics.JointType.Ball) && idx < grad.Count)
                 {
-                    grad[idx] = -nullSpaceGain * (q[idx] - mid.y);
+                    float val = (body.jointType == ArticulationJointType.RevoluteJoint) ? currentQ_X : currentQ_Y;
+                    grad[idx] = -nullSpaceGain * (val - mid.y);
                     idx++;
                 }
 
                 if ((type == Kinematics.JointType.HingeZ || type == Kinematics.JointType.Ball) && idx < grad.Count)
                 {
-                    grad[idx] = -nullSpaceGain * (q[idx] - mid.z);
+                    float val = (body.jointType == ArticulationJointType.RevoluteJoint) ? currentQ_X : currentQ_Z;
+                    grad[idx] = -nullSpaceGain * (val - mid.z);
                     idx++;
                 }
             }
             return grad;
-        }
-
-        void ClampJoints()
-        {
-            for (int i=0; i < r_joints.Length; i++)
-            {
-                if (r_joints[i] == null || i >= limitsMin.Length || i >= limitsMax.Length) continue;
-                Vector3 e = r_joints[i].localEulerAngles;
-
-                float x = e.x > 180 ? e.x - 360 : e.x;
-                float y = e.y > 180 ? e.y - 360 : e.y;
-                float z = e.z > 180 ? e.z - 360 : e.z;
-
-                x = Mathf.Clamp(x, limitsMin[i].x, limitsMax[i].x);
-                y = Mathf.Clamp(y, limitsMin[i].y, limitsMax[i].y);
-                z = Mathf.Clamp(z, limitsMin[i].z, limitsMax[i].z);
-
-                r_joints[i].localRotation = Quaternion.Euler(x, y, z);
-            }
         }
 
         private void ProcessInput()
