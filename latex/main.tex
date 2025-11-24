@@ -1,4 +1,4 @@
-\documentclass[12pt, a4paper]{report}
+\documentclass[11pt, a4paper]{report}
 \usepackage{booktabs}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
@@ -14,6 +14,7 @@
 \usepackage{mathtools}
 \usepackage{multirow}
 \usepackage{subcaption}
+\usepackage{hyperref}
 \usepackage[backend=biber,style=ieee]{biblatex}
 \addbibresource{ref.bib}
 
@@ -38,13 +39,12 @@
 \tableofcontents
 
 \input{sections/1_intro}
-%\input{sections/2_SOTA}
-%\input{sections/3_Dynamics}
-%\input{sections/4_Control}
-%\input{sections/5_Experimental_setup}
-%\input{sections/6_Results}
-%\input{sections/7_Conclusion}
+\input{sections/2_background}
+\input{sections/3_framework}
+\input{sections/4_setup}
+\input{sections/5_results}
+\input{sections/6_conclusion}
 
-%\printbibliography
+\printbibliography
 
 \end{document}
