@@ -2359,10 +2359,13 @@
     <bcf:citekey order="9">santello1998postural</bcf:citekey>
     <bcf:citekey order="10">primiceri2025motion</bcf:citekey>
     <bcf:citekey order="11">gioioso2013mapping</bcf:citekey>
-    <bcf:citekey order="12">santello1998postural</bcf:citekey>
+    <bcf:citekey order="12">gioioso2013mapping</bcf:citekey>
     <bcf:citekey order="13">gioioso2013mapping</bcf:citekey>
-    <bcf:citekey order="14">weart_website</bcf:citekey>
-    <bcf:citekey order="15">primiceri2025motion</bcf:citekey>
+    <bcf:citekey order="14">primiceri2025motion</bcf:citekey>
+    <bcf:citekey order="15">santello1998postural</bcf:citekey>
+    <bcf:citekey order="16">gioioso2013mapping</bcf:citekey>
+    <bcf:citekey order="17">weart_website</bcf:citekey>
+    <bcf:citekey order="18">primiceri2025motion</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="none">

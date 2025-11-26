@@ -1,9 +1,103 @@
 \chapter{Framework}\label{Ch:framework}
 
+In this chapter, we present the mathematical formulation of the proposed motion retargeting framework. We detail the definition of the virtual sphere, the construction of the interaction matrix that relates hand motion to object deformation, and the derivation of the control law used to drive the robotic hand. Finally, we describe the redundancy resolution strategy employed to optimize the configuration of the robotic hand during manipulation task.
+
 \section{Reference points and sphere definition}
+The core concept of the object-based mapping is to abstract the hand's motion into the motion of a virtual object. We model this object as a \textit{virtual sphere} defined by a set of reference points on the hand.
+
+Let $\bs{p}_h\in\mathbb{R}^{3N_h}$ be the vector of the Cartesian positions of $N_h$ reference points on the human hand. Similarly, let $\bs{p}_r\in\mathbb{R}^{3N_r}$ be the vector of $N_r$ reference points on the robotic hand. At any time step $t$, the virtual sphere is defined as the \textit{minimum enclosing ball}, i.e., the sphere of smallest radius that contains all reference points. Such a sphere is characterized by its center $\bs{o}\in\mathbb{R}^3$ and radius $r\in\mathbb{R}$.
+
+The objective of the retargeting algorithm is to impose that the virtual sphere of the robotic hand mimics the rigid-body motion (translation and rotation) and the non-rigid deformation (scaling) of the human virtual sphere. To account for the size difference between the two hands, we introduce a scaling factor $k_{sc}$:
+\begin{equation}\label{eq:scaling_factor}
+    k_{sc} = \frac{r_r}{r_h}
+\end{equation}
+where $r_r$ and $r_h$ are the radii of the robotic and human virtual spheres in their initial reference configurations, respectively.
 
 \section{Interaction matrix}
+To map the motion of the reference points to the motion of the sphere, we use the definition provided by Gioioso et al. \cite{gioioso2013mapping}. The velocity of a generic reference points $\bs{p}_i$ can be expressed as a function of the sphere's linear velocity $\dbs{o}$, angular velocity $\bs\omega$, and rate of change of radius $\dot{r}$:
+\begin{equation}\label{eq:point_velocity}
+    \dbs{p}_i = \dbs{o} + \bs\omega \times (\bs{p}_i - \bs{o}) + \dot{r} (\bs{p}_i - \bs{o})
+\end{equation}
+By stacking the velocities of all reference points, we can express the relationship between the sphere motion and the reference points' motion in matrix form:
+\begin{equation}
+    \dbs{p} = \bs{A} \bs{v}_\text{obj}
+\end{equation}
+where $\bs{v}_\text{obj} = [\dbs{o}^T, \bs\omega^T, \dot{r}]^T\in\mathbb{R}^7$ represents the generalized velocity of the virtual object. The matrix $\bs{A}\in \mathbb{R}^{3N \times 7}$ is the \textit{interaction matrix}, constructed as follows:
+\begin{equation}\label{eq:interaction_matrix}
+    \bs{A} = \begin{bmatrix}
+        \bs{I}_3 & -[\bs{p}_1 - \bs{o}]_\times & (\bs{p}_1 - \bs{o}) \\
+        \vdots & \vdots & \vdots \\
+        \bs{I}_3 & -[\bs{p}_N - \bs{o}]_\times & (\bs{p}_N - \bs{o})
+    \end{bmatrix}
+\end{equation}
+Here, $\bs{I}_3$ is the $3 \times 3$ identity matrix, and $[\cdot]_\times$ denotes the skew-symmetric matrix operator for the cross product. This matrix relates the task-space velocities of the reference points to the deformation of the object.
 
 \section{Retargeting control law}
+Our retargeting strategy relies on mapping the velocity of the virtual object from the human domain to the robot domain. In the original formulation by Gioioso et al. \cite{gioioso2013mapping}, the human hand velocity is derived analytically from the synergy inputs.
+
+Let $\bs{z} \in \mathbb{R}^{n_z}$ be the vector of synergy activation coefficients. The human joint velocities $\dbs{q}_h$ can be expressed as:
+\begin{equation}\label{eq:synergies}
+    \dbs{q}_h = \bs{S} \dbs{z}
+\end{equation}
+where $\bs{S}\in\mathbb{R}^{n_{q_h} \times n_z}$ is the \textit{synergy matrix} mapping low-dimensional inputs to the full joint space. Consequently, the velocity of the human reference points $\dbs{p}_h$ would be computed as:
+\begin{equation}
+    \dbs{p}_h = \bs{J}_h \dbs{q}_h = \bs{J}_h \bs{S} \dbs{z}
+\end{equation}
+where $\bs{J}_h \in \mathbb{R}^{3N_h \times n_{q_h}}$ is the human hand Jacobian.
+
+However, in our specific architecture, the reconstruction of the human hand pose is performed by a neural network \cite{primiceri2025motion}, which directly outputs the full joint configuration $\bs{q}_h$ of the virtual human hand in Unity. Since the full pose is known at every frame, computing the analytical Jacobian $\bs{J}_h$ and the synergy matrix $\bs{S}$ explicitly is unnecessary. Instead, we obtain the reference point velocities $\dbs{p}_h$ via \textit{numerical differentiation} of the tracked points in the virtual environment:
+\begin{equation}
+    \dbs{p}_h(t) \approx \frac{\bs{p}_h(t) - \bs{p}_h(t - \Delta t)}{\Delta t}
+\end{equation}
+This approach allows us to bypass the complexity of modeling the human kinematic chain analytically while ensuring that the motion fed into the retargeting algorithm accurately reflects the reconstructed hand pose.
+
+Once $\dbs{p}_h$ is obtained, we compute the generalized velocity $\bs{v}_{\text{obj}, h}$ of the human virtual sphere by inverting the interaction matrix. Since $\bs{A}_h$ is typically tall (more reference points than object DoFs), we us the \textit{Moore-Penrose pseudoinverse} $\bs{A}_h^\#$:
+\begin{equation}\label{eq:human_object_velocity}
+    \bs{v}_{\text{obj}, h} = \bs{A}_h^\# \dbs{p}_h
+\end{equation}
+
+Next, we map this motion to the robotic domain using a scaling matrix $\bs{K}_c \in \mathbb{R}^{7 \times 7}$:
+\begin{equation}
+    \bs{v}_{\text{obj}, r} = \bs{K}_c \bs{v}_{\text{obj}, h}
+\end{equation}
+The matrix $\bs{K}_c$ scales the translation and radial growth components of the object velocity by the factor $k_{sc}$, while leaving the angular velocity unchanged (which is independent of size):
+\begin{equation}\label{eq:scaling_matrix}
+    \bs{K}_c = \begin{bmatrix}
+        k_{sc} \bs{I}_3 & \bs{0}_{3 \times 3} & \bs{0}_{3 \times 1} \\
+        \bs{0}_{3 \times 3} & \bs{I}_3 & \bs{0}_{3 \times 1} \\
+        \bs{0}_{1 \times 3} & \bs{0}_{1 \times 3} & k_{sc}
+    \end{bmatrix}
+\end{equation}
+
+We then compute the target velocity for the robot reference points $\dbs{p}_{r, \text{des}} = \bs{A}_r \bs{v}_{\text{obj}, r}$. To track these points, we use the robot's differential kinematics equation $\dbs{p}_r = \bs{J}_r \dbs{q}_r$, where $\bs{J}_r$ is the Jacobian matrix mapping robot joint velocities $\dbs{q}_r$ to end-effector velocities $\dbs{p}_r$.
+
+The final control law for the robot joint velocities is obtained by inverting this equaton:
+\begin{equation}\label{eq:robot_control_law}
+    \dbs{q}_r = \bs{J}_{r,\text{DLS}}^\# \dbs{p}_{r, \text{des}}
+\end{equation}
+where $\bs{J}_r^\#$ is the \textit{Damped Least Squares} (DLS) inverse of the robot Jacobian, which ensures numerical stability even when the robot is near singular configurations.
 
 \section{Redundancy resolution}
+In those scenarios where dexterous robotic hands are employed, one can exploit their kinematic redundancy to optimize their internal configuration while performing grasping tasks.
+
+To achieve this, we can augment the control law derived in Eq. \ref{eq:robot_control_law} with a secondary objective using the \textit{null-space projection} method: we exploit the null space of the Jacobian to perform secondary tasks without affecting the primary goal of tracking the virtual sphere motion. The modified control law becomes:
+\begin{equation}\label{eq:redundant_control_law}
+    \dbs{q}_r = \underbrace{\bs{J}_{r,\text{DLS}}^\# \dbs{p}_{r, \text{des}}}_{\dbs{q}_{r, \text{primary}}} + (\bs{I} - \bs{J}_{r, \text{DLS}}^\# \bs{J}_r) \dbs{q}_0
+\end{equation}
+The term $(\bs{I} - \bs{J}_{r, \text{DLS}}^\# \bs{J}_r)$ projects an \textit{arbitrary} velocity vector $\dbs{q}_0$ into the null space of the primary task. This allows us to define $\dbs{q}_0$ as the gradient of a performance criterion $H(\bs{q}_r)$ designed to keep the joints of the robotic hand away from the mechanical limits. Following standard kinematic control theory, we utilize the \textit{joint range} availability function:
+\begin{equation}
+    H(\bs{q}_r) = \frac{1}{2N} \sum_{i=1}^{N} \left( \frac{q_i - \bar{q}_i}{q_{i,\text{max}} - q_{i,\text{min}}} \right)^2
+\end{equation}
+where $N$ is the number of joints, $q_{i, \text{max}}$ and $q_{i, \text{min}}$ are the upper and lower limits, and $\bar{q}_i$ is the midpoint of the range of joint $i$.
+
+The secondary velocity task is defined as the steepest descent direction of this function:
+\begin{equation}
+    \dbs{q}_0 = - \eta \nabla_{\bs{q}}H
+\end{equation}
+where $\eta$ is a positive scalar gain that regulates the influence of the secondary task, and the $i$-th component of the gradient is:
+\begin{equation}
+    \frac{\partial H}{\partial q_i} = \frac{1}{N} \frac{q_i - \bar{q}_i}{(q_{i,\text{max}} - q_{i,\text{min}})^2}
+\end{equation}
+This formulation normalizes the error, ensuring that joints with smaller ranges are prioritized (pushed harder towards the center of their range) comapred to joints with larger ranges.
+
+For underactuated grippers with fewer degrees of freedom than the task requirements, the null space term naturally vanishes or has no effect. In these cases, the pseudoinverse in Eq. \ref{eq:robot_control_law} provides the least-squares solution that minimizes the error between the desired and actual sphere motion.
