@@ -224,7 +224,8 @@ namespace WeArt.Components
                 v_r_world[i*3] = wld.x; v_r_world[i*3 + 1] = wld.y; v_r_world[i*3 + 2] = wld.z;
             }
 
-            Vector<double> dq_final = J_r_pinv * v_r_world;
+            Vector<double> dq_particular = J_r_pinv * v_r_world;
+            Vector<double> dq_final;
             if (useNullSpace)
             {
                 Vector<double> dq_0 = ComputeGradient();
