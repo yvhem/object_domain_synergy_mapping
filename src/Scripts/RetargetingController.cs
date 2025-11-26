@@ -304,9 +304,10 @@ namespace WeArt.Components
             }
         }
 
-                private Vector<double> ComputeGradient()
+        private Vector<double> ComputeGradient()
         {
             var grad = Vector<double>.Build.Dense(_dof);
+            double N = (double)_dof;
             
             int idx = 0;
             for (int i=0; i < r_joints.Length; i++)
@@ -317,37 +318,47 @@ namespace WeArt.Components
                 var body = _r_bodies[i];
 
                 // read current angles from physics (radians)
-                float currentQ_X = (body != null && body.dofCount > 0) ? body.jointPosition[0] : 0;
-                float currentQ_Y = (body != null && body.dofCount > 1) ? body.jointPosition[1] : 0;
-                float currentQ_Z = (body != null && body.dofCount > 2) ? body.jointPosition[2] : 0;
-
+                float qX = (body != null && body.dofCount > 0) ? body.jointPosition[0] : 0;
+                float qY = (body != null && body.dofCount > 1) ? body.jointPosition[1] : 0;
+                float qZ = (body != null && body.dofCount > 2) ? body.jointPosition[2] : 0;
+                
+                // limits
                 Vector3 min = limitsMin[i] * Mathf.Deg2Rad;
                 Vector3 max = limitsMax[i] * Mathf.Deg2Rad;
+                Vector3 range = max - min;
                 Vector3 mid = (max + min) / 2.0f;
 
+                // compute gradient elements
                 if ((type == Kinematics.JointType.HingeX || type == Kinematics.JointType.HingeXY || type == Kinematics.JointType.Ball) && idx < grad.Count)
                 {
-                    grad[idx] = -nullSpaceGain * (currentQ_X - mid.x);
+                    double denom = range.x * range.x;
+                    if (denom > 1e-9)
+                        grad[idx] = (1.0/N) * (qX - mid.x) / denom;
                     idx++;
                 }
 
                 if ((type == Kinematics.JointType.HingeY || type == Kinematics.JointType.HingeXY || type == Kinematics.JointType.Ball) && idx < grad.Count)
                 {
-                    float val = (body.jointType == ArticulationJointType.RevoluteJoint) ? currentQ_X : currentQ_Y;
-                    grad[idx] = -nullSpaceGain * (val - mid.y);
+                    float val = (body.jointType == ArticulationJointType.RevoluteJoint) ? qX : qY;
+                    double denom = range.y * range.y;
+                    if (denom > 1e-9) 
+                        grad[idx] = (1.0/N) * (val - mid.y) / denom;
                     idx++;
                 }
 
                 if ((type == Kinematics.JointType.HingeZ || type == Kinematics.JointType.Ball) && idx < grad.Count)
                 {
-                    float val = (body.jointType == ArticulationJointType.RevoluteJoint) ? currentQ_X : currentQ_Z;
-                    grad[idx] = -nullSpaceGain * (val - mid.z);
+                    float val = (body.jointType == ArticulationJointType.RevoluteJoint) ? qX : qZ;
+                    double denom = range.z * range.z;
+                    if (denom > 1e-9) 
+                        grad[idx] = (1.0/N) * (val - mid.z) / denom;
                     idx++;
                 }
             }
-            return grad;
+            
+            // q0 = -eta * grad
+            return -nullSpaceGain * grad;
         }
-
 
         private void NetworkLoop() {
             byte[] sendBuf = new byte[16]; byte[] recvBuf = new byte[45 * 4]; float[] floats = new float[45]; 
