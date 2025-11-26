@@ -1,0 +1,18 @@
+[0] Config.pm:307> INFO - This is Biber 2.17
+[0] Config.pm:310> INFO - Logfile is 'main.blg'
+[83] biber:340> INFO - === Wed Nov 26, 2025, 11:02:49
+[98] Biber.pm:418> INFO - Reading 'main.bcf'
+[172] Biber.pm:972> INFO - Found 4 citekeys in bib section 0
+[189] Biber.pm:4383> INFO - Processing section 0
+[202] Biber.pm:4574> INFO - Looking for bibtex file 'ref.bib' for section 0
+[203] bibtex.pm:1713> INFO - LaTeX decoding ...
+[209] bibtex.pm:1518> INFO - Found BibTeX data source 'ref.bib'
+[275] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[275] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[275] Biber.pm:4203> INFO - Sorting list 'none/global//global/global' of type 'entry' with template 'none' and locale 'en-US'
+[275] Biber.pm:4209> INFO - No sort tailoring available for locale 'en-US'
+[278] bbl.pm:654> INFO - Writing 'main.bbl' with encoding 'UTF-8'
+[282] bbl.pm:757> INFO - Output to main.bbl
+[282] Biber.pm:130> WARN - Duplicate entry key: 'weart_website' in file 'ref.bib', skipping ...
+[283] Biber.pm:130> WARN - legacy month field 'June' in entry 'primiceri2025motion' is not an integer - this will probably not sort properly.
+[283] Biber.pm:132> INFO - WARNINGS: 2

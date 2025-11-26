@@ -1,0 +1,50 @@
+\documentclass[12pt, a4paper]{report}
+\usepackage{booktabs}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem} 
+\usepackage[dvipsnames]{xcolor}   
+\usepackage{times}
+\usepackage{float}
+\usepackage{mathtools}
+\usepackage{multirow}
+\usepackage{subcaption}
+\usepackage{hyperref}
+\usepackage[backend=biber,style=ieee]{biblatex}
+\addbibresource{ref.bib}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    filecolor=magenta,
+    urlcolor=cyan,
+    pdftitle={MR_project},
+    pdfpagemode=FullScreen,
+}
+
+\newcommand{\bs}[1]{\boldsymbol{#1}}
+\newcommand{\dbs}[1]{\dot{\boldsymbol{#1}}}
+\newcommand{\ddbs}[1]{\ddot{\boldsymbol{#1}}}
+\newcommand{\ps}[3]{{\prescript{#1}{}{#2}_{#3}}}
+
+\begin{document}
+
+\input{sections/0_titlePage}
+
+\tableofcontents
+
+\input{sections/1_intro}
+\input{sections/2_background}
+\input{sections/3_framework}
+\input{sections/4_setup}
+\input{sections/5_results}
+\input{sections/6_conclusion}
+
+\printbibliography
+
+\end{document}

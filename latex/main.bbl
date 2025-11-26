@@ -1,0 +1,155 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global}
+    \entry{santello1998postural}{article}{}
+      \name{author}{3}{}{%
+        {{hash=7f6acc1c66146ea0f7e2969608687ce5}{%
+           family={Santello},
+           familyi={S\bibinitperiod},
+           given={Marco},
+           giveni={M\bibinitperiod}}}%
+        {{hash=1a73c467c48c624023ebc04b2c7cd454}{%
+           family={Flanders},
+           familyi={F\bibinitperiod},
+           given={Martha},
+           giveni={M\bibinitperiod}}}%
+        {{hash=93e0c190bf5c2c3642c0d0dd7ec392c9}{%
+           family={Soechting},
+           familyi={S\bibinitperiod},
+           given={John\bibnamedelima F},
+           giveni={J\bibinitperiod\bibinitdelim F\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Soc Neuroscience}%
+      }
+      \strng{namehash}{8a53240cc4e926e5c700564ac11d4d36}
+      \strng{fullhash}{8a53240cc4e926e5c700564ac11d4d36}
+      \strng{bibnamehash}{8a53240cc4e926e5c700564ac11d4d36}
+      \strng{authorbibnamehash}{8a53240cc4e926e5c700564ac11d4d36}
+      \strng{authornamehash}{8a53240cc4e926e5c700564ac11d4d36}
+      \strng{authorfullhash}{8a53240cc4e926e5c700564ac11d4d36}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{The Journal of Neuroscience}
+      \field{number}{23}
+      \field{title}{Postural hand synergies for tool use}
+      \field{volume}{18}
+      \field{year}{1998}
+      \field{pages}{10105\bibrangedash 10115}
+      \range{pages}{11}
+    \endentry
+    \entry{gioioso2013mapping}{article}{}
+      \name{author}{4}{}{%
+        {{hash=5aa578b19f4b450daec9b4096a1b6970}{%
+           family={Gioioso},
+           familyi={G\bibinitperiod},
+           given={Guido},
+           giveni={G\bibinitperiod}}}%
+        {{hash=6af077efe2e6a40255c4cfda51715e2b}{%
+           family={Salvietti},
+           familyi={S\bibinitperiod},
+           given={Gionata},
+           giveni={G\bibinitperiod}}}%
+        {{hash=d01cf6710f299ecb9d9f70504d2787d6}{%
+           family={Malvezzi},
+           familyi={M\bibinitperiod},
+           given={Monica},
+           giveni={M\bibinitperiod}}}%
+        {{hash=b809e251b95f1e16cd648e509299e7b1}{%
+           family={Prattichizzo},
+           familyi={P\bibinitperiod},
+           given={Domenico},
+           giveni={D\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {IEEE}%
+      }
+      \strng{namehash}{0321fd6df1904498da7fea7e4d52ddec}
+      \strng{fullhash}{8efc1f1c24fed4dbff89ef7debfe9dbc}
+      \strng{bibnamehash}{8efc1f1c24fed4dbff89ef7debfe9dbc}
+      \strng{authorbibnamehash}{8efc1f1c24fed4dbff89ef7debfe9dbc}
+      \strng{authornamehash}{0321fd6df1904498da7fea7e4d52ddec}
+      \strng{authorfullhash}{8efc1f1c24fed4dbff89ef7debfe9dbc}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IEEE Transactions on Robotics}
+      \field{number}{4}
+      \field{title}{Mapping synergies from human to robotic hands with dissimilar kinematics: An approach in the object domain}
+      \field{volume}{29}
+      \field{year}{2013}
+      \field{pages}{825\bibrangedash 837}
+      \range{pages}{13}
+    \endentry
+    \entry{weart_website}{misc}{}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{https://weart.it/}}
+      \field{note}{Accessed: 2025-06-13}
+      \field{title}{Weart Website}
+    \endentry
+    \entry{primiceri2025motion}{misc}{}
+      \name{author}{4}{}{%
+        {{hash=0495d295dfa8f5346e3749561e8eb538}{%
+           family={Primiceri},
+           familyi={P\bibinitperiod},
+           given={Charlotte\bibnamedelima Ludovica},
+           giveni={C\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+        {{hash=335d95576d2d3e75c872335c03e3c4ab}{%
+           family={Trovalusci},
+           familyi={T\bibinitperiod},
+           given={Serena},
+           giveni={S\bibinitperiod}}}%
+        {{hash=721e750531c1a5b31eb002b0f3835c2e}{%
+           family={Bubenek\bibnamedelima Turconi},
+           familyi={B\bibinitperiod\bibinitdelim T\bibinitperiod},
+           given={Diana\bibnamedelima Ioana},
+           giveni={D\bibinitperiod\bibinitdelim I\bibinitperiod}}}%
+        {{hash=f5d64a11c9e205e9c4bfe8533a210260}{%
+           family={Pagano},
+           familyi={P\bibinitperiod},
+           given={Giordano},
+           giveni={G\bibinitperiod}}}%
+      }
+      \strng{namehash}{5f4e50730925889bd23b13d7f2317159}
+      \strng{fullhash}{9a8cdbf1ce2dba3aed37d8f005696f7f}
+      \strng{bibnamehash}{9a8cdbf1ce2dba3aed37d8f005696f7f}
+      \strng{authorbibnamehash}{9a8cdbf1ce2dba3aed37d8f005696f7f}
+      \strng{authornamehash}{5f4e50730925889bd23b13d7f2317159}
+      \strng{authorfullhash}{9a8cdbf1ce2dba3aed37d8f005696f7f}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{M.Sc. Project Report, Sapienza University of Rome}
+      \field{month}{6}
+      \field{note}{Code available at: \url{https://github.com/serenatrovalusci/Hand-Motion-Reconstruction-from-Minimal-Inputs-through-Latent-Space-Learning}}
+      \field{title}{Motion Retargeting on a Human Hand Model}
+      \field{year}{2025}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+
