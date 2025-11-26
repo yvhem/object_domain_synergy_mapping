@@ -24,6 +24,7 @@ _" Each data sample in the final dataset consists of:_
 ---
 ## Hand Models
 The hand models used for retargeting are:
+- **Barrett hand**: Model sourced from the [hand_embodiment](https://github.com/dfki-ric/hand_embodiment) repository by DFKI-RIC.
 - ...
 
 ---
