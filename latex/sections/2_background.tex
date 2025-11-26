@@ -1,10 +1,37 @@
 \chapter{Background}\label{Ch:background}
 
-\section{Postural synergies}
-% santello's theory
+In this chapter, we review the theoretical foundations and existing methodologies that form the basis of our work. We first discuss the biomechanical principles of human hand control, specifically the concept of postural synergies. We then analyze standard approaches for mapping human motion to robotic hands, highlighting their limitations when dealing with dissimilar kinematics. Finally, we introduce the object-based retargeting approach, which provides the theoretical framework for the virtual sphere method used in this project.
 
-\section{Motion retargeting strategies}
-% joint-to-joint mapping + limitations, fingertip/Cartesian mapping + limitations
+\section{Postural synergies}
+The human hand is a kinematic structure with more than 20 degrees of freedom (DoF) controlled by a complex network of muscles and tendons. Despite this mechanical complexity, humans are able to grasp objects of different shapes and sizes with ease and dexterity. Neuroscientific studies suggest that the central nervous system simplifies the control of the hand by coordinating the movement of multiple joints through a reduced set of control variables known as \textit{postural synergies} \cite{santello1998postural}. These synergies represent patterns of joint coordination that capture the most significant variations in hand posture during grasping tasks.
+
+In their study, Santello et al. \cite{santello1998postural} analyzed the hand postures of different subjects while grasping imaginary objects. By applying \textit{Principal Component Analysis} (PCA) to the collected joint angle data, they identified that a large portion of the variance in hand postures could be explained by a very small number of principal components. Specifically:
+\begin{itemize}
+    \item the first principal components (\textit{synergies}) account for more than 80\% of the variance in hand posture;
+    \item the first synergy corresponds to the coordinated flexion and extension of all fingers (opening and closing the hand), resembling a power grasp *TODO: add figure*;
+    \item the second synergy accounts for the abduction of the fingers and the opposition of the thumb, effectively controlling the arching of the palm *TODO: add figure*;
+    \item the remaining synergies can be used to fine-tune the hand posture for specific grasp types, but contribute increasingly less to the overall variance.
+\end{itemize}
+This finding is fundamental to our work: it implies that we do not need to measure every single joint of the human hand to understand its pose. Instead, we can capture the underlying correlations to reconstruct the full hand posture from the sparse data provided by the Weart glove, as demonstrated by the neural network approach \cite{primiceri2025motion} that we use.
+
+\section{Standard motion retargeting strategies}
+Retargeting human hand motion to a robotic hand is a classic problem in robotics, often referred to as the \textit{correspondence problem}. The challenge arises from the fact that robotic hands typically have different kinematic structures, sizes, and joint limits compared to the human hand. In literature, we can find two main strategies to address this problem.
+
+\paragraph{Joint-to-joint mapping} This is the most direct approach, where the joint angles of the human hand are mapped one-to-one to the corresponding joints of the robotic hand. If the robot is anthropomorphic, we can map human joints $\bs{q}_h$ directly to robot joints $\bs{q}_r$ using a linear transformation; if the robot has fewer joints, we need a mapping function to approximate the motion.
+
+This method is straightforward and relatively easy to implement, but it fails with non-anthropomorphic hands (e.g., a 3-fingered gripper). Since the kinematic chains differ, applying human angles directly can lead to unnatural or infeasible robot postures, self-collisions, or the inability to grasp objects properly.
+
+\paragraph{Fingertip (Cartesian) mapping} To overcome the limitations of joint-to-joint mapping, another common approach is to focus on the positions of the fingertips rather than the joint angles. The Cartesian coordinates of the human fingertips $\bs{p}_h$ are computed through forward kinematics and then used as target positions for the robot's fingertips $\bs{p}_r$. An inverse kinematics solver is then employed to find the joint angles $\bs{q}_r$ that achieve these positions.
+
+While this ensures that the fingertips reach the target, it completely ignores the internal configuration of the hand, potentially leading to unnatural grasps or excessive joint movements. Additionally, if the robot has fewer fingers than the human hand, it becomes unclear how to map multiple human fingrtips to fewer robotic ones: a fingertip position reachable by a human might be a singular or uncreachable configuration for the robot.
 
 \section{Object-based retargeting}
-% theory behind virtual sphere method, advantages
+To address the limitations of the standard retargeting methods, Gioioso et al. \cite{gioioso2013mapping} proposed an approach defined in the \textit{object domain}: instead of mapping the hand itself, either in joint or Cartesian space, we map the effect the hand has on the object being manipulated. The key idea is that the primary goal of the hand is to interact with objects, so by focusing on the object, we can achieve more natural and effective grasps.
+
+Since the object might not physically exist during teleoperation (e.g., in virtual reality scenarios), a \textit{virtual object} (a sphere) is introduced in the grasping process. The method proceeds in the following steps:
+\begin{enumerate}
+    \item A virtual sphere is mathematically fitted inside the human hand, defined by a set of reference points (e.g., fingertips and palm center). As the human hand moves via synergies, this sphere \textit{translates}, \textit{rotates}, and \textit{deforms} accordingly.
+    \item The motion of the human sphere is scaled to match the size of the robotic hand, allowing a large human hand to control a small robotic gripper, or vice versa.
+    \item The robot is commanded to move its joints such that its own virtual sphere mimics the transformation of the human's sphere.
+\end{enumerate}
+This object-based retargeting method is \textit{independent} of the kinematic structure of both hands. It captures the intention of the grasp, namely whether the user is squeezing (shrinking the sphere) or moving the hand (translating the sphere), and it applies to the robot regardless of its number of fingers or joint structure.

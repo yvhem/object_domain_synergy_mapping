@@ -5,11 +5,7 @@ Robotic hands are becoming increasingly common in research and industry. Modern 
 This project addresses the problem of \textit{motion retargeting} from a human hand to a non-anthropomorphic robotic hand. The goal is to leverage human hand synergies to control a robotic hand with a different kinematic structure to that of the human hand. To do this, we use an object-based mapping approach called the \textit{virtual sphere} method \cite{gioioso2013mapping}, which focuses on the interaction between the hand and the object being manipulated.
 
 \section{The correspondence problem}
-A major challenge in teleoperation is the \textit{correspondence problem}. Human hands and robotic hands are rarely identical: they usually have different bone lengths, different types of joints, and a different number of fingers. Because of these differences, standard mapping techniques fail to accurately translate human motion.
-\begin{itemize}
-    \item \textit{Joint-to-joint mapping}: this method copies the angles of the human joints directly to the robot. This is often impossible because the robot might have fewer joints than the human, or the joints might rotate around different axes, leading to unnatural poses.
-    \item \textit{Fingertip mapping}: this method forces the robot's fingertips to follow the position of the human fingertips. Although this ensures contact points are reached, it ignores the position of the palm and the rest of the fingers, causing the robot hand to collide with itself or reach impossible configurations.
-\end{itemize}
+A major challenge in teleoperation is the \textit{correspondence problem}. Human hands and robotic hands are rarely identical: they usually have different bone lengths, different types of joints, and a different number of fingers. Because of these differences, standard mapping techniques like mapping joint angles directly or mapping fingertip positions fail to accurately translate human motion.
 
 To solve this, we adopt an approach proposed by Gioioso et al. \cite{gioioso2013mapping} that works in the \textit{object domain}. Instead of mapping the anatomy of the hand directly, we map the effect that the hand has on a virtual object (a sphere) held in the hand.
 

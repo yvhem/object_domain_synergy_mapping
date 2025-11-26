@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2025.8.12)  24 NOV 2025 19:30
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2025.8.12)  26 NOV 2025 08:41
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -8,8 +8,8 @@ entering extended mode
 LaTeX2e <2021-11-15> patch level 1
 L3 programming layer <2022-01-21> (/usr/share/texlive/texmf-dist/tex/latex/base/report.cls
 Document Class: report 2021/10/04 v1.4n Standard LaTeX document class
-(/usr/share/texlive/texmf-dist/tex/latex/base/size11.clo
-File: size11.clo 2021/10/04 v1.4n Standard LaTeX file (size option)
+(/usr/share/texlive/texmf-dist/tex/latex/base/size12.clo
+File: size12.clo 2021/10/04 v1.4n Standard LaTeX file (size option)
 )
 \c@part=\count185
 \c@chapter=\count186
@@ -662,12 +662,12 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 * \topmargin=-38.1381pt
 * \headheight=12.0pt
 * \headsep=25.0pt
-* \topskip=11.0pt
+* \topskip=12.0pt
 * \footskip=30.0pt
-* \marginparwidth=50.0pt
+* \marginparwidth=35.0pt
 * \marginparsep=10.0pt
 * \columnsep=10.0pt
-* \skip\footins=10.0pt plus 4.0pt minus 2.0pt
+* \skip\footins=10.8pt plus 4.0pt minus 2.0pt
 * \hoffset=0.0pt
 * \voffset=0.0pt
 * \mag=1000
@@ -739,68 +739,62 @@ l.1 \chapter
 
 ]
 Chapter 1.
-
-Overfull \hbox (6.60611pt too wide) in paragraph at lines 5--6
-[]\OT1/ptm/m/n/10.95 This project ad-dresses the prob-lem of \OT1/ptm/m/it/10.95 mo-tion re-tar-get-ing \OT1/ptm/m/n/10.95 from a hu-man hand to a non-anthropomorphic
- []
-
-LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 10.
-(/usr/share/texlive/texmf-dist/tex/latex/psnfss/ts1ptm.fd
-File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
-)
 <images/weart_glove.png, id=148, 520.94624pt x 586.19pt>
 File: images/weart_glove.png Graphic file (type png)
 <use images/weart_glove.png>
-Package pdftex.def Info: images/weart_glove.png  used on input line 20.
+Package pdftex.def Info: images/weart_glove.png  used on input line 16.
 (pdftex.def)             Requested size: 113.81102pt x 128.05879pt.
- [2
+[2
 
 ]) (./sections/2_background.tex [3 <./images/weart_glove.png>]
 Chapter 2.
-) (./sections/3_framework.tex [4
+LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 10.
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/ts1ptm.fd
+File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
+) [4
 
-]
+]) (./sections/3_framework.tex [5] [6]
 Chapter 3.
-) (./sections/4_setup.tex [5
+) (./sections/4_setup.tex [7
 
 ]
 Chapter 4.
-) (./sections/5_results.tex [6
+) (./sections/5_results.tex [8
 
 ]
 Chapter 5.
-) (./sections/6_conclusion.tex [7
+) (./sections/6_conclusion.tex [9
 
 ]
 Chapter 6.
-) [8
+) [10
 
 ]
 LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 48.
  (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
-) [9
+) [11
 
 ] (./main.aux)
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: F05E8F31099273348C02FAE2A50BAC1C;3289.
+(rerunfilecheck)             Checksum: CFEB9B62CA37DDFC940900B4B1E06DC5;3337.
 Package logreq Info: Writing requests to 'main.run.xml'.
 \openout1 = `main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 20752 strings out of 480247
- 362197 string characters out of 5896151
- 1063138 words of memory out of 5000000
- 38369 multiletter control sequences out of 15000+600000
- 491397 words of font info for 70 fonts, out of 8000000 for 9000
+ 20777 strings out of 480247
+ 362417 string characters out of 5896151
+ 1063143 words of memory out of 5000000
+ 38377 multiletter control sequences out of 15000+600000
+ 492030 words of font info for 76 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 67i,7n,77p,1142b,1275s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texlive/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on main.pdf (10 pages, 255522 bytes).
+ 67i,7n,77p,1142b,1277s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on main.pdf (12 pages, 279603 bytes).
 PDF statistics:
- 236 PDF objects out of 1000 (max. 8388607)
- 209 compressed objects within 3 object streams
- 42 named destinations out of 1000 (max. 500000)
+ 265 PDF objects out of 1000 (max. 8388607)
+ 232 compressed objects within 3 object streams
+ 49 named destinations out of 1000 (max. 500000)
  211 words of extra memory for PDF output out of 10000 (max. 10000000)
 
