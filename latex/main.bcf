@@ -2362,10 +2362,31 @@
     <bcf:citekey order="12">gioioso2013mapping</bcf:citekey>
     <bcf:citekey order="13">gioioso2013mapping</bcf:citekey>
     <bcf:citekey order="14">primiceri2025motion</bcf:citekey>
-    <bcf:citekey order="15">santello1998postural</bcf:citekey>
-    <bcf:citekey order="16">gioioso2013mapping</bcf:citekey>
-    <bcf:citekey order="17">weart_website</bcf:citekey>
-    <bcf:citekey order="18">primiceri2025motion</bcf:citekey>
+    <bcf:citekey order="15">primiceri2025motion</bcf:citekey>
+    <bcf:citekey order="16">primiceri2025motion</bcf:citekey>
+    <bcf:citekey order="17">gioioso2013mapping</bcf:citekey>
+    <bcf:citekey order="18">Fabisch2022</bcf:citekey>
+    <bcf:citekey order="19">ros_barrett</bcf:citekey>
+    <bcf:citekey order="20">ros_barrett</bcf:citekey>
+    <bcf:citekey order="21">barrett_website</bcf:citekey>
+    <bcf:citekey order="22">barrett_website</bcf:citekey>
+    <bcf:citekey order="23">barrett_specs</bcf:citekey>
+    <bcf:citekey order="24">prensilia_research</bcf:citekey>
+    <bcf:citekey order="25">prensilia_research</bcf:citekey>
+    <bcf:citekey order="26">mia_grips</bcf:citekey>
+    <bcf:citekey order="27">mia_grips</bcf:citekey>
+    <bcf:citekey order="28">mia_specs</bcf:citekey>
+    <bcf:citekey order="29">santello1998postural</bcf:citekey>
+    <bcf:citekey order="30">gioioso2013mapping</bcf:citekey>
+    <bcf:citekey order="31">weart_website</bcf:citekey>
+    <bcf:citekey order="32">primiceri2025motion</bcf:citekey>
+    <bcf:citekey order="33">Fabisch2022</bcf:citekey>
+    <bcf:citekey order="34">ros_barrett</bcf:citekey>
+    <bcf:citekey order="35">barrett_website</bcf:citekey>
+    <bcf:citekey order="36">barrett_specs</bcf:citekey>
+    <bcf:citekey order="37">prensilia_research</bcf:citekey>
+    <bcf:citekey order="38">mia_grips</bcf:citekey>
+    <bcf:citekey order="39">mia_specs</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="none">

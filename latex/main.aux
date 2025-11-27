@@ -81,29 +81,85 @@
 \newlabel{eq:robot_control_law}{{3.11}{9}{Retargeting control law}{equation.3.3.11}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {3.4}Redundancy resolution}{9}{section.3.4}\protected@file@percent }
 \newlabel{eq:redundant_control_law}{{3.12}{9}{Redundancy resolution}{equation.3.4.12}{}}
+\abx@aux@cite{0}{primiceri2025motion}
+\abx@aux@segm{0}{0}{primiceri2025motion}
+\abx@aux@cite{0}{primiceri2025motion}
+\abx@aux@segm{0}{0}{primiceri2025motion}
 \@writefile{toc}{\contentsline {chapter}{\numberline {4}Experimental setup}{10}{chapter.4}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \newlabel{Ch:setup}{{4}{10}{Experimental setup}{chapter.4}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {4.1}System overview}{10}{section.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.1}Hardware}{10}{subsection.4.1.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.2}Software}{10}{subsection.4.1.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.2}Input layer}{10}{section.4.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.3}Software}{10}{section.4.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.4}Robotic models}{10}{section.4.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {5}Results}{11}{chapter.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.2}Human input layer}{10}{section.4.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces System architecture overview showing the complete motion retargeting pipeline. The data flows from the haptic glove through the reconstruction server, into the Unity-based retargeting layer, and finally to the robotic hand model for actuation.\relax }}{11}{figure.caption.5}\protected@file@percent }
+\newlabel{fig:system_overview}{{4.1}{11}{System architecture overview showing the complete motion retargeting pipeline. The data flows from the haptic glove through the reconstruction server, into the Unity-based retargeting layer, and finally to the robotic hand model for actuation.\relax }{figure.caption.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.3}Software implementation}{11}{section.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Communication}{11}{section*.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Kinematic solver}{11}{section*.7}\protected@file@percent }
+\abx@aux@cite{0}{gioioso2013mapping}
+\abx@aux@segm{0}{0}{gioioso2013mapping}
+\abx@aux@cite{0}{Fabisch2022}
+\abx@aux@segm{0}{0}{Fabisch2022}
+\abx@aux@cite{0}{ros_barrett}
+\abx@aux@segm{0}{0}{ros_barrett}
+\abx@aux@cite{0}{ros_barrett}
+\abx@aux@segm{0}{0}{ros_barrett}
+\abx@aux@cite{0}{barrett_website}
+\abx@aux@segm{0}{0}{barrett_website}
+\abx@aux@cite{0}{barrett_website}
+\abx@aux@segm{0}{0}{barrett_website}
+\abx@aux@cite{0}{barrett_specs}
+\abx@aux@segm{0}{0}{barrett_specs}
+\@writefile{toc}{\contentsline {paragraph}{Virtual sphere}{12}{section*.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.4}Robot models}{12}{section.4.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.1}Barrett Hand}{12}{subsection.4.4.1}\protected@file@percent }
+\newlabel{fig:barrett_structure}{{4.2a}{12}{Kinematic structure \cite {ros_barrett}\relax }{figure.caption.9}{}}
+\newlabel{sub@fig:barrett_structure}{{a}{12}{Kinematic structure \cite {ros_barrett}\relax }{figure.caption.9}{}}
+\newlabel{fig:barrett_grasp}{{4.2b}{12}{Grasping an object \cite {barrett_website}\relax }{figure.caption.9}{}}
+\newlabel{sub@fig:barrett_grasp}{{b}{12}{Grasping an object \cite {barrett_website}\relax }{figure.caption.9}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces The Barrett Hand. (a) shows the hand in an open configuration, highlighting the three-finger design. (b) demonstrates the adaptability of the hand grasping an egg.\relax }}{12}{figure.caption.9}\protected@file@percent }
+\newlabel{fig:barrett_hand}{{4.2}{12}{The Barrett Hand. (a) shows the hand in an open configuration, highlighting the three-finger design. (b) demonstrates the adaptability of the hand grasping an egg.\relax }{figure.caption.9}{}}
+\@writefile{toc}{\contentsline {paragraph}{Kinematics}{12}{section*.10}\protected@file@percent }
+\abx@aux@cite{0}{prensilia_research}
+\abx@aux@segm{0}{0}{prensilia_research}
+\abx@aux@cite{0}{prensilia_research}
+\abx@aux@segm{0}{0}{prensilia_research}
+\abx@aux@cite{0}{mia_grips}
+\abx@aux@segm{0}{0}{mia_grips}
+\abx@aux@cite{0}{mia_grips}
+\abx@aux@segm{0}{0}{mia_grips}
+\abx@aux@cite{0}{mia_specs}
+\abx@aux@segm{0}{0}{mia_specs}
+\@writefile{toc}{\contentsline {paragraph}{Actuation}{13}{section*.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.2}Mia Hand}{13}{subsection.4.4.2}\protected@file@percent }
+\newlabel{fig:mia_structure}{{4.3a}{13}{Anthropomorphic structure \cite {prensilia_research}\relax }{figure.caption.12}{}}
+\newlabel{sub@fig:mia_structure}{{a}{13}{Anthropomorphic structure \cite {prensilia_research}\relax }{figure.caption.12}{}}
+\newlabel{fig:mia_cylindrical}{{4.3b}{13}{Cylindrical grasp \cite {mia_grips}\relax }{figure.caption.12}{}}
+\newlabel{sub@fig:mia_cylindrical}{{b}{13}{Cylindrical grasp \cite {mia_grips}\relax }{figure.caption.12}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces The Mia Hand. (a) shows the hand's resting posture, highlighting the mechanical design and soft pads. (b) shows the hand performing a cylindrical grasp, demonstrating finger coordination.\relax }}{13}{figure.caption.12}\protected@file@percent }
+\newlabel{fig:mia_hand}{{4.3}{13}{The Mia Hand. (a) shows the hand's resting posture, highlighting the mechanical design and soft pads. (b) shows the hand performing a cylindrical grasp, demonstrating finger coordination.\relax }{figure.caption.12}{}}
+\@writefile{toc}{\contentsline {paragraph}{Kinematics}{13}{section*.13}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Actuation}{13}{section*.14}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {5}Results}{14}{chapter.5}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{Ch:results}{{5}{11}{Results}{chapter.5}{}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {6}Conclusion}{12}{chapter.6}\protected@file@percent }
+\newlabel{Ch:results}{{5}{14}{Results}{chapter.5}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {6}Conclusion}{15}{chapter.6}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{Ch:conclusion}{{6}{12}{Conclusion}{chapter.6}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {6.1}Summary}{12}{section.6.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6.2}Future work}{12}{section.6.2}\protected@file@percent }
-\abx@aux@read@bbl@mdfivesum{8F7942358F78D4AD198ED8A216D4285B}
+\newlabel{Ch:conclusion}{{6}{15}{Conclusion}{chapter.6}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6.1}Summary}{15}{section.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6.2}Future work}{15}{section.6.2}\protected@file@percent }
+\abx@aux@read@bbl@mdfivesum{B048395458D2251F7043E3B80C183F8D}
 \abx@aux@defaultrefcontext{0}{santello1998postural}{none/global//global/global}
 \abx@aux@defaultrefcontext{0}{gioioso2013mapping}{none/global//global/global}
 \abx@aux@defaultrefcontext{0}{weart_website}{none/global//global/global}
 \abx@aux@defaultrefcontext{0}{primiceri2025motion}{none/global//global/global}
-\gdef \@abspage@last{14}
+\abx@aux@defaultrefcontext{0}{Fabisch2022}{none/global//global/global}
+\abx@aux@defaultrefcontext{0}{ros_barrett}{none/global//global/global}
+\abx@aux@defaultrefcontext{0}{barrett_website}{none/global//global/global}
+\abx@aux@defaultrefcontext{0}{barrett_specs}{none/global//global/global}
+\abx@aux@defaultrefcontext{0}{prensilia_research}{none/global//global/global}
+\abx@aux@defaultrefcontext{0}{mia_grips}{none/global//global/global}
+\abx@aux@defaultrefcontext{0}{mia_specs}{none/global//global/global}
+\gdef \@abspage@last{17}

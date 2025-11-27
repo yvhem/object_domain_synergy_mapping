@@ -1,18 +1,165 @@
 \chapter{Experimental setup}\label{Ch:setup}
 
+In this chapter, we describe the complete hardware and software architecture developed to validate the proposed retargeting framework. We will go through the data flow from the input device to the simulation environment, the software implementation of the control algorithms, and the specific robotic hand models used in the experiments.
+
 \section{System overview}
-% glove -> python -> unity
-\subsection{Hardware}
-% weart glove + (simulated) robotic hand
+The motion retargeting pipeline shown in Figure \ref{fig:system_overview} is designed as a modular system composed of three main blocks: the \textit{input layer} (haptic glove and reconstruction server), the \textit{retargeting layer} (unity simulation and retargeting logic), and the \textit{output layer} (robotic hand models).
 
-\subsection{Software}
-% data flow diagram + description of each module
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}[
+        node distance=3.5cm and 3.5cm, 
+        font=\small\sffamily,
+        >=Latex,
+        % styles
+        baseBlock/.style={rectangle, thick, align=center, rounded corners=4pt, minimum height=1.3cm, text width=3.2cm, drop shadow={opacity=0.25, shadow xshift=2pt, shadow yshift=-2pt}},
+        % component styles
+        styleInput/.style={baseBlock, draw=green!40!black, fill=green!15},
+        styleLogic/.style={baseBlock, draw=blue!50!black, fill=blue!15},
+        styleOutput/.style={baseBlock, draw=orange!60!black, fill=orange!15},
+        % container styles
+        container/.style={dashed, thick, inner sep=0.3cm, rounded corners=8pt},
+        cntInput/.style={container, draw=green!40!black!40, fill=green!6},
+        cntLogic/.style={container, draw=blue!40!black!40, fill=blue!6},
+        cntOutput/.style={container, draw=orange!40!black!40, fill=orange!6},
+        % label styles
+        layerLabel/.style={text=black!65, font=\bfseries, align=center},
+        arrowLbl/.style={font=\footnotesize, align=center, text=black!90, inner sep=3pt},
+        conn/.style={->, thick, draw=black!75, rounded corners=5pt}
+    ]
 
-\section{Input layer}
-% weart glove and neural network
+    % nodes
 
-\section{Software}
-% unity scripts, kinematics library
+    % row 1: input layer
+    \node [styleInput] (glove) {Weart\\TouchDIVER G1};
+    \node [styleInput, right=of glove] (server) {Python server};
 
-\section{Robotic models}
-% barrett hand
+    % row 2: retargeting layer
+    \node [styleLogic, below=of glove] (vhand) {Virtual\\human hand};
+    \node [styleLogic, right=of vhand] (algo) {Retargeting\\algorithm};
+
+    % row 3: output layer
+    \node [styleOutput, below=2.0cm of algo] (rhand) {Robotic\\hand model};
+
+    % containers and labels
+    \begin{scope}[on background layer]
+        % block 1: input layer
+        \node [cntInput, fit=(glove) (server)] (boxInput) {};
+        \node [layerLabel, above=0.1cm of boxInput] {Input layer};
+        
+        % block 2: retargeting layer
+        \node [cntLogic, fit=(vhand) (algo)] (boxLogic) {};
+        \node [layerLabel, above=0.1cm of boxLogic] {Retargeting layer (Unity)};
+
+        % block 3: output layer
+        \node [cntOutput, fit=(rhand), minimum width=4cm] (boxOutput) {};
+        \node [layerLabel, left=0.2cm of boxOutput, anchor=east] {Output layer};
+    \end{scope}
+
+    % connections
+
+    % 1. Acquisition
+    \draw [conn] (glove) -- node[arrowLbl, above] {\textbf{1. Acquisition}\\Sensor data} (server);
+
+    % 2. Pose Reconstruction & 3. Transmission
+    \draw [conn] (server.south) 
+        -- ++(0,-1.6) coordinate(turn1) 
+        node[midway, right, xshift=2pt, font=\footnotesize, text=black!80, align=left] {\textbf{2. Pose}\\ \textbf{reconstruction}}
+        -- (turn1 -| vhand.north) coordinate(turn2) 
+        -- (vhand.north)
+        node[midway, left, arrowLbl, align=right] {\textbf{3. Transmission}\\Joint angles};
+
+    % 4. Retargeting
+    \draw [conn] (vhand) -- node[arrowLbl, above] {\textbf{4. Retargeting}\\Deformation} (algo);
+
+    % 5. Actuation
+    \draw [conn] (algo) -- node[arrowLbl, right, xshift=3pt] {\textbf{5. Actuation}\\Joint velocities} (rhand);
+
+    \end{tikzpicture}
+    \caption{System architecture overview showing the complete motion retargeting pipeline. The data flows from the haptic glove through the reconstruction server, into the Unity-based retargeting layer, and finally to the robotic hand model for actuation.}
+    \label{fig:system_overview}
+\end{figure}
+
+The data flow consists of the following steps:
+\begin{enumerate}
+    \item \textit{Acquisition}: the user wears the Weart TouchDIVER G1 haptic glove, which captures sensor data (finger closure and abduction) that are sent to a Python server.
+    \item \textit{Reconstruction}: the Python server processes the glove inputs using a neural network \cite{primiceri2025motion} to reconstruct the full pose of the virtual human hand in Unity.
+    \item \textit{Transmission}: the reconstructed joint angles are sent to the Unity simulation environment in real-time.
+    \item \textit{Retargeting}: inside Unity, the retargeting algorithm detailed in Chapter \ref{Ch:framework} computes the deformation of the virtual sphere and derives the corresponding joint velocities for the target robotic hand model.
+    \item \textit{Actuation}: the resulting joint velocities are integrated to update the visual pose of the robotic hand in the simulation.
+\end{enumerate}
+
+\section{Human input layer}
+The input interface is the Weart TouchDIVER G1, a wearable haptic device capable of tracking hand movements and rendering force, texture, and thermal cues. For the scope of this work, we focus on its motion tracking capabilities: it provides raw data about the closure of the thumb, index, and middle fingers, as well as the abduction of the thumb relative to the palm.
+
+Since the glove does not track the ring and pinky fingers, nor the individual phalanx rotations (MCP, PIP, DIP) explicitly, the raw sensor data is insufficient for teleoperation. To address this limitation, we employ the reconstruction module developed by Primiceri et al. \cite{primiceri2025motion}: a Python script acts as a server listening for incoming data from the glove, and feeds this data into a pre-trained neural network which outputs a 62-dimensional vector containing the sine and cosine encodings of all 15 human hand joints; this vector is then converted back into Euler angles and sent to the Unity client.
+
+\section{Software implementation}
+The core logic of the project is implemented in C\# in the Unity engine. The implementation relies on the \texttt{MathNet.Numerics} library for efficient linear algebra computations, such as matrix multiplications and pseudoinverses.
+
+\paragraph{Communication} A dedicated thread handles the TCP communication with the Python server to separate the network operations from the main Unity thread, so as to not interfere with the simulation's frame rate. The received human pose $\bs{q}_h$ is applied to a kinematic model of the human hand, which serves as the \textit{master} for the retargeting algorithm.
+
+\paragraph{Kinematic solver} To guarantee the system is adaptable to different robots, we developed a generalized \texttt{Kinematics} library: unlike standard solutions that hardcode the Jacobian matrix for a specific robot, our implementation computes the robot Jacobian $\bs{J}_r$ dynamically. We define the robot structure in the Unity inspector by assigning a list of joint Transforms and their corresponding types (e.g., \texttt{HingeX}, \texttt{HingeY}, \texttt{HingeZ}, or \texttt{Ball}), allowing the software to handle any serial kinematic chain without code modification.
+
+\paragraph{Virtual sphere} The \texttt{VirtualSphere} script implements the mathematical framework described in Chapter \ref{Ch:framework} for the deformation and retargeting logic. It takes as input an array of \texttt{Transform} objects representing the reference points, and at every update:
+\begin{enumerate}
+    \item it extracts the local positions of the reference points with respect to the palm;
+    \item it computes the \textit{minimum enclosing ball} using Welzl's algorithm;
+    \item it constructs the interaction matrix $\bs{A}$ from Eq. \refeq {eq:interaction_matrix} based on the sphere's current center and radius.
+\end{enumerate}
+This script is attached to both the human hand and the robotic hand, providing the necessary matrices $\bs{A}_h$ and $\bs{A}_r$ to the main controller.
+
+\section{Robot models}
+To evaluate the flexibility of the object-based retargeting approach \cite{gioioso2013mapping}, we selected robotic hands with significantly different kinematic structures to that of the human hand. In our experiments, we used two specific models: the \textit{Barrett Hand} and the \textit{Mia Hand}, whose kinematic descriptions (URDF models) were obtained from the embodiment framework by Fabisch et al. \cite{Fabisch2022}.
+
+\subsection{Barrett Hand}
+The \textit{Barrett Hand} (Figure \ref{fig:barrett_hand}) is a multi-fingered programmable grasper whose kinematic structure is deeply different from the human hand, making it an interesting candidate for testing the robustness of the virtual sphere retargeting method.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=0.55\textwidth]{images/barrett_hand1}
+        \caption{Kinematic structure \cite{ros_barrett}}
+        \label{fig:barrett_structure}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=0.95\textwidth]{images/barrett_hand2}
+        \caption{Grasping an object \cite{barrett_website}}
+        \label{fig:barrett_grasp}
+    \end{subfigure}
+    \caption{The Barrett Hand. (a) shows the hand in an open configuration, highlighting the three-finger design. (b) demonstrates the adaptability of the hand grasping an egg.}
+    \label{fig:barrett_hand}
+\end{figure}
+
+\paragraph{Kinematics} It consists of three fingers: one finger is fixed, while the other two can rotate synchronously around the palm (\textit{spread motion}) up to $180^\circ$. This allows the hand to change its configuration dynamically, switching from a parallel grasp with the three fingers aligned, to an opposition grasp with the two rotating fingers opposing the fixed one.
+
+\paragraph{Actuation} The hand has 8 axes of motion but is \textit{underactuated}, driven by only 4 motors: one controls the spread of the two movable fingers, and the other three control the flexion of each finger independently \cite{barrett_specs}. A proprietary "\textit{TorqueSwitch}" mechanism couples the proximal and distal links: the distal link remains stationary until the proximal link encounters resistance, at which point the distal link curls to enclose the object. However, we are interested in evaluating the retargeting performance based on kinematics alone; therefore, in our kinematic model of the Barrett Hand, we treat all 8 axes as independent degrees of freedom.
+
+\subsection{Mia Hand}
+The \textit{Mia Hand} (Figure \ref{fig:mia_hand}) by Prensilia is an anthropomorphic end-effector designed primarily for prosthetics and research applications. Unlike the Barrett Hand, the Mia Hand has a kinematic structure that resembles that of the human hand, although with less dexterity.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.4\textwidth}
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/mia_hand}
+        \caption{Anthropomorphic structure \cite{prensilia_research}}
+        \label{fig:mia_structure}
+    \end{subfigure}
+    \hspace{1cm}
+    \begin{subfigure}[b]{0.4\textwidth}
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/mia_hand_cylindrical_grip}
+        \caption{Cylindrical grasp \cite{mia_grips}}
+        \label{fig:mia_cylindrical}
+    \end{subfigure}
+    \caption{The Mia Hand. (a) shows the hand's resting posture, highlighting the mechanical design and soft pads. (b) shows the hand performing a cylindrical grasp, demonstrating finger coordination.}
+    \label{fig:mia_hand}
+\end{figure}
+
+\paragraph{Kinematics} The Mia Hand's dimensions are similar to an average human hand (palm width 83 mm). It consists of five fingers and an opposable thumb, designed to perform various grasp types such as cylindrical, spherical, and lateral grasps \cite{mia_specs}.
+
+\paragraph{Actuation} To keep a lightweight profile (approx. 540 g), the Mia Hand employs an underactuated mechanism driven by 3 motors actuating the flexion/extension of the fingers and the opposition of the thumb. Again, like for the Barrett Hand, in our simulation we treat the hand's kinematic chain as fully articulated, meaning we control the individual joints of the fingers independently. Consequently, the kinematic model has more degrees of freedom ($N \approx 15$) than the virtual sphere task ($N=7$), making the system \textit{kinematically redundant} with respect to it. We therefore employ the redundancy resolution strategy described in Chapter \ref{Ch:framework} to distribute the motion among the joints, keepeing them away from their mechanical limits while tracking the object deformation.

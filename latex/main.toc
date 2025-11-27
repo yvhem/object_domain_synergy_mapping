@@ -16,12 +16,19 @@
 \contentsline {section}{\numberline {3.4}Redundancy resolution}{9}{section.3.4}%
 \contentsline {chapter}{\numberline {4}Experimental setup}{10}{chapter.4}%
 \contentsline {section}{\numberline {4.1}System overview}{10}{section.4.1}%
-\contentsline {subsection}{\numberline {4.1.1}Hardware}{10}{subsection.4.1.1}%
-\contentsline {subsection}{\numberline {4.1.2}Software}{10}{subsection.4.1.2}%
-\contentsline {section}{\numberline {4.2}Input layer}{10}{section.4.2}%
-\contentsline {section}{\numberline {4.3}Software}{10}{section.4.3}%
-\contentsline {section}{\numberline {4.4}Robotic models}{10}{section.4.4}%
-\contentsline {chapter}{\numberline {5}Results}{11}{chapter.5}%
-\contentsline {chapter}{\numberline {6}Conclusion}{12}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Summary}{12}{section.6.1}%
-\contentsline {section}{\numberline {6.2}Future work}{12}{section.6.2}%
+\contentsline {section}{\numberline {4.2}Human input layer}{10}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Software implementation}{11}{section.4.3}%
+\contentsline {paragraph}{Communication}{11}{section*.6}%
+\contentsline {paragraph}{Kinematic solver}{11}{section*.7}%
+\contentsline {paragraph}{Virtual sphere}{12}{section*.8}%
+\contentsline {section}{\numberline {4.4}Robot models}{12}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Barrett Hand}{12}{subsection.4.4.1}%
+\contentsline {paragraph}{Kinematics}{12}{section*.10}%
+\contentsline {paragraph}{Actuation}{13}{section*.11}%
+\contentsline {subsection}{\numberline {4.4.2}Mia Hand}{13}{subsection.4.4.2}%
+\contentsline {paragraph}{Kinematics}{13}{section*.13}%
+\contentsline {paragraph}{Actuation}{13}{section*.14}%
+\contentsline {chapter}{\numberline {5}Results}{14}{chapter.5}%
+\contentsline {chapter}{\numberline {6}Conclusion}{15}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Summary}{15}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Future work}{15}{section.6.2}%

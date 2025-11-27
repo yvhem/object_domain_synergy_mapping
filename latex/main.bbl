@@ -107,7 +107,7 @@
       \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
       \field{labeltitlesource}{title}
       \field{howpublished}{\url{https://weart.it/}}
-      \field{note}{Accessed: 2025-06-13}
+      \field{note}{Accessed: 23 Nov 2025}
       \field{title}{Weart Website}
     \endentry
     \entry{primiceri2025motion}{misc}{}
@@ -147,6 +147,141 @@
       \field{month}{6}
       \field{note}{Code available at: \url{https://github.com/serenatrovalusci/Hand-Motion-Reconstruction-from-Minimal-Inputs-through-Latent-Space-Learning}}
       \field{title}{Motion Retargeting on a Human Hand Model}
+      \field{year}{2025}
+    \endentry
+    \entry{Fabisch2022}{inproceedings}{}
+      \name{author}{6}{}{%
+        {{hash=cc6819194087111c0aa1995a77f6dc32}{%
+           family={Fabisch},
+           familyi={F\bibinitperiod},
+           given={Alexander},
+           giveni={A\bibinitperiod}}}%
+        {{hash=58c367f71a1d9627095ad20ee7c9dca6}{%
+           family={Uliano},
+           familyi={U\bibinitperiod},
+           given={Manuela},
+           giveni={M\bibinitperiod}}}%
+        {{hash=88906b2dbe5eb31bc94e211df0d067ba}{%
+           family={Marschner},
+           familyi={M\bibinitperiod},
+           given={Dennis},
+           giveni={D\bibinitperiod}}}%
+        {{hash=7a7b962f2146a1f4cd3c128854229199}{%
+           family={Laux},
+           familyi={L\bibinitperiod},
+           given={Melvin},
+           giveni={M\bibinitperiod}}}%
+        {{hash=cfb5fde05fbcf7a02751a588ccecb8d8}{%
+           family={Brust},
+           familyi={B\bibinitperiod},
+           given={Johannes},
+           giveni={J\bibinitperiod}}}%
+        {{hash=2f8e9842e9abede0e017ae8543a83d85}{%
+           family={Controzzi},
+           familyi={C\bibinitperiod},
+           given={Marco},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{ee3cab3981749f9e549c15e58b4c739e}
+      \strng{fullhash}{c741f9a60d0124d2914bd9e4a430bf89}
+      \strng{bibnamehash}{c741f9a60d0124d2914bd9e4a430bf89}
+      \strng{authorbibnamehash}{c741f9a60d0124d2914bd9e4a430bf89}
+      \strng{authornamehash}{ee3cab3981749f9e549c15e58b4c739e}
+      \strng{authorfullhash}{c741f9a60d0124d2914bd9e4a430bf89}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2022 IEEE-RAS 21st International Conference on Humanoid Robots (Humanoids)}
+      \field{title}{A Modular Approach to the Embodiment of Hand Motions from Human Demonstrations}
+      \field{year}{2022}
+      \field{pages}{801\bibrangedash 808}
+      \range{pages}{8}
+      \verb{doi}
+      \verb 10.1109/Humanoids53995.2022.10000165
+      \endverb
+    \endentry
+    \entry{ros_barrett}{misc}{}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{https://robots.ros.org/barrett-hand/}}
+      \field{note}{Accessed: 27 Nov 2025}
+      \field{title}{Barrett Hand - ROS Robots}
+    \endentry
+    \entry{barrett_website}{misc}{}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{https://barrett.com/barretthand}}
+      \field{note}{Accessed: 27 Nov 2025}
+      \field{title}{BarrettHand Product Page}
+    \endentry
+    \entry{barrett_specs}{manual}{}
+      \list{organization}{1}{%
+        {Barrett Technology}%
+      }
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labeltitlesource}{title}
+      \field{note}{Datasheet}
+      \field{title}{BarrettHand BH8-282 specifications}
+      \field{year}{2025}
+    \endentry
+    \entry{prensilia_research}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=bec531faa83709d66cf0110f69e4edb1}{%
+           family={Prensilia},
+           familyi={P\bibinitperiod}}}%
+      }
+      \strng{namehash}{bec531faa83709d66cf0110f69e4edb1}
+      \strng{fullhash}{bec531faa83709d66cf0110f69e4edb1}
+      \strng{bibnamehash}{bec531faa83709d66cf0110f69e4edb1}
+      \strng{authorbibnamehash}{bec531faa83709d66cf0110f69e4edb1}
+      \strng{authornamehash}{bec531faa83709d66cf0110f69e4edb1}
+      \strng{authorfullhash}{bec531faa83709d66cf0110f69e4edb1}
+      \field{extraname}{1}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{https://www.prensilia.com/mia-hand-research/}}
+      \field{note}{Accessed: 27 Nov 2025}
+      \field{title}{Mia Hand Research}
+    \endentry
+    \entry{mia_grips}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=bec531faa83709d66cf0110f69e4edb1}{%
+           family={Prensilia},
+           familyi={P\bibinitperiod}}}%
+      }
+      \strng{namehash}{bec531faa83709d66cf0110f69e4edb1}
+      \strng{fullhash}{bec531faa83709d66cf0110f69e4edb1}
+      \strng{bibnamehash}{bec531faa83709d66cf0110f69e4edb1}
+      \strng{authorbibnamehash}{bec531faa83709d66cf0110f69e4edb1}
+      \strng{authornamehash}{bec531faa83709d66cf0110f69e4edb1}
+      \strng{authorfullhash}{bec531faa83709d66cf0110f69e4edb1}
+      \field{extraname}{2}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{https://www.mia-hand.com/en/mia-hand-grips/}}
+      \field{note}{Accessed: 27 Nov 2025}
+      \field{title}{Mia Hand Grips}
+    \endentry
+    \entry{mia_specs}{manual}{}
+      \list{location}{1}{%
+        {Pontedera, Italy}%
+      }
+      \list{organization}{1}{%
+        {Prensilia s.r.l.}%
+      }
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labeltitlesource}{title}
+      \field{note}{Available at: \url{https://prensilia.com}}
+      \field{title}{Mia Hand Technical Specifications}
       \field{year}{2025}
     \endentry
   \enddatalist
