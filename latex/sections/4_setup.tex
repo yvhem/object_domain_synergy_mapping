@@ -109,6 +109,8 @@ The core logic of the project is implemented in C\# in the Unity engine. The imp
 \end{enumerate}
 This script is attached to both the human hand and the robotic hand, providing the necessary matrices $\bs{A}_h$ and $\bs{A}_r$ to the main controller.
 
+\paragraph{Code} The complete source code developed for this project is open source and available on GitHub. \footnote{\url{https://github.com/yvhem/object_domain_synergy_mapping}}.
+
 \section{Robot models}
 To evaluate the flexibility of the object-based retargeting approach \cite{gioioso2013mapping}, we selected robotic hands with significantly different kinematic structures to that of the human hand. In our experiments, we used two specific models: the \textit{Barrett Hand} and the \textit{Mia Hand}, whose kinematic descriptions (URDF models) were obtained from the embodiment framework by Fabisch et al. \cite{Fabisch2022}.
 
@@ -120,14 +122,14 @@ The \textit{Barrett Hand} (Figure \ref{fig:barrett_hand}) is a multi-fingered pr
     \begin{subfigure}[b]{0.45\textwidth}
         \centering
         \includegraphics[width=0.55\textwidth]{images/barrett_hand1}
-        \caption{Kinematic structure \cite{ros_barrett}}
+        \caption{Kinematic structure (source: ROS.org)}
         \label{fig:barrett_structure}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.45\textwidth}
         \centering
         \includegraphics[width=0.95\textwidth]{images/barrett_hand2}
-        \caption{Grasping an object \cite{barrett_website}}
+        \caption{Grasping an egg (source: Barrett Technology)}
         \label{fig:barrett_grasp}
     \end{subfigure}
     \caption{The Barrett Hand. (a) shows the hand in an open configuration, highlighting the three-finger design. (b) demonstrates the adaptability of the hand grasping an egg.}
@@ -136,7 +138,7 @@ The \textit{Barrett Hand} (Figure \ref{fig:barrett_hand}) is a multi-fingered pr
 
 \paragraph{Kinematics} It consists of three fingers: one finger is fixed, while the other two can rotate synchronously around the palm (\textit{spread motion}) up to $180^\circ$. This allows the hand to change its configuration dynamically, switching from a parallel grasp with the three fingers aligned, to an opposition grasp with the two rotating fingers opposing the fixed one.
 
-\paragraph{Actuation} The hand has 8 axes of motion but is \textit{underactuated}, driven by only 4 motors: one controls the spread of the two movable fingers, and the other three control the flexion of each finger independently \cite{barrett_specs}. A proprietary "\textit{TorqueSwitch}" mechanism couples the proximal and distal links: the distal link remains stationary until the proximal link encounters resistance, at which point the distal link curls to enclose the object. However, we are interested in evaluating the retargeting performance based on kinematics alone; therefore, in our kinematic model of the Barrett Hand, we treat all 8 axes as independent degrees of freedom.
+\paragraph{Actuation} The hand has 8 axes of motion but is \textit{underactuated}, driven by only 4 motors: one controls the spread of the two movable fingers, and the other three control the flexion of each finger independently. \footnote{BarrettHand BH8-282 specifications: \url{https://barrett.com/barretthand}} A proprietary "\textit{TorqueSwitch}" mechanism couples the proximal and distal links: the distal link remains stationary until the proximal link encounters resistance, at which point the distal link curls to enclose the object. However, we are interested in evaluating the retargeting performance based on kinematics alone; therefore, in our kinematic model of the Barrett Hand, we treat all 8 axes as independent degrees of freedom.
 
 \subsection{Mia Hand}
 The \textit{Mia Hand} (Figure \ref{fig:mia_hand}) by Prensilia is an anthropomorphic end-effector designed primarily for prosthetics and research applications. Unlike the Barrett Hand, the Mia Hand has a kinematic structure that resembles that of the human hand, although with less dexterity.
@@ -146,20 +148,20 @@ The \textit{Mia Hand} (Figure \ref{fig:mia_hand}) by Prensilia is an anthropomor
     \begin{subfigure}[b]{0.4\textwidth}
         \centering
         \includegraphics[width=0.8\textwidth]{images/mia_hand}
-        \caption{Anthropomorphic structure \cite{prensilia_research}}
+        \caption{Anthropomorphic structure (source: Prensilia)}
         \label{fig:mia_structure}
     \end{subfigure}
     \hspace{1cm}
     \begin{subfigure}[b]{0.4\textwidth}
         \centering
         \includegraphics[width=0.8\textwidth]{images/mia_hand_cylindrical_grip}
-        \caption{Cylindrical grasp \cite{mia_grips}}
+        \caption{Cylindrical grasp (source: Prensilia)}
         \label{fig:mia_cylindrical}
     \end{subfigure}
     \caption{The Mia Hand. (a) shows the hand's resting posture, highlighting the mechanical design and soft pads. (b) shows the hand performing a cylindrical grasp, demonstrating finger coordination.}
     \label{fig:mia_hand}
 \end{figure}
 
-\paragraph{Kinematics} The Mia Hand's dimensions are similar to an average human hand (palm width 83 mm). It consists of five fingers and an opposable thumb, designed to perform various grasp types such as cylindrical, spherical, and lateral grasps \cite{mia_specs}.
+\paragraph{Kinematics} The Mia Hand's dimensions are similar to an average human hand (palm width 83 mm). It consists of five fingers and an opposable thumb, designed to perform various grasp types such as cylindrical, spherical, and lateral grasps. \footnote{Technical specifications of the Mia Hand can be found at: \url{https://prensilia.com}}
 
 \paragraph{Actuation} To keep a lightweight profile (approx. 540 g), the Mia Hand employs an underactuated mechanism driven by 3 motors actuating the flexion/extension of the fingers and the opposition of the thumb. Again, like for the Barrett Hand, in our simulation we treat the hand's kinematic chain as fully articulated, meaning we control the individual joints of the fingers independently. Consequently, the kinematic model has more degrees of freedom ($N \approx 15$) than the virtual sphere task ($N=7$), making the system \textit{kinematically redundant} with respect to it. We therefore employ the redundancy resolution strategy described in Chapter \ref{Ch:framework} to distribute the motion among the joints, keepeing them away from their mechanical limits while tracking the object deformation.

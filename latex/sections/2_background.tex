@@ -5,13 +5,22 @@ In this chapter, we review the theoretical foundations and existing methodologie
 \section{Postural synergies}
 The human hand is a kinematic structure with more than 20 degrees of freedom (DoF) controlled by a complex network of muscles and tendons. Despite this mechanical complexity, humans are able to grasp objects of different shapes and sizes with ease and dexterity. Neuroscientific studies suggest that the central nervous system simplifies the control of the hand by coordinating the movement of multiple joints through a reduced set of control variables known as \textit{postural synergies} \cite{santello1998postural}. These synergies represent patterns of joint coordination that capture the most significant variations in hand posture during grasping tasks.
 
-In their study, Santello et al. \cite{santello1998postural} analyzed the hand postures of different subjects while grasping imaginary objects. By applying \textit{Principal Component Analysis} (PCA) to the collected joint angle data, they identified that a large portion of the variance in hand postures could be explained by a very small number of principal components. Specifically:
-\begin{itemize}
-    \item the first principal components (\textit{synergies}) account for more than 80\% of the variance in hand posture;
-    \item the first synergy corresponds to the coordinated flexion and extension of all fingers (opening and closing the hand), resembling a power grasp *TODO: add figure*;
-    \item the second synergy accounts for the abduction of the fingers and the opposition of the thumb, effectively controlling the arching of the palm *TODO: add figure*;
-    \item the remaining synergies can be used to fine-tune the hand posture for specific grasp types, but contribute increasingly less to the overall variance.
-\end{itemize}
+In their study, Santello et al. \cite{santello1998postural} analyzed the hand postures of different subjects while grasping imaginary objects. By applying \textit{Principal Component Analysis} (PCA) to the collected joint angle data, they identified that a large portion of the variance in hand postures could be explained by a very small number of principal components. Specifically, the first principal components (\textit{synergies}) account for more than 80\% of the variance in hand posture: the first synergy corresponds to the coordinated flexion and extension of all fingers (openin and closing the hand), resembling a power grasp (Figure \ref{fig:synergies_visual}, horizontal axis); the second synergy accounts for the abduction of the fingers and the opposition of the thumb, effectively controlling the arching of the palm (Figure \ref{fig:synergies_visual}, vertical axis). The remaining synergies can be used to fine-tune the hand posture for specific grasp types, but contribute increasingly less to the overall variance. We graphically illustrate the underlying flow of information in human hand control with the block diagram in Figure \ref{fig:synergies_block_diagram}.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.45\textwidth]{images/synergies_visual}
+    \caption{Visual representation of the first two postural synergies. Synergy 1 (on the horizontal axis) controls the general opening and closing of the hand. Synergy 2 (on the vertical axis) modulates the arching of the palm and finger adduction/abduction.}
+    \label{fig:synergies_visual}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.4\textwidth]{images/synergies_block_diagram}
+    \caption{The hierarchical control scheme of the hand. Coarse control is achieved via the first two synergies ($>80\%$ variance), while fine control is handled by higher-order synergies ($<20\%$ variance).}
+    \label{fig:synergies_block_diagram}
+\end{figure}
+
 This finding is fundamental to our work: it implies that we do not need to measure every single joint of the human hand to understand its pose. Instead, we can capture the underlying correlations to reconstruct the full hand posture from the sparse data provided by the Weart glove, as demonstrated by the neural network approach \cite{primiceri2025motion} that we use.
 
 \section{Standard motion retargeting strategies}

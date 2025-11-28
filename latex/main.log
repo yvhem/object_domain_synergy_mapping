@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2025.8.12)  27 NOV 2025 22:03
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2025.8.12)  28 NOV 2025 07:12
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -982,25 +982,54 @@ l.1 \chapter
 
 ]
 Chapter 1.
-<images/weart_glove.png, id=175, 520.94624pt x 586.19pt>
-File: images/weart_glove.png Graphic file (type png)
-<use images/weart_glove.png>
-Package pdftex.def Info: images/weart_glove.png  used on input line 16.
-(pdftex.def)             Requested size: 113.81102pt x 128.05879pt.
+<images/human_vs_robotic_hand.png, id=174, 614.295pt x 409.53pt>
+File: images/human_vs_robotic_hand.png Graphic file (type png)
+<use images/human_vs_robotic_hand.png>
+Package pdftex.def Info: images/human_vs_robotic_hand.png  used on input line 7.
+(pdftex.def)             Requested size: 182.09486pt x 121.39769pt.
 [2
 
-]) (./sections/2_background.tex [3 <./images/weart_glove.png>]
+ <./images/human_vs_robotic_hand.png>]
+<images/synergy_control_robotic_hand.png, id=187, 2055.68pt x 684.5575pt>
+File: images/synergy_control_robotic_hand.png Graphic file (type png)
+<use images/synergy_control_robotic_hand.png>
+Package pdftex.def Info: images/synergy_control_robotic_hand.png  used on input line 21.
+(pdftex.def)             Requested size: 318.66948pt x 106.11575pt.
+<images/weart_glove.png, id=189, 520.94624pt x 586.19pt>
+File: images/weart_glove.png Graphic file (type png)
+<use images/weart_glove.png>
+Package pdftex.def Info: images/weart_glove.png  used on input line 31.
+(pdftex.def)             Requested size: 113.81102pt x 128.05879pt.
+LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 32.
+ (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1pcr.fd
+File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
+) [3 <./images/synergy_control_robotic_hand.png> <./images/weart_glove.png>]) (./sections/2_background.tex [4]
 Chapter 2.
-LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 10.
-(/usr/share/texlive/texmf-dist/tex/latex/psnfss/ts1ptm.fd
-File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
-) [4
+<images/synergies_visual.png, id=217, 921.4425pt x 704.6325pt>
+File: images/synergies_visual.png Graphic file (type png)
+<use images/synergies_visual.png>
+Package pdftex.def Info: images/synergies_visual.png  used on input line 12.
+(pdftex.def)             Requested size: 204.85846pt x 156.6539pt.
 
-]) (./sections/3_framework.tex [5] [6]
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+<images/synergies_block_diagram.png, id=218, 477.28313pt x 556.32843pt>
+File: images/synergies_block_diagram.png Graphic file (type png)
+<use images/synergies_block_diagram.png>
+Package pdftex.def Info: images/synergies_block_diagram.png  used on input line 19.
+(pdftex.def)             Requested size: 182.09486pt x 212.24739pt.
+[5
+
+] [6 <./images/synergies_visual.png>]) (./sections/3_framework.tex [7 <./images/synergies_block_diagram.png (PNG copy)>]
 Chapter 3.
-[7
+<images/vsm_reference_points.jpg, id=247, 1612.0225pt x 750.805pt>
+File: images/vsm_reference_points.jpg Graphic file (type jpg)
+<use images/vsm_reference_points.jpg>
+Package pdftex.def Info: images/vsm_reference_points.jpg  used on input line 10.
+(pdftex.def)             Requested size: 182.09486pt x 84.81133pt.
+[8
 
-] [8]) (./sections/4_setup.tex [9]
+ <./images/vsm_reference_points.jpg>] [9] [10]) (./sections/4_setup.tex [11]
 Chapter 4.
 LaTeX Font Info:    Trying to load font information for OT1+phv on input line 34.
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1phv.fd
@@ -1009,48 +1038,39 @@ File: ot1phv.fd 2020/03/25 scalable font definitions for OT1/phv.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[10
+[12
 
-]
-LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 98.
- (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1pcr.fd
-File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
-) [11]
-<images/barrett_hand1.png, id=292, 803.0pt x 985.6825pt>
+] [13]
+<images/barrett_hand1.png, id=323, 803.0pt x 985.6825pt>
 File: images/barrett_hand1.png Graphic file (type png)
 <use images/barrett_hand1.png>
-Package pdftex.def Info: images/barrett_hand1.png  used on input line 122.
+Package pdftex.def Info: images/barrett_hand1.png  used on input line 124.
 (pdftex.def)             Requested size: 112.67278pt x 138.29541pt.
-<images/barrett_hand2.png, id=295, 481.8pt x 306.4248pt>
+<images/barrett_hand2.png, id=324, 481.8pt x 306.4248pt>
 File: images/barrett_hand2.png Graphic file (type png)
 <use images/barrett_hand2.png>
-Package pdftex.def Info: images/barrett_hand2.png  used on input line 129.
+Package pdftex.def Info: images/barrett_hand2.png  used on input line 131.
 (pdftex.def)             Requested size: 194.6149pt x 123.77406pt.
- [12 <./images/barrett_hand1.png> <./images/barrett_hand2.png>]
-<images/mia_hand.png, id=316, 1204.5pt x 1204.5pt>
+ [14]
+<images/mia_hand.png, id=343, 1204.5pt x 1204.5pt>
 File: images/mia_hand.png Graphic file (type png)
 <use images/mia_hand.png>
-Package pdftex.def Info: images/mia_hand.png  used on input line 148.
+Package pdftex.def Info: images/mia_hand.png  used on input line 150.
 (pdftex.def)             Requested size: 145.67644pt x 145.67326pt.
-<images/mia_hand_cylindrical_grip.png, id=319, 1505.625pt x 1709.38625pt>
+<images/mia_hand_cylindrical_grip.png, id=344, 1505.625pt x 1709.38625pt>
 File: images/mia_hand_cylindrical_grip.png Graphic file (type png)
 <use images/mia_hand_cylindrical_grip.png>
-Package pdftex.def Info: images/mia_hand_cylindrical_grip.png  used on input line 155.
+Package pdftex.def Info: images/mia_hand_cylindrical_grip.png  used on input line 157.
 (pdftex.def)             Requested size: 145.67644pt x 165.36685pt.
-) (./sections/5_results.tex [13 <./images/mia_hand.png> <./images/mia_hand_cylindrical_grip.png>]
+) (./sections/5_results.tex [15 <./images/barrett_hand1.png> <./images/barrett_hand2.png> <./images/mia_hand.png> <./images/mia_hand_cylindrical_grip.png>] [16]
 Chapter 5.
-) (./sections/6_conclusion.tex [14
+) (./sections/6_conclusion.tex [17
 
 ]
 Chapter 6.
-) [15
+) [18
 
-]
-Overfull \hbox (16.49309pt too wide) in paragraph at lines 51--51
-\OT1/ptm/m/it/12 IEEE-RAS 21st In-ter-na-tional Con-fer-ence on Hu-manoid Robots (Hu-manoids)\OT1/ptm/m/n/12 , 2022, pp. 801{
- []
-
-[16
+] [19
 
 ] (./main.aux)
 Package rerunfilecheck Info: File `main.out' has not changed.
@@ -1060,18 +1080,18 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 33609 strings out of 480247
- 662142 string characters out of 5896151
- 1358888 words of memory out of 5000000
- 50875 multiletter control sequences out of 15000+600000
- 503480 words of font info for 90 fonts, out of 8000000 for 9000
+ 33637 strings out of 480247
+ 662969 string characters out of 5896151
+ 1359553 words of memory out of 5000000
+ 50892 multiletter control sequences out of 15000+600000
+ 506965 words of font info for 101 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 84i,13n,83p,1142b,1302s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 84i,13n,83p,1380b,1302s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on main.pdf (17 pages, 2672743 bytes).
+Output written on main.pdf (20 pages, 3627691 bytes).
 PDF statistics:
- 456 PDF objects out of 1000 (max. 8388607)
- 370 compressed objects within 4 object streams
- 94 named destinations out of 1000 (max. 500000)
- 339 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 475 PDF objects out of 1000 (max. 8388607)
+ 383 compressed objects within 4 object streams
+ 99 named destinations out of 1000 (max. 500000)
+ 364 words of extra memory for PDF output out of 10000 (max. 10000000)
 

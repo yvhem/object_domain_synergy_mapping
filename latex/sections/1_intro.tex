@@ -1,20 +1,35 @@
 \chapter{Introduction}\label{ch:Intro}
 
-Robotic hands are becoming increasingly common in research and industry. Modern robotic hands often have many degrees of freedom (DoF) to imitate the dexterity of the human hand, which has over 20 DoF. However, controlling these high-DoF robotic hands is a complex task: while the human brain controls the hand easily using coordinated patterns called \textit{synergies} \cite{santello1998postural}, explicitly controlling 15 or more motors of a robotic hand would be impractical.
+Robotic hands are becoming increasingly common in research and industry. Modern robotic hands often have many degrees of freedom (DoF) to imitate the dexterity of the human hand, which has over 20 DoF (e.g., Figure \ref{fig:human_vs_robotic_hand} shows a typical example of robotic hand (right)). A high number of DoF provides greater dexterity and the ability to carry out complex manipulation tasks. In fact, as humans, we can perform a huge variety of grasps in a natural way. However, controlling all of these DoF individually is generally not feasible for a robotic hand, as it would require an impractical number of actuators: robotic hand models are generally \textit{underactuated}, meaning they have fewer actuators than DoF.
 
-This project addresses the problem of \textit{motion retargeting} from a human hand to a non-anthropomorphic robotic hand. The goal is to leverage human hand synergies to control a robotic hand with a different kinematic structure to that of the human hand. To do this, we use an object-based mapping approach called the \textit{virtual sphere} method \cite{gioioso2013mapping}, which focuses on the interaction between the hand and the object being manipulated.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.4\textwidth]{images/human_vs_robotic_hand.png}
+    \caption{Comparison between a human hand (left) and a robotic hand (right).}
+    \label{fig:human_vs_robotic_hand}
+\end{figure}
+
+This concept goes under the name of \textit{postural synergies} \cite{santello1998postural}: the human brain controls the hand easily using coordinated patterns, the synergies, that reduce the complexity of hand control.
+
+This project addresses the problem of \textit{motion retargeting} from a human hand to a robotic hand, which can also be non-anthropomorphic. The goal is to leverage the patterns described by the postural synergies to control a target robotic hand that has a different kinematic structure from that of the human hand. To do this, we use an object-based mapping approach called the \textit{virtual sphere} method \cite{gioioso2013mapping}, which focuses on the interaction between the hand and the object being manipulated, rather than on the specific structure of the hand itself.
 
 \section{The correspondence problem}
-A major challenge in teleoperation is the \textit{correspondence problem}. Human hands and robotic hands are rarely identical: they usually have different bone lengths, different types of joints, and a different number of fingers. Because of these differences, standard mapping techniques like mapping joint angles directly or mapping fingertip positions fail to accurately translate human motion.
+A major challenge in teleoperation is the \textit{correspondence problem}. Human hands and robotic hands are rarely identical: they usually have different bone lengths, different types of joints, and a different number of fingers. Because of these differences, standard mapping techniques like mapping joint angles directly or mapping fingertip positions fail to accurately translate human motion. To solve this, we adopt an approach proposed by Gioioso et al. \cite{gioioso2013mapping} that works in the \textit{object domain}. Instead of mapping the anatomy of the hand directly, we map the effect that the hand has on a virtual object (a sphere) held in the hand, as illustrated in Figure \ref{fig:synergy_control_robotic_hand}.
 
-To solve this, we adopt an approach proposed by Gioioso et al. \cite{gioioso2013mapping} that works in the \textit{object domain}. Instead of mapping the anatomy of the hand directly, we map the effect that the hand has on a virtual object (a sphere) held in the hand.
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/synergy_control_robotic_hand}
+    \caption{Schematic representation of the synergy-driven control of a robotic hand via the virtual sphere method. The human hand controls a virtual sphere, whose motion is then replicated by the robotic hand.}
+    \label{fig:synergy_control_robotic_hand}
+\end{figure}
+
 
 \section{Synergy-driven input}
 To control the robotic hand, we first need a reliable reconstruction of the human hand pose. In this project, we use the Weart TouchDIVER G1 haptic glove in Figure \ref{fig:weart_glove}, which provides the closure of three fingers (thumb, index, middle) and the abduction of the thumb, plus other measurements that are not of interest for this work.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.25\textwidth]{images/weart_glove} 
-    \caption{The Weart TouchDIVER G1 haptic glove. Image source: \cite{weart_website}.}
+    \caption{The Weart TouchDIVER G1 haptic glove. (Image source: \url{https://weart.it/task-operations/}).}
     \label{fig:weart_glove}
 \end{figure}
 
