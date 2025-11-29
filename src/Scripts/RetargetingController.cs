@@ -13,7 +13,7 @@ namespace WeArt.Components
 {
     public class RetargetingController : MonoBehaviour
     {
-        public enum ControlMode { Network, Dataset }
+        public enum ControlMode { Network, Dataset, WeArt}
 
         [Header("Control Mode")]
         public ControlMode inputSource = ControlMode.Network;
@@ -32,6 +32,11 @@ namespace WeArt.Components
         
         public Transform[] h_refPoints;     // ph
         private Vector3[] _h_prevPos;
+
+        [Header("WeArt Thimbles")]
+        [SerializeField] private WeArtThimbleTrackingObject thumbThimble;
+        [SerializeField] private WeArtThimbleTrackingObject indexThimble;
+        [SerializeField] private WeArtThimbleTrackingObject middleThimble;
 
         [Header("Robot configuration")]
         public Transform r_palm;
@@ -172,6 +177,9 @@ namespace WeArt.Components
 
             else if (inputSource == ControlMode.Dataset)
                 ProcessDatasetInput();
+            
+            else if (inputSource == ControlMode.WeArt)
+                ProcessWeArtInput();
 
             if (_hasData)
             {
@@ -285,6 +293,19 @@ namespace WeArt.Components
             }
         }
 
+        private void ProcessWeArtInput()
+        {
+            // Input in tempo reale dai thimble WeArt
+            if (thumbThimble != null)
+            {
+                _synergyInput[0] = thumbThimble.Closure.Value;
+                _synergyInput[3] = thumbThimble.Abduction.Value;
+            }
+            if (indexThimble != null)
+                _synergyInput[1] = indexThimble.Closure.Value;
+            if (middleThimble != null)
+                _synergyInput[2] = middleThimble.Closure.Value;
+        }
         private void ApplyFrameToInput(int index)
         {
             if (index < 0 || index >= _recordedFrames.Count) return;
