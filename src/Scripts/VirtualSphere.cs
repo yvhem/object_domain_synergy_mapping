@@ -6,10 +6,15 @@ using MathNet.Numerics.LinearAlgebra.Double;
 
 namespace WeArt.Components
 {
+    [RequireComponent(typeof(MeshFilter))]
+    [RequireComponent(typeof(MeshRenderer))]
     public class VirtualSphere : MonoBehaviour
     {
         public Vector3 LocalCenter { get; private set; } = Vector3.zero;
         public float Radius { get; private set; } = 0.05f;
+        
+        [Range(0.001f, 0.1f)] 
+        public float pointSize = 0.01f;
 
         [Header("Debug")]
         public bool showGizmos = true;
@@ -18,12 +23,34 @@ namespace WeArt.Components
         public Transform[] referencePoints;
 
         private Transform _palm;
+        private List<GameObject> _debugPointObjects = new List<GameObject>();
 
         void Awake()
         {
             _palm = transform.parent;
-            var rend = GetComponent<MeshRenderer>();
-            if (rend != null) rend.enabled = false;
+        }
+
+        void Update()
+        {
+            if (_palm == null)
+            {
+                _palm = transform.parent;
+                if (_palm == null) return;
+            }
+
+            UpdateSphere(_palm);
+
+            transform.localPosition = LocalCenter;
+            float diameter = Radius * 2f;
+            transform.localScale = Vector3.one * diameter;
+        }
+        
+        void OnDestroy()
+        {
+            foreach (var dot in _debugPointObjects)
+            {
+                if (dot != null) Destroy(dot);
+            }
         }
 
         public void UpdateSphere(Transform palm)
@@ -39,7 +66,6 @@ namespace WeArt.Components
             
             if (localPoints.Count < 2) return;
 
-            // Compute minimum enclosing ball
             var set = new ArrayPointSet(3, localPoints.Count); 
             for (int i = 0; i < localPoints.Count; i++)
             {
@@ -52,7 +78,7 @@ namespace WeArt.Components
             LocalCenter = new Vector3((float)mb.Center[0], (float)mb.Center[1], (float)mb.Center[2]);
             Radius = (float)mb.Radius;
         }
-        
+
         public Matrix<double> ComputeMatrixA(Transform palm)
         {
             var localPoints = new List<Vector3>();
@@ -92,7 +118,6 @@ namespace WeArt.Components
         void OnDrawGizmos()
         {
             if (!showGizmos || referencePoints == null || _palm == null) return;
-            
             if (!Application.isPlaying) UpdateSphere(_palm);
 
             Vector3 worldCenter = _palm.TransformPoint(LocalCenter);
@@ -101,12 +126,8 @@ namespace WeArt.Components
             Gizmos.color = new Color(1, 1, 0, 0.2f);
             Gizmos.DrawSphere(worldCenter, worldRadius);
             Gizmos.DrawWireSphere(worldCenter, worldRadius);
-            
-            Gizmos.color = Color.cyan;
-            foreach (var p in referencePoints)
-            {
-                if(p != null) Gizmos.DrawSphere(p.position, 0.005f);
-            }
         }
     }
 }
+
+        
