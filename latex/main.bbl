@@ -193,6 +193,68 @@
       \verb 10.1109/Humanoids53995.2022.10000165
       \endverb
     \endentry
+    \entry{bunny-visionpro}{article}{}
+      \name{author}{8}{}{%
+        {{hash=f393ece0fab0fcd542db917cc615ee69}{%
+           family={Ding},
+           familyi={D\bibinitperiod},
+           given={Runyu},
+           giveni={R\bibinitperiod}}}%
+        {{hash=90b5e5009800fc3991f5f2868b3e76e0}{%
+           family={Qin},
+           familyi={Q\bibinitperiod},
+           given={Yuzhe},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=aa7fb3e9e7b5eb447fdcd439cfb18408}{%
+           family={Zhu},
+           familyi={Z\bibinitperiod},
+           given={Jiyue},
+           giveni={J\bibinitperiod}}}%
+        {{hash=237620c5045a1b0b2ab4856bb59375a1}{%
+           family={Jia},
+           familyi={J\bibinitperiod},
+           given={Chengzhe},
+           giveni={C\bibinitperiod}}}%
+        {{hash=e3b1184276f2ab6cc2d132f92556be1a}{%
+           family={Yang},
+           familyi={Y\bibinitperiod},
+           given={Shiqi},
+           giveni={S\bibinitperiod}}}%
+        {{hash=530994f35dcd3db12eeca41b0a54f76e}{%
+           family={Yang},
+           familyi={Y\bibinitperiod},
+           given={Ruihan},
+           giveni={R\bibinitperiod}}}%
+        {{hash=b21d751b50214e5e719eb624ac756bc0}{%
+           family={Qi},
+           familyi={Q\bibinitperiod},
+           given={Xiaojuan},
+           giveni={X\bibinitperiod}}}%
+        {{hash=84a57ab121539e94069a33b4d40492c1}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Xiaolong},
+           giveni={X\bibinitperiod}}}%
+      }
+      \strng{namehash}{e9029b33e02a792e815bc218bc41519a}
+      \strng{fullhash}{2e3acf0ec44c39ec13285f0f6775524b}
+      \strng{bibnamehash}{e9029b33e02a792e815bc218bc41519a}
+      \strng{authorbibnamehash}{e9029b33e02a792e815bc218bc41519a}
+      \strng{authornamehash}{e9029b33e02a792e815bc218bc41519a}
+      \strng{authorfullhash}{2e3acf0ec44c39ec13285f0f6775524b}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Bunny-VisionPro: Real-Time Bimanual Dexterous Teleoperation for Imitation Learning}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/2407.03162
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/2407.03162
+      \endverb
+    \endentry
   \enddatalist
 \endrefsection
 \endinput

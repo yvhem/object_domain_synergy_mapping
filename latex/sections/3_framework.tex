@@ -86,7 +86,7 @@ The final control law for the robot joint velocities is obtained by inverting th
 where $\bs{J}_r^\#$ is the \textit{Damped Least Squares} (DLS) inverse of the robot Jacobian, which ensures numerical stability even when the robot is near singular configurations.
 
 \section{Redundancy resolution}
-In those scenarios where dexterous robotic hands are employed, one can exploit their kinematic redundancy to optimize their internal configuration while performing grasping tasks.
+In those scenarios where particularly dexterous robotic hands are employed, one can exploit their kinematic redundancy to optimize their internal configuration while performing grasping tasks.
 
 To achieve this, we can augment the control law derived in Eq. \ref{eq:robot_control_law} with a secondary objective using the \textit{null-space projection} method: we exploit the null space of the Jacobian to perform secondary tasks without affecting the primary goal of tracking the virtual sphere motion. The modified control law becomes:
 \begin{equation}\label{eq:redundant_control_law}

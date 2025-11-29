@@ -2365,10 +2365,12 @@
     <bcf:citekey order="15">primiceri2025motion</bcf:citekey>
     <bcf:citekey order="16">gioioso2013mapping</bcf:citekey>
     <bcf:citekey order="17">Fabisch2022</bcf:citekey>
-    <bcf:citekey order="18">gioioso2013mapping</bcf:citekey>
-    <bcf:citekey order="19">santello1998postural</bcf:citekey>
-    <bcf:citekey order="20">primiceri2025motion</bcf:citekey>
-    <bcf:citekey order="21">Fabisch2022</bcf:citekey>
+    <bcf:citekey order="18">bunny-visionpro</bcf:citekey>
+    <bcf:citekey order="19">gioioso2013mapping</bcf:citekey>
+    <bcf:citekey order="20">santello1998postural</bcf:citekey>
+    <bcf:citekey order="21">primiceri2025motion</bcf:citekey>
+    <bcf:citekey order="22">Fabisch2022</bcf:citekey>
+    <bcf:citekey order="23">bunny-visionpro</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="none">

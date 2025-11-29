@@ -25,11 +25,22 @@
 \contentsline {section}{\numberline {4.4}Robot models}{14}{section.4.4}%
 \contentsline {subsection}{\numberline {4.4.1}Barrett Hand}{14}{subsection.4.4.1}%
 \contentsline {paragraph}{Kinematics}{14}{section*.16}%
-\contentsline {paragraph}{Actuation}{14}{section*.17}%
+\contentsline {paragraph}{Actuation}{15}{section*.17}%
 \contentsline {subsection}{\numberline {4.4.2}Mia Hand}{15}{subsection.4.4.2}%
-\contentsline {paragraph}{Kinematics}{15}{section*.19}%
-\contentsline {paragraph}{Actuation}{15}{section*.20}%
-\contentsline {chapter}{\numberline {5}Results}{17}{chapter.5}%
-\contentsline {chapter}{\numberline {6}Conclusion}{18}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Summary}{18}{section.6.1}%
-\contentsline {section}{\numberline {6.2}Future work}{18}{section.6.2}%
+\contentsline {paragraph}{Kinematics}{16}{section*.19}%
+\contentsline {paragraph}{Actuation}{16}{section*.20}%
+\contentsline {subsection}{\numberline {4.4.3}Shadow Dexterous Hand}{16}{subsection.4.4.3}%
+\contentsline {paragraph}{Kinematics}{16}{section*.22}%
+\contentsline {paragraph}{Actuation}{16}{section*.23}%
+\contentsline {section}{\numberline {4.5}Evaluation metrics}{17}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}Geometry metrics}{17}{subsection.4.5.1}%
+\contentsline {paragraph}{Radius error}{17}{section*.24}%
+\contentsline {paragraph}{Position variation error}{17}{section*.25}%
+\contentsline {paragraph}{Rotation variation error}{17}{section*.26}%
+\contentsline {subsection}{\numberline {4.5.2}Energy metrics}{18}{subsection.4.5.2}%
+\contentsline {paragraph}{Elastic energy error}{18}{section*.27}%
+\contentsline {paragraph}{Relative percentage error}{18}{section*.28}%
+\contentsline {chapter}{\numberline {5}Results}{19}{chapter.5}%
+\contentsline {chapter}{\numberline {6}Conclusion}{20}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Summary}{20}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Future work}{20}{section.6.2}%

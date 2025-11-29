@@ -1,6 +1,6 @@
 \chapter{Experimental setup}\label{Ch:setup}
 
-In this chapter, we describe the complete hardware and software architecture developed to validate the proposed retargeting framework. We will go through the data flow from the input device to the simulation environment, the software implementation of the control algorithms, and the specific robotic hand models used in the experiments.
+In this chapter, we describe the complete hardware and software architecture developed to validate the proposed retargeting framework. We will first go through the data flow from the input device to the simulation environment, delve into the software implementation of the control algorithm, present the specific robotic hand models used in our experiments, and finally define the metrics employed to evaluate the performance of the whole architecture.
 
 \section{System overview}
 The motion retargeting pipeline shown in Figure \ref{fig:system_overview} is designed as a modular system composed of three main blocks: the \textit{input layer} (haptic glove and reconstruction server), the \textit{retargeting layer} (unity simulation and retargeting logic), and the \textit{output layer} (robotic hand models).
@@ -112,7 +112,7 @@ This script is attached to both the human hand and the robotic hand, providing t
 \paragraph{Code} The complete source code developed for this project is open source and available on GitHub. \footnote{\url{https://github.com/yvhem/object_domain_synergy_mapping}}.
 
 \section{Robot models}
-To evaluate the flexibility of the object-based retargeting approach \cite{gioioso2013mapping}, we selected robotic hands with significantly different kinematic structures to that of the human hand. In our experiments, we used two specific models: the \textit{Barrett Hand} and the \textit{Mia Hand}, whose kinematic descriptions (URDF models) were obtained from the embodiment framework by Fabisch et al. \cite{Fabisch2022}.
+To evaluate the flexibility of the object-based retargeting approach \cite{gioioso2013mapping}, we selected robotic hands with significantly different kinematic structures to that of the human hand. In our experiments, we used three specific models: the \textit{Barrett Hand}, the \textit{Mia Hand}, and the \textit{Shadow Dexterous Hand}. The kinematic descriptions (URDF models) for the Barrett and Mia hands were obtained from the embodiment framework by Fabisch et al. \cite{Fabisch2022}, while the Shadow Hand model was sourced from the Bunny-VisionPro framework \cite{bunny-visionpro}. All of them provide a full implementation of the physical properties (dynamics, collisions, limits, etc.) for realistic experiments, and were imported into Unity using the \textit{URDF Importer} package.
 
 \subsection{Barrett Hand}
 The \textit{Barrett Hand} (Figure \ref{fig:barrett_hand}) is a multi-fingered programmable grasper whose kinematic structure is deeply different from the human hand, making it an interesting candidate for testing the robustness of the virtual sphere retargeting method.
@@ -122,23 +122,23 @@ The \textit{Barrett Hand} (Figure \ref{fig:barrett_hand}) is a multi-fingered pr
     \begin{subfigure}[b]{0.45\textwidth}
         \centering
         \includegraphics[width=0.55\textwidth]{images/barrett_hand1}
-        \caption{Kinematic structure (source: ROS.org)}
+        \caption{Kinematic structure}
         \label{fig:barrett_structure}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.45\textwidth}
         \centering
-        \includegraphics[width=0.95\textwidth]{images/barrett_hand2}
-        \caption{Grasping an egg (source: Barrett Technology)}
+        \includegraphics[width=0.9\textwidth]{images/barrett_hand2}
+        \caption{Grasping an egg}
         \label{fig:barrett_grasp}
     \end{subfigure}
-    \caption{The Barrett Hand. (a) shows the hand in an open configuration, highlighting the three-finger design. (b) demonstrates the adaptability of the hand grasping an egg.}
+    \caption{The Barrett Hand. (a) shows the hand in an open configuration, highlighting the three-finger design (Source: ROS.org). (b) demonstrates the adaptability of the hand grasping an egg (Source: Barrett Technology).}
     \label{fig:barrett_hand}
 \end{figure}
 
 \paragraph{Kinematics} It consists of three fingers: one finger is fixed, while the other two can rotate synchronously around the palm (\textit{spread motion}) up to $180^\circ$. This allows the hand to change its configuration dynamically, switching from a parallel grasp with the three fingers aligned, to an opposition grasp with the two rotating fingers opposing the fixed one.
 
-\paragraph{Actuation} The hand has 8 axes of motion but is \textit{underactuated}, driven by only 4 motors: one controls the spread of the two movable fingers, and the other three control the flexion of each finger independently. \footnote{BarrettHand BH8-282 specifications: \url{https://barrett.com/barretthand}} A proprietary "\textit{TorqueSwitch}" mechanism couples the proximal and distal links: the distal link remains stationary until the proximal link encounters resistance, at which point the distal link curls to enclose the object. However, we are interested in evaluating the retargeting performance based on kinematics alone; therefore, in our kinematic model of the Barrett Hand, we treat all 8 axes as independent degrees of freedom.
+\paragraph{Actuation} The hand has 8 axes of motion but is \textit{underactuated}, driven by only 4 motors: one controls the spread of the two movable fingers, and the other three control the flexion of each finger independently. \footnote{BarrettHand BH8-282 specs: \url{https://barrett.com/barretthand}} A proprietary "\textit{TorqueSwitch}" mechanism couples the proximal and distal links: the distal link remains stationary until the proximal link encounters resistance, at which point the distal link curls to enclose the object. However, we are interested in evaluating the retargeting performance based on kinematics alone; therefore, in our kinematic model of the Barrett Hand, we treat all 8 axes as independent degrees of freedom.
 
 \subsection{Mia Hand}
 The \textit{Mia Hand} (Figure \ref{fig:mia_hand}) by Prensilia is an anthropomorphic end-effector designed primarily for prosthetics and research applications. Unlike the Barrett Hand, the Mia Hand has a kinematic structure that resembles that of the human hand, although with less dexterity.
@@ -148,20 +148,104 @@ The \textit{Mia Hand} (Figure \ref{fig:mia_hand}) by Prensilia is an anthropomor
     \begin{subfigure}[b]{0.4\textwidth}
         \centering
         \includegraphics[width=0.8\textwidth]{images/mia_hand}
-        \caption{Anthropomorphic structure (source: Prensilia)}
+        \caption{Anthropomorphic structure}
         \label{fig:mia_structure}
     \end{subfigure}
     \hspace{1cm}
     \begin{subfigure}[b]{0.4\textwidth}
         \centering
         \includegraphics[width=0.8\textwidth]{images/mia_hand_cylindrical_grip}
-        \caption{Cylindrical grasp (source: Prensilia)}
+        \caption{Cylindrical grasp}
         \label{fig:mia_cylindrical}
     \end{subfigure}
-    \caption{The Mia Hand. (a) shows the hand's resting posture, highlighting the mechanical design and soft pads. (b) shows the hand performing a cylindrical grasp, demonstrating finger coordination.}
+    \caption{The Mia Hand. (a) shows the hand's resting posture, highlighting the mechanical design and soft pads. (b) shows the hand performing a cylindrical grasp, demonstrating finger coordination. Source: Prensilia.}
     \label{fig:mia_hand}
 \end{figure}
 
-\paragraph{Kinematics} The Mia Hand's dimensions are similar to an average human hand (palm width 83 mm). It consists of five fingers and an opposable thumb, designed to perform various grasp types such as cylindrical, spherical, and lateral grasps. \footnote{Technical specifications of the Mia Hand can be found at: \url{https://prensilia.com}}
+\paragraph{Kinematics} The Mia Hand's dimensions are similar to an average human hand (palm width 83 mm). It consists of five fingers and an opposable thumb, designed to perform various grasp types such as cylindrical, spherical, and lateral grasps. \footnote{Technical specification of the Mia Hand can be found at: \url{https://www.mia-hand.com/}}
 
-\paragraph{Actuation} To keep a lightweight profile (approx. 540 g), the Mia Hand employs an underactuated mechanism driven by 3 motors actuating the flexion/extension of the fingers and the opposition of the thumb. Again, like for the Barrett Hand, in our simulation we treat the hand's kinematic chain as fully articulated, meaning we control the individual joints of the fingers independently. Consequently, the kinematic model has more degrees of freedom ($N \approx 15$) than the virtual sphere task ($N=7$), making the system \textit{kinematically redundant} with respect to it. We therefore employ the redundancy resolution strategy described in Chapter \ref{Ch:framework} to distribute the motion among the joints, keepeing them away from their mechanical limits while tracking the object deformation.
+\paragraph{Actuation} To keep a lightweight profile (approx. 540 g), the Mia Hand employs an underactuated mechanism driven by 3 motors actuating the flexion/extension of the fingers and the opposition of the thumb. Again, like for the Barrett Hand, in our simulation we treat the hand's kinematic chain as fully articulated, meaning we control the individual joints of the fingers independently. Consequently, the kinematic model has more degrees of freedom ($N \approx 15$) than the virtual sphere task ($N=7$), making the system \textit{kinematically redundant} with respect to it. We therefore employ the redundancy resolution strategy described in Chapter \ref{Ch:framework} to distribute the motion among the joints, keeping them away from their mechanical limits while tracking the object deformation.
+
+\subsection{Shadow Dexterous Hand}
+The \textit{Shadow Dexterous Hand} (Figure \ref{fig:shadow_hand}) is one of the most advanced anthropomorphic end-effectors available on the market, designed to reproduce the kinematics and dexterity of the human hand as closely as possible.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, height=5cm, keepaspectratio]{images/shadow_hand1}
+        \caption{Open configuration}
+        \label{fig:shadow_side}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, height=5cm, keepaspectratio]{images/shadow_hand2}
+        \caption{Tool use}
+        \label{fig:shadow_tool}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, height=5cm, keepaspectratio]{images/shadow_hand3}
+        \caption{Grasping an object}
+        \label{fig:shadow_grasp}
+    \end{subfigure}
+    \caption{The Shadow Dexterous Hand. Its 24 degrees of freedom allow it to perform complex manipulation tasks, from power grasps to precision tool use. Source: Shadow Robot.}
+    \label{fig:shadow_hand}
+\end{figure}
+
+\paragraph{Kinematics} The Shadow Hand has 24 joints (actuated and passive) providing 20 independent degrees of freedom: the thumb has 5 joints and 5 DoF, allowing for complex opposition movements, while each of the four fingers has 4 joints but only 3 DoF due to the mechanical coupling of the distal joint (DIP) and the middle joint (PIP). This design ensures that the angle of the middle joint is always greater than or equal to that of the distal joint, mimicking the natural behavior of human fingers. The little finger has an extra joint in the palm to allow for opposition (forming a palm arch). The wrist provides 2 DoF. 
+
+\paragraph{Actuation} Unlike most robotic hands such as the Barrett and Mia hands, which are underactuated, the Shadow Hand is fully actuated. Indeed, it is driven by 20 electric "\textit{Smart Motors}" located in the forearm base, which transmit force to the joints via tendons. \footnote{Shadow Dexterous Hand technical specification: \url{https://shadowrobot.com/}} This high number of degrees of freedom makes the Shadow Hand highly \textit{kinematically redundant} with respect to the 7-DoF virtual sphere task. Therefore, the redundancy resolution strategy defined in Eq. \refeq{eq:redundant_control_law} becomes crucial to stabilize the internal configuration of the hand keeping the 20 actuated joints away from their mechanical limits, while the virtual sphere accurately defines the overall grasp shape.
+
+\section{Evaluation metrics}
+To quantitatively assess the performance of the retargeting algorithm, we define a set of metrics that measure how well the robotic hand tracks the desired object deformation and how effectively it uses its kinematic capabilities. Since the virtual sphere represents the core of our control strategy, these metrics focus on comparing the state of the virtual sphere of the robot against that of the human over time.
+
+We define $t_0$ as the start time of the experiment. The subscripts $H$ and $R$ denote the Human (reference) and Robot (measured) quantities, respectively.
+
+\subsection{Geometry metrics}
+These metrics evaluate how accurately the robotic hand tracks the translation, rotation, and deformation of the virtual object.
+
+\paragraph{Radius error} This metric measures the ability of the system to replicate the scaling of the sphere, namely opening and closing of the hand. Since the robot and human hands have different sizes, the radius of the human sphere $r_H$ must be scaled by a factor $k_{sc}$ (defined in Eq. \ref{eq:scaling_factor}) before comparison. The absolute radius error $e_\text{rad}(t)$ is defined as:
+\begin{equation}
+    e_\text{rad}(t) = |r_R(t) - k_{sc}r_H(t)|
+\end{equation}
+
+\paragraph{Position variation error} This metric assesses the "drift" of the object within the hand. Ideally, if the human hand translates the sphere by a certain vector, the robot should replicate that same displacement vector. We therefore compare the displacement relative to the initial position at $t_0$ to account for different starting offsets in the workspace.
+
+Let $\bs{p}(t) = [x,y,z]^T$ be the position of the sphere center. The relative displacement is defined as:
+\[ \Delta \bs{p}(t) = \bs{p}(t) - \bs{p}(t_0) \]
+
+The position variation error $e_\text{pos}(t)$ is then obtained as the magnitude of the difference between the human and robot relative displacements:
+\begin{equation}
+    e_\text{pos}(t) = ||\Delta \bs{p}_H(t) - \Delta \bs{p}_R(t)||
+\end{equation}
+
+\paragraph{Rotation variation error} This metric evaluates the tracking of the sphere's orientation. Let $\bs{q}(t)$ be the quaternion representing the sphere's rotation. The relative rotation from $t_0$ is computed as:
+\[ \bs{q}_\text{rel}(t) = \bs{q}(t) \otimes \bs{q}(t_0)^{-1} \]
+where $\otimes$ denotes quaternion multiplication and $^{-1}$ denotes the quaternion conjugate.
+
+We define an extraction operator $\Phi(\bs{q})$ that returns the rotation angle (magnitude) from a quaternion:
+\[ \Phi(\bs{q}) = 2\arccos(q_w) \]
+
+The rotation error $e_\text{rot}(t)$ is then defined as the angle of the difference quaternion between the human and robot relative rotations:
+\begin{equation}
+    \bs{q}_\text{diff}(t) = \bs{q}_{R, \text{rel}}(t) \otimes \bs{q}_{H, \text{rel}}(t)^{-1} \quad \Rightarrow \quad e_\text{rot}(t) = \Phi(\bs{q}_\text{diff}(t))
+\end{equation}
+
+\subsection{Energy metrics}
+Besides the geometry of the virtual sphere, we are also interested in evaluating the \textit{intensity} of the grasp. In the virtual sphere framework, the squeezing of the object corresponds to an accumulation of elastic potential energy in the virtual stiffness model.
+
+\paragraph{Elastic energy error} Let $U_H(t)$ be the reference energy generated by the human grasp and $U_R(t)$ be the actual energy stored in the robotic grasp. The absolute energy error is:
+\begin{equation}
+    e_\text{energy}(t) = |U_R(t) - U_H(t)|
+\end{equation}
+
+\paragraph{Relative percentage error} To normalize the energy performance, we compute the relative percentage error. To avoid numerical instability when the energy is near zero (e.g., when the hand is open), we introduce a small constant $\epsilon=1 \times 10^{-9}$ and apply a conditional mask to zero out the error during idle phases (when $U_H(t) \leq 5\%$ of its maximum).
+\begin{equation}
+    e_{\%}(t) = \frac{|U_R(t) - U_H(t)|}{U_H(t) + \epsilon} \times 100
+\end{equation}
+
+Finally, for an easy interpretation of the results, we smooth the percentage error using a moving average filter $\mathcal{S}$ over a window of 10 frames:
+\[ e_{\%, \text{smooth}}(t) = \mathcal{S}(e_{\%}(t)) \]
