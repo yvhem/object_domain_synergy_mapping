@@ -8,9 +8,6 @@ from scipy.spatial.transform import Rotation as R
 from matplotlib.animation import FuncAnimation
 from tqdm import tqdm
 
-
-# --- Data Processing Functions ---
-
 def read_csv(csv_path):
     df = pd.read_csv(csv_path)
     # Radius, Position and Rotation
@@ -27,18 +24,24 @@ def read_csv(csv_path):
     time = df['Time']
     return df, time, h_radius, r_radius, h_energy, r_energy, h_pos, r_pos, h_rot, r_rot, k
 
+def preprocess(h_radius, r_radius, r_energy, r_pos, r_rot, verbose, enable_shift=True):
+    shift_idx = 0
 
-def preprocess(h_radius, r_radius, r_energy, r_pos, r_rot, verbose):
-    h_mid = (h_radius.max() + h_radius.min()) / 2.0
-    r_mid = (r_radius.max() + r_radius.min()) / 2.0
-    idx_mid_h = (np.abs(h_radius - h_mid)).argmin()
-    idx_mid_r = (np.abs(r_radius - r_mid)).argmin()
-    shift_idx = idx_mid_r - idx_mid_h
+    if enable_shift:
+        h_mid = (h_radius.max() + h_radius.min()) / 2.0
+        r_mid = (r_radius.max() + r_radius.min()) / 2.0
+        idx_mid_h = (np.abs(h_radius - h_mid)).argmin()
+        idx_mid_r = (np.abs(r_radius - r_mid)).argmin()
+        shift_idx = idx_mid_r - idx_mid_h
+    elif verbose:
+        print("Shifting disabled by user.")
 
-    if verbose:
+    if verbose and enable_shift:
         print(f"Shift Applied: {shift_idx} frames")
 
     def shift_array(arr, shift):
+        if shift == 0:
+            return arr
         result = np.roll(arr, -shift, axis=0)
         if shift > 0:
             result[-shift:] = result[-shift - 1]
@@ -59,6 +62,7 @@ def compute_metrics(h_radius, aligned_r_radius, h_pos, aligned_r_pos, h_rot, ali
     # Radius
     scaled_h_radius = h_radius * k
     rad_error = np.abs(aligned_r_radius - scaled_h_radius)
+
     # Position
     h_start_pos = h_pos[0]
     r_start_pos = aligned_r_pos[0]
@@ -68,6 +72,7 @@ def compute_metrics(h_radius, aligned_r_radius, h_pos, aligned_r_pos, h_rot, ali
     r_move_mag = np.linalg.norm(r_delta_vec, axis=1)
     var_diff_vec = h_delta_vec - r_delta_vec
     pos_error_var = np.linalg.norm(var_diff_vec, axis=1)
+
     # Rotation
     rot_h_obj = R.from_euler('xyz', h_rot, degrees=True)
     rot_r_obj = R.from_euler('xyz', aligned_r_rot, degrees=True)
@@ -79,9 +84,11 @@ def compute_metrics(h_radius, aligned_r_radius, h_pos, aligned_r_pos, h_rot, ali
     r_excursion = np.degrees(r_rel.magnitude())
     diff_rel = r_rel * h_rel.inv()
     rot_error_var = np.degrees(diff_rel.magnitude())
+
     # Energy
     exp_r_energy = h_energy
     energy_delta = np.abs(aligned_r_energy - exp_r_energy)
+
     # Energy %
     epsilon = 1e-9
     energy_pct = (energy_delta / (exp_r_energy + epsilon)) * 100.0
@@ -229,7 +236,7 @@ class ResultVisualizer:
         plt.show()
 
 
-def main(csv_path, anim_fps, verbose):
+def main(csv_path, anim_fps, verbose, no_shift):
     if not os.path.exists(csv_path):
         print(f"File not found: {csv_path}")
         return
@@ -240,13 +247,20 @@ def main(csv_path, anim_fps, verbose):
         print(f"CSV Reading Error: {e}")
         return
 
-    aligned_r_radius, aligned_r_energy, aligned_r_pos, aligned_r_rot = preprocess(h_radius, r_radius, r_energy, r_pos, r_rot, verbose)
+    # Pass 'not no_shift' because enable_shift should be True if no_shift is False
+    enable_shift = not no_shift
+    aligned_r_radius, aligned_r_energy, aligned_r_pos, aligned_r_rot = preprocess(
+        h_radius, r_radius, r_energy, r_pos, r_rot, verbose, enable_shift
+    )
 
     # Compute metrics
-    radius_data, pos_data, rot_data, energy_data, en_pct = compute_metrics(h_radius, aligned_r_radius, h_pos, aligned_r_pos, h_rot, aligned_r_rot, h_energy, aligned_r_energy, k)
+    radius_data, pos_data, rot_data, energy_data, en_pct = compute_metrics(
+        h_radius, aligned_r_radius, h_pos, aligned_r_pos, h_rot, aligned_r_rot, h_energy, aligned_r_energy, k
+    )
 
     if verbose:
         print("=" * 40 + "\n      GLOBAL RMSE SUMMARY       \n" + "=" * 40)
+        print(f"Shifting Enabled:  {enable_shift}")
         print(f"Radius RMSE:       {np.sqrt(np.mean(radius_data[2] ** 2)):.5f} m")
         print(f"Pos Variation RMSE:{np.sqrt(np.mean(pos_data[2] ** 2)):.5f} m")
         print(f"Rot Variation RMSE:{np.sqrt(np.mean(rot_data[2] ** 2)):.5f} deg")
@@ -257,11 +271,13 @@ def main(csv_path, anim_fps, verbose):
     viz = ResultVisualizer(time, radius_data, pos_data, rot_data, energy_data, en_pct, anim_fps)
 
     # Save Animation
-    save_path_anim = os.path.splitext(csv_path)[0] + "_video.mp4"
+    aniext = "_no-shift_video.mp4" if no_shift else "_video.mp4"
+    save_path_anim = os.path.splitext(csv_path)[0] + aniext
     viz.save_animation(save_path_anim)
 
     # Save Static Plot
-    save_path_static = os.path.splitext(csv_path)[0] + ".png"
+    plotext = "_no-shift.png" if no_shift else ".png"
+    save_path_static = os.path.splitext(csv_path)[0] + plotext
     viz.save_static(save_path_static)
 
     # Show
@@ -271,8 +287,10 @@ def main(csv_path, anim_fps, verbose):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("path", help="CSV file path")
-    parser.add_argument("anim_fps", help="Animation FPS", default=60)
+    parser.add_argument("--fps", help="Animation FPS", default=60)
     parser.add_argument("-v", "--verbose", action="store_true", help="Print details")
+    parser.add_argument("--no-shift", action="store_true", help="Disable automatic time shifting/alignment")
+
     args = parser.parse_args()
 
-    main(args.path, args.anim_fps, args.verbose)
+    main(args.path, args.fps, args.verbose, args.no_shift)
