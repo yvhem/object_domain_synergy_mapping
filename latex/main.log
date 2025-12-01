@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2025.8.12)  29 NOV 2025 17:44
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2025.8.12)  1 DEC 2025 12:35
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**"/home/yvhem/OneDrive/Uni/AIRO/Medical Robotics/project/object_domain_synergy_mapping/latex/main.tex"
-(/home/yvhem/OneDrive/Uni/AIRO/Medical Robotics/project/object_domain_synergy_mapping/latex/main.tex
+**"/home/yvhem/OneDrive/Uni/AIRO/Medical Robotics/object_domain_synergy_mapping/latex/main.tex"
+(/home/yvhem/OneDrive/Uni/AIRO/Medical Robotics/object_domain_synergy_mapping/latex/main.tex
 LaTeX2e <2021-11-15> patch level 1
 L3 programming layer <2022-01-21> (/usr/share/texlive/texmf-dist/tex/latex/base/report.cls
 Document Class: report 2021/10/04 v1.4n Standard LaTeX document class
@@ -955,7 +955,7 @@ Package biblatex Info: ... file 'main.bbl' found.
 Package biblatex Info: Reference section=0 on input line 37.
 Package biblatex Info: Reference segment=0 on input line 37.
  (./sections/0_titlePage.tex
-<images/logo.png, id=147, 247.92625pt x 72.27pt>
+<images/logo.png, id=155, 247.92625pt x 72.27pt>
 File: images/logo.png Graphic file (type png)
 <use images/logo.png>
 Package pdftex.def Info: images/logo.png  used on input line 5.
@@ -982,7 +982,7 @@ l.1 \chapter
 
 ]
 Chapter 1.
-<images/human_vs_robotic_hand.png, id=195, 614.295pt x 409.53pt>
+<images/human_vs_robotic_hand.png, id=205, 614.295pt x 409.53pt>
 File: images/human_vs_robotic_hand.png Graphic file (type png)
 <use images/human_vs_robotic_hand.png>
 Package pdftex.def Info: images/human_vs_robotic_hand.png  used on input line 7.
@@ -990,12 +990,12 @@ Package pdftex.def Info: images/human_vs_robotic_hand.png  used on input line 7.
 [2
 
  <./images/human_vs_robotic_hand.png>]
-<images/synergy_control_robotic_hand.png, id=207, 2055.68pt x 684.5575pt>
+<images/synergy_control_robotic_hand.png, id=217, 2055.68pt x 684.5575pt>
 File: images/synergy_control_robotic_hand.png Graphic file (type png)
 <use images/synergy_control_robotic_hand.png>
 Package pdftex.def Info: images/synergy_control_robotic_hand.png  used on input line 21.
 (pdftex.def)             Requested size: 318.66948pt x 106.11575pt.
-<images/weart_glove.png, id=209, 520.94624pt x 586.19pt>
+<images/weart_glove.png, id=219, 520.94624pt x 586.19pt>
 File: images/weart_glove.png Graphic file (type png)
 <use images/weart_glove.png>
 Package pdftex.def Info: images/weart_glove.png  used on input line 31.
@@ -1005,7 +1005,7 @@ LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 32
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 ) [3 <./images/synergy_control_robotic_hand.png> <./images/weart_glove.png>]) (./sections/2_background.tex [4]
 Chapter 2.
-<images/synergies_visual.png, id=237, 921.4425pt x 704.6325pt>
+<images/synergies_visual.png, id=247, 921.4425pt x 704.6325pt>
 File: images/synergies_visual.png Graphic file (type png)
 <use images/synergies_visual.png>
 Package pdftex.def Info: images/synergies_visual.png  used on input line 12.
@@ -1013,7 +1013,7 @@ Package pdftex.def Info: images/synergies_visual.png  used on input line 12.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-<images/synergies_block_diagram.png, id=238, 477.28313pt x 556.32843pt>
+<images/synergies_block_diagram.png, id=248, 477.28313pt x 556.32843pt>
 File: images/synergies_block_diagram.png Graphic file (type png)
 <use images/synergies_block_diagram.png>
 Package pdftex.def Info: images/synergies_block_diagram.png  used on input line 19.
@@ -1022,7 +1022,7 @@ Package pdftex.def Info: images/synergies_block_diagram.png  used on input line 
 
 ] [6 <./images/synergies_visual.png>]) (./sections/3_framework.tex [7 <./images/synergies_block_diagram.png (PNG copy)>]
 Chapter 3.
-<images/vsm_reference_points.jpg, id=267, 1612.0225pt x 750.805pt>
+<images/vsm_reference_points.jpg, id=277, 1612.0225pt x 750.805pt>
 File: images/vsm_reference_points.jpg Graphic file (type jpg)
 <use images/vsm_reference_points.jpg>
 Package pdftex.def Info: images/vsm_reference_points.jpg  used on input line 10.
@@ -1041,73 +1041,77 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 [12
 
 ] [13]
-<images/barrett_hand1.png, id=344, 803.0pt x 985.6825pt>
+<images/barrett_hand1.png, id=354, 803.0pt x 985.6825pt>
 File: images/barrett_hand1.png Graphic file (type png)
 <use images/barrett_hand1.png>
 Package pdftex.def Info: images/barrett_hand1.png  used on input line 124.
 (pdftex.def)             Requested size: 112.67278pt x 138.29541pt.
-<images/barrett_hand2.png, id=345, 481.8pt x 306.4248pt>
+<images/barrett_hand2.png, id=355, 481.8pt x 306.4248pt>
 File: images/barrett_hand2.png Graphic file (type png)
 <use images/barrett_hand2.png>
 Package pdftex.def Info: images/barrett_hand2.png  used on input line 131.
 (pdftex.def)             Requested size: 184.37135pt x 117.2562pt.
  [14]
-<images/mia_hand.png, id=363, 1204.5pt x 1204.5pt>
+<images/mia_hand.png, id=373, 1204.5pt x 1204.5pt>
 File: images/mia_hand.png Graphic file (type png)
 <use images/mia_hand.png>
 Package pdftex.def Info: images/mia_hand.png  used on input line 150.
 (pdftex.def)             Requested size: 145.67644pt x 145.67326pt.
-<images/mia_hand_cylindrical_grip.png, id=364, 1505.625pt x 1709.38625pt>
+<images/mia_hand_cylindrical_grip.png, id=374, 1505.625pt x 1709.38625pt>
 File: images/mia_hand_cylindrical_grip.png Graphic file (type png)
 <use images/mia_hand_cylindrical_grip.png>
 Package pdftex.def Info: images/mia_hand_cylindrical_grip.png  used on input line 157.
 (pdftex.def)             Requested size: 145.67644pt x 165.36685pt.
  [15 <./images/barrett_hand1.png> <./images/barrett_hand2.png> <./images/mia_hand.png> <./images/mia_hand_cylindrical_grip.png>]
-<images/shadow_hand1.png, id=377, 903.375pt x 668.4975pt>
+<images/shadow_hand1.png, id=387, 903.375pt x 668.4975pt>
 File: images/shadow_hand1.png Graphic file (type png)
 <use images/shadow_hand1.png>
 Package pdftex.def Info: images/shadow_hand1.png  used on input line 176.
 (pdftex.def)             Requested size: 136.57558pt x 101.06593pt.
-<images/shadow_hand2.png, id=378, 1666.225pt x 898.35625pt>
+<images/shadow_hand2.png, id=388, 1666.225pt x 898.35625pt>
 File: images/shadow_hand2.png Graphic file (type png)
 <use images/shadow_hand2.png>
 Package pdftex.def Info: images/shadow_hand2.png  used on input line 183.
 (pdftex.def)             Requested size: 136.55505pt x 73.62456pt.
-<images/shadow_hand3.png, id=379, 150.5625pt x 376.40625pt>
+<images/shadow_hand3.png, id=389, 150.5625pt x 376.40625pt>
 File: images/shadow_hand3.png Graphic file (type png)
 <use images/shadow_hand3.png>
 Package pdftex.def Info: images/shadow_hand3.png  used on input line 190.
 (pdftex.def)             Requested size: 56.90648pt x 142.26622pt.
- [16 <./images/shadow_hand1.png> <./images/shadow_hand2.png> <./images/shadow_hand3.png>] [17]) (./sections/5_results.tex [18]
+ [16 <./images/shadow_hand1.png> <./images/shadow_hand2.png> <./images/shadow_hand3.png>] [17] [18]
+LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 268.
+ (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ts1ptm.fd
+File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
+)) (./sections/5_results.tex [19]
 Chapter 5.
-) (./sections/6_conclusion.tex [19
+) (./sections/6_conclusion.tex [20
 
 ]
 Chapter 6.
-) [20
+) [21
 
-] [21
+] [22
 
 ] (./main.aux)
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 6B8C3423DC7EAFE106853586189EB85E;4065.
+(rerunfilecheck)             Checksum: E0F036E7854FB072555A20A929D708A6;4421.
 Package logreq Info: Writing requests to 'main.run.xml'.
 \openout1 = `main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 33706 strings out of 480247
- 664477 string characters out of 5896151
- 1361002 words of memory out of 5000000
- 50937 multiletter control sequences out of 15000+600000
- 506965 words of font info for 101 fonts, out of 8000000 for 9000
+ 33739 strings out of 480247
+ 664937 string characters out of 5896151
+ 1360005 words of memory out of 5000000
+ 50961 multiletter control sequences out of 15000+600000
+ 507279 words of font info for 102 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 84i,13n,83p,1381b,1304s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 84i,13n,83p,1373b,1304s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on main.pdf (22 pages, 4445041 bytes).
+Output written on main.pdf (23 pages, 4451283 bytes).
 PDF statistics:
- 537 PDF objects out of 1000 (max. 8388607)
- 436 compressed objects within 5 object streams
- 120 named destinations out of 1000 (max. 500000)
- 411 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 554 PDF objects out of 1000 (max. 8388607)
+ 452 compressed objects within 5 object streams
+ 125 named destinations out of 1000 (max. 500000)
+ 427 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -197,7 +197,7 @@ The \textit{Shadow Dexterous Hand} (Figure \ref{fig:shadow_hand}) is one of the 
 
 \paragraph{Kinematics} The Shadow Hand has 24 joints (actuated and passive) providing 20 independent degrees of freedom: the thumb has 5 joints and 5 DoF, allowing for complex opposition movements, while each of the four fingers has 4 joints but only 3 DoF due to the mechanical coupling of the distal joint (DIP) and the middle joint (PIP). This design ensures that the angle of the middle joint is always greater than or equal to that of the distal joint, mimicking the natural behavior of human fingers. The little finger has an extra joint in the palm to allow for opposition (forming a palm arch). The wrist provides 2 DoF. 
 
-\paragraph{Actuation} Unlike most robotic hands such as the Barrett and Mia hands, which are underactuated, the Shadow Hand is fully actuated. Indeed, it is driven by 20 electric "\textit{Smart Motors}" located in the forearm base, which transmit force to the joints via tendons. \footnote{Shadow Dexterous Hand technical specification: \url{https://shadowrobot.com/}} This high number of degrees of freedom makes the Shadow Hand highly \textit{kinematically redundant} with respect to the 7-DoF virtual sphere task. Therefore, the redundancy resolution strategy defined in Eq. \refeq{eq:redundant_control_law} becomes crucial to stabilize the internal configuration of the hand keeping the 20 actuated joints away from their mechanical limits, while the virtual sphere accurately defines the overall grasp shape.
+\paragraph{Actuation} Unlike the significantly underactuated Barrett and Mia hands, the Shadow Hand is highly actuated: indeed, it has 24 joints driven by 20 electric "\textit{Smart Motors}" located in the forearm base, which transmit force to the joints via tendons. \footnote{Shadow Dexterous Hand technical specification: \url{https://shadowrobot.com/}} This high number of degrees of freedom makes the Shadow Hand highly \textit{kinematically redundant} with respect to the 7-DoF virtual sphere task. Therefore, the redundancy resolution strategy defined in Eq. \refeq{eq:redundant_control_law} becomes crucial to stabilize the internal configuration of the hand keeping the 20 actuated joints away from their mechanical limits, while the virtual sphere accurately defines the overall grasp shape.
 
 \section{Evaluation metrics}
 To quantitatively assess the performance of the retargeting algorithm, we define a set of metrics that measure how well the robotic hand tracks the desired object deformation and how effectively it uses its kinematic capabilities. Since the virtual sphere represents the core of our control strategy, these metrics focus on comparing the state of the virtual sphere of the robot against that of the human over time.
@@ -259,3 +259,28 @@ where $k_s$ is the spring stiffness, for simplicity set to 1. Having now both hu
 
 Finally, for an easy interpretation of the results, we smooth the percentage error using a moving average filter $\mathcal{S}$ over a window of 10 frames:
 \[ e_{\%, \text{smooth}}(t) = \mathcal{S}(e_{\%}(t)) \]
+
+\section{Qualitative validation}
+The quantitative metrics defined above provide a measure of kinematic accuracy, but they do not capture the functional success of a grasp in a practical scenario. To assess the applicability of the retargeting algorithm in real-world manipulation tasks, we also perform qualitative evaluations by simulating various grasping tasks within the Unity environment.
+
+We selected three objects of standard geometric shapes to test different grasp types:
+\begin{itemize}
+    \item \textit{Sphere}: to test spherical grasps and the ability to conform to curved surfaces.
+    \item \textit{Cube}: to evaluate the ability of the robotic fingers to adapt to flat surfaces and edges.
+    \item \textit{Cylinder}: to assess the performance in cylindrical grasps, which are common in everyday tasks.
+\end{itemize}
+
+For each object, we simulate a grasping task using the Weart glove as the input device. We visually inspect the resulting robotic motion to determine two key aspects:
+\begin{itemize}
+    \item Whether the robot fingers enclose around the object in a natural way without unfeasible interpenetration or unnatural internal joint configurations;
+    \item whether the virtual object remains stably within the robotic hand during the closure phase.
+\end{itemize}
+
+\subsection{Simulation physics setup}
+Simulating contact interactions between rigid bodies in Unity is complex, and a wrong configuration can lead to unrealistic behaviors such as the two models flying away from each other. 
+
+To mitigate this issue and simualate a realistic interaction, we introduced linear and angular \textit{damping} to the manipulated objects. This mimics the effect of \textit{friction} between the hand and the object, preventing this latter from reacting too abruptly to sudden contact forces.
+
+Furthermore, we disabled gravity for the target objects. Since our experimental setup focuses strictly on the \textit{grasping} phase, we skip the \textit{approach} phase (where the hand moves towards the object) and fix the base of the robotic hand in space. Disabling gravity allows the object to remain suspended in the "grasping workspace", ensuring that the evaluation focuses solely on the closure of the fingers and the synergy mapping, rather than the robot's ability to chase a falling object.
+
+Finally, it is important to note that the outcome of these tests is heavily influenced by the quality of the \textit{colliders} of the robotic models: inaccurate or simplified collision meshes, such as box colliders, can lead to missed contacts or interpenetrations, affecting the realism of the grasp.

@@ -1,9 +1,9 @@
-PWD /home/yvhem/OneDrive/Uni/AIRO/Medical Robotics/project/object_domain_synergy_mapping/latex
+PWD /home/yvhem/OneDrive/Uni/AIRO/Medical Robotics/object_domain_synergy_mapping/latex
 INPUT /etc/texmf/web2c/texmf.cnf
 INPUT /usr/share/texmf/web2c/texmf.cnf
 INPUT /usr/share/texlive/texmf-dist/web2c/texmf.cnf
 INPUT /var/lib/texmf/web2c/pdftex/pdflatex.fmt
-INPUT /home/yvhem/OneDrive/Uni/AIRO/Medical Robotics/project/object_domain_synergy_mapping/latex/main.tex
+INPUT /home/yvhem/OneDrive/Uni/AIRO/Medical Robotics/object_domain_synergy_mapping/latex/main.tex
 OUTPUT main.log
 INPUT /usr/share/texlive/texmf-dist/tex/latex/base/report.cls
 INPUT /usr/share/texlive/texmf-dist/tex/latex/base/report.cls
@@ -1284,6 +1284,11 @@ INPUT ./images/shadow_hand3.png
 INPUT images/shadow_hand3.png
 INPUT ./images/shadow_hand3.png
 INPUT ./images/shadow_hand3.png
+INPUT /usr/share/texlive/texmf-dist/tex/latex/psnfss/ts1ptm.fd
+INPUT /usr/share/texlive/texmf-dist/tex/latex/psnfss/ts1ptm.fd
+INPUT /usr/share/texlive/texmf-dist/tex/latex/psnfss/ts1ptm.fd
+INPUT /usr/share/texlive/texmf-dist/tex/latex/psnfss/ts1ptm.fd
+INPUT /usr/share/texlive/texmf-dist/fonts/tfm/adobe/times/ptmr8c.tfm
 INPUT ./sections/5_results.tex
 INPUT ./sections/5_results.tex
 INPUT ./sections/5_results.tex
@@ -1291,6 +1296,7 @@ INPUT sections/5_results.tex
 INPUT ./sections/5_results.tex
 INPUT ./sections/5_results.tex
 INPUT sections/5_results.tex
+INPUT /usr/share/texlive/texmf-dist/fonts/vf/adobe/times/ptmr8c.vf
 INPUT ./sections/6_conclusion.tex
 INPUT ./sections/6_conclusion.tex
 INPUT ./sections/6_conclusion.tex
