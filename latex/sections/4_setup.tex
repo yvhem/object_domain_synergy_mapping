@@ -205,7 +205,7 @@ To quantitatively assess the performance of the retargeting algorithm, we define
 We define $t_0$ as the start time of the experiment. The subscripts $H$ and $R$ denote the Human (reference) and Robot (measured) quantities, respectively.
 
 \subsection{Geometry metrics}
-These metrics evaluate how accurately the robotic hand tracks the translation, rotation, and deformation of the virtual object.
+These metrics evaluate how accurately the robotic hand tracks the translation and radial deformation of the virtual object.
 
 \paragraph{Radius error} This metric measures the ability of the system to replicate the scaling of the sphere, namely opening and closing of the hand. Since the robot and human hands have different sizes, the radius of the human sphere $r_H$ must be scaled by a factor $k_{sc}$ (defined in Eq. \ref{eq:scaling_factor}) before comparison. The absolute radius error $e_\text{rad}(t)$ is defined as:
 \begin{equation}
@@ -220,18 +220,6 @@ Let $\bs{p}(t) = [x,y,z]^T$ be the position of the sphere center. The relative d
 The position variation error $e_\text{pos}(t)$ is then obtained as the magnitude of the difference between the human and robot relative displacements:
 \begin{equation}
     e_\text{pos}(t) = ||\Delta \bs{p}_H(t) - \Delta \bs{p}_R(t)||
-\end{equation}
-
-\paragraph{Rotation variation error} This metric evaluates the tracking of the sphere's orientation. Let $\bs{q}(t)$ be the quaternion representing the sphere's rotation. The relative rotation from $t_0$ is computed as:
-\[ \bs{q}_\text{rel}(t) = \bs{q}(t) \otimes \bs{q}(t_0)^{-1} \]
-where $\otimes$ denotes quaternion multiplication and $^{-1}$ denotes the quaternion conjugate.
-
-We define an extraction operator $\Phi(\bs{q})$ that returns the rotation angle (magnitude) from a quaternion:
-\[ \Phi(\bs{q}) = 2\arccos(q_w) \]
-
-The rotation error $e_\text{rot}(t)$ is then defined as the angle of the difference quaternion between the human and robot relative rotations:
-\begin{equation}
-    \bs{q}_\text{diff}(t) = \bs{q}_{R, \text{rel}}(t) \otimes \bs{q}_{H, \text{rel}}(t)^{-1} \quad \Rightarrow \quad e_\text{rot}(t) = \Phi(\bs{q}_\text{diff}(t))
 \end{equation}
 
 \subsection{Energy metrics}

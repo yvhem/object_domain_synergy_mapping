@@ -36,11 +36,10 @@
 \contentsline {subsection}{\numberline {4.5.1}Geometry metrics}{17}{subsection.4.5.1}%
 \contentsline {paragraph}{Radius error}{17}{section*.24}%
 \contentsline {paragraph}{Position variation error}{17}{section*.25}%
-\contentsline {paragraph}{Rotation variation error}{17}{section*.26}%
-\contentsline {subsection}{\numberline {4.5.2}Energy metrics}{18}{subsection.4.5.2}%
-\contentsline {paragraph}{Elastic energy error}{18}{section*.27}%
-\contentsline {paragraph}{Relative percentage error}{18}{section*.28}%
-\contentsline {section}{\numberline {4.6}Qualitative validation}{19}{section.4.6}%
+\contentsline {subsection}{\numberline {4.5.2}Energy metrics}{17}{subsection.4.5.2}%
+\contentsline {paragraph}{Elastic energy error}{18}{section*.26}%
+\contentsline {paragraph}{Relative percentage error}{18}{section*.27}%
+\contentsline {section}{\numberline {4.6}Qualitative validation}{18}{section.4.6}%
 \contentsline {subsection}{\numberline {4.6.1}Simulation physics setup}{19}{subsection.4.6.1}%
 \contentsline {chapter}{\numberline {5}Results}{20}{chapter.5}%
 \contentsline {chapter}{\numberline {6}Conclusion}{21}{chapter.6}%

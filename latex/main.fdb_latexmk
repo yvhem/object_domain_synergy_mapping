@@ -1,11 +1,11 @@
 # Fdb version 3
-["biber main"] 1764434424 "main.bcf" "main.bbl" "main" 1764588925
-  "main.bcf" 1764588925 107718 e40a286d1794a2b203b7f4da76cef3b9 "pdflatex"
+["biber main"] 1764434424 "main.bcf" "main.bbl" "main" 1764783893
+  "main.bcf" 1764783893 107718 e40a286d1794a2b203b7f4da76cef3b9 "pdflatex"
   "ref.bib" 1764403684 2180 c044f1565368df4e4320696d3233f94e ""
   (generated)
   "main.bbl"
   "main.blg"
-["pdflatex"] 1764588922 "/home/yvhem/OneDrive/Uni/AIRO/Medical Robotics/object_domain_synergy_mapping/latex/main.tex" "main.pdf" "main" 1764588925
+["pdflatex"] 1764783889 "/home/yvhem/OneDrive/Uni/AIRO/Medical Robotics/object_domain_synergy_mapping/latex/main.tex" "main.pdf" "main" 1764783893
   "/etc/texmf/web2c/texmf.cnf" 1754997670 475 c0e671620eb5563b2130f56340a5fde8 ""
   "/home/yvhem/OneDrive/Uni/AIRO/Medical Robotics/object_domain_synergy_mapping/latex/main.tex" 1764277576 1193 9f339d40a47575ca9a5f426c24a0c726 ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
@@ -267,17 +267,17 @@
   "images/synergy_control_robotic_hand.png" 1764306884 318286 9166043dbb0939d7785e4c1573717bdb ""
   "images/vsm_reference_points.jpg" 1764306890 176306 2434de209c2d73ab23fd4c9518d5b87d ""
   "images/weart_glove.png" 1764140056 121548 8eb4dfa1d94b5061138002b8b6ddfa33 ""
-  "main.aux" 1764588925 16313 c05f5dc670c6f0854fa12e02c7f0d77d "pdflatex"
+  "main.aux" 1764783893 16202 1672070a8d8cdef11271073dec1ed36d "pdflatex"
   "main.bbl" 1764434425 10151 fb43f184ae6de327e4ff9f87ef74f498 "biber main"
-  "main.out" 1764588925 4421 e0f036e7854fb072555a20a929d708a6 "pdflatex"
-  "main.run.xml" 1764588925 2395 1575f6bbc0c6be1b1dbf4e9f7ecaa5c6 "pdflatex"
+  "main.out" 1764783893 4421 e0f036e7854fb072555a20a929d708a6 "pdflatex"
+  "main.run.xml" 1764783893 2395 1575f6bbc0c6be1b1dbf4e9f7ecaa5c6 "pdflatex"
   "main.tex" 1764277576 1193 9f339d40a47575ca9a5f426c24a0c726 ""
-  "main.toc" 1764588925 3482 03f265f26735d27765aade42b65bb1a0 "pdflatex"
+  "main.toc" 1764783893 3412 16aaabd26d35fb65ffd64c3df0b2864e "pdflatex"
   "sections/0_titlePage.tex" 1764310664 776 ddcb4c6dd4a6bf2dd0f97cd116677504 ""
-  "sections/1_intro.tex" 1764403683 5924 e32ded1ef7419dbb989529e16a547939 ""
+  "sections/1_intro.tex" 1764783839 5913 2e170cbed704bb887d403746bf56c9a7 ""
   "sections/2_background.tex" 1764403684 7337 997503c56f463f5e87f85720b81dc6e1 ""
   "sections/3_framework.tex" 1764403683 10004 01ef9e6bbb3418f13ed831db8193e73b ""
-  "sections/4_setup.tex" 1764588921 23990 58194fc2666a5b99736afe9f83cf01c1 ""
+  "sections/4_setup.tex" 1764783889 23119 1eab51ddb786cd1542e4aeee17a472b1 ""
   "sections/5_results.tex" 1764140056 36 6b1225953f0402dcace6a2486064ef50 ""
   "sections/6_conclusion.tex" 1764140056 83 13ecc5efd0dded2b83b2a79323021346 ""
   (generated)
