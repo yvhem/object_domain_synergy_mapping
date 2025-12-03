@@ -8,23 +8,24 @@ from scipy.spatial.transform import Rotation as R
 from matplotlib.animation import FuncAnimation
 from tqdm import tqdm
 
+
 def read_csv(csv_path):
     df = pd.read_csv(csv_path)
-    # Radius, Position and Rotation
+    # Radius, Position
     h_radius = df['HumanRadius']
     r_radius = df['RobotRadius']
     h_pos = df[['hPos_x', 'hPos_y', 'hPos_z']].values
     r_pos = df[['rPos_x', 'rPos_y', 'rPos_z']].values
-    h_rot = df[['hRot_x', 'hRot_y', 'hRot_z']].values
-    r_rot = df[['rRot_x', 'rRot_y', 'rRot_z']].values
+
     # Energy and Scaling Factor
     h_energy = df['HumanEnergy']
     r_energy = df['RobotEnergy']
     k = df['ScalingFactor'].iloc[0]
     time = df['Time']
-    return df, time, h_radius, r_radius, h_energy, r_energy, h_pos, r_pos, h_rot, r_rot, k
+    return df, time, h_radius, r_radius, h_energy, r_energy, h_pos, r_pos, k
 
-def preprocess(h_radius, r_radius, r_energy, r_pos, r_rot, verbose, enable_shift=True):
+
+def preprocess(h_radius, r_radius, r_energy, r_pos, verbose, enable_shift=True):
     shift_idx = 0
 
     if enable_shift:
@@ -52,13 +53,11 @@ def preprocess(h_radius, r_radius, r_energy, r_pos, r_rot, verbose, enable_shift
     aligned_r_radius = r_radius.shift(-shift_idx).ffill().bfill()
     aligned_r_energy = r_energy.shift(-shift_idx).ffill().bfill()
     aligned_r_pos = shift_array(r_pos, shift_idx)
-    aligned_r_rot = shift_array(r_rot, shift_idx)
 
-    return aligned_r_radius, aligned_r_energy, aligned_r_pos, aligned_r_rot
+    return aligned_r_radius, aligned_r_energy, aligned_r_pos
 
 
-def compute_metrics(h_radius, aligned_r_radius, h_pos, aligned_r_pos, h_rot, aligned_r_rot, h_energy, aligned_r_energy,
-                    k):
+def compute_metrics(h_radius, aligned_r_radius, h_pos, aligned_r_pos, h_energy, aligned_r_energy, k):
     # Radius
     scaled_h_radius = h_radius * k
     rad_error = np.abs(aligned_r_radius - scaled_h_radius)
@@ -68,22 +67,13 @@ def compute_metrics(h_radius, aligned_r_radius, h_pos, aligned_r_pos, h_rot, ali
     r_start_pos = aligned_r_pos[0]
     h_delta_vec = h_pos - h_start_pos
     r_delta_vec = aligned_r_pos - r_start_pos
+
+    # Magnitudes (Scalar displacement)
     h_move_mag = np.linalg.norm(h_delta_vec, axis=1)
     r_move_mag = np.linalg.norm(r_delta_vec, axis=1)
-    var_diff_vec = h_delta_vec - r_delta_vec
-    pos_error_var = np.linalg.norm(var_diff_vec, axis=1)
 
-    # Rotation
-    rot_h_obj = R.from_euler('xyz', h_rot, degrees=True)
-    rot_r_obj = R.from_euler('xyz', aligned_r_rot, degrees=True)
-    h_start_rot = rot_h_obj[0]
-    r_start_rot = rot_r_obj[0]
-    h_rel = rot_h_obj * h_start_rot.inv()
-    r_rel = rot_r_obj * r_start_rot.inv()
-    h_excursion = np.degrees(h_rel.magnitude())
-    r_excursion = np.degrees(r_rel.magnitude())
-    diff_rel = r_rel * h_rel.inv()
-    rot_error_var = np.degrees(diff_rel.magnitude())
+    # FIX: Error is difference of magnitudes, not magnitude of vector difference
+    pos_error_var = np.abs(h_move_mag - r_move_mag)
 
     # Energy
     exp_r_energy = h_energy
@@ -99,56 +89,70 @@ def compute_metrics(h_radius, aligned_r_radius, h_pos, aligned_r_pos, h_rot, ali
 
     return (scaled_h_radius, aligned_r_radius, rad_error), \
         (h_move_mag, r_move_mag, pos_error_var), \
-        (h_excursion, r_excursion, rot_error_var), \
         (exp_r_energy, aligned_r_energy, energy_delta), \
         energy_pct_smooth
 
 
 class ResultVisualizer:
-    def __init__(self, time, radius_data, pos_data, rot_data, energy_data, en_pct, _fps):
+    def __init__(self, time, radius_data, pos_data, energy_data, en_pct, _fps):
         self.time = time
         self.en_pct = en_pct
         self.fps = _fps
 
         # Styles
-        sns.set_context("paper", font_scale=1.2)
+        sns.set_context("paper", font_scale=5.5)
         sns.set_style("whitegrid")
+        plt.rcParams['font.size'] = 26
+        plt.rcParams['axes.titlesize'] = 32
+        plt.rcParams['axes.labelsize'] = 28
+        plt.rcParams['xtick.labelsize'] = 24
+        plt.rcParams['ytick.labelsize'] = 24
+        plt.rcParams['legend.fontsize'] = 24
+        plt.rcParams['figure.titlesize'] = 34
+        plt.rcParams['lines.linewidth'] = 4
+
         self.colors = {'h': '#1f77b4', 'r': '#ff7f0e', 'err_f': '#ff9999', 'err_l': '#d62728', 'pct': '#800080'}
-        self.lw = 2.5
+        self.lw = 6.0
 
         # Initialize Figure
-        self.fig, self.axes = plt.subplots(5, 1, figsize=(10, 16), sharex=True)
+        self.fig, self.axes = plt.subplots(2, 2, figsize=(20, 15), sharex=True)
+        self.axes_flat = self.axes.flatten()
 
-        # Data grouping for iteration
+        # Data grouping for iteration (Radius=0, Pos=1, Energy=2)
         self.plot_defs = [
-            (self.axes[0], "Radius Comparison", "Radius (m)", radius_data),
-            (self.axes[1], "Position Variation", "Displacement (m)", pos_data),
-            (self.axes[2], "Rotation Variation ", "Excursion (deg)", rot_data),
-            (self.axes[3], "Elastic Energy", "Energy (J)", energy_data)
+            (self.axes_flat[0], "Radius Comparison", "Radius (m)", radius_data),
+            (self.axes_flat[1], "Position Variation", "Displacement (m)", pos_data),
+            (self.axes_flat[2], "Elastic Energy", "Energy (J)", energy_data)
         ]
 
         self.lines = []
 
-        # Setup first 4 plots
+        # Setup first 3 plots
         for ax, title, ylabel, data in self.plot_defs:
             self._setup_axis(ax, title, ylabel, data[0], data[1], data[2])
 
-        # Setup 5th plot
-        ax5 = self.axes[4]
-        ax5.set_title('Relative Energy Error', loc='left', fontweight='bold')
-        ax5.set_ylabel('Error (%)', fontweight='bold')
-        ax5.set_xlabel('Time (s)', fontweight='bold')
-        ax5.set_xlim(time.min(), time.max())
-        ax5.set_ylim(-5, 105)
-        ax5.grid(True, linestyle='--', alpha=0.5)
-        self.line_pct, = ax5.plot([], [], color=self.colors['pct'], linewidth=2, label='Rel. Error %')
-        ax5.legend(loc='upper right')
+        # Manually add xlabel to bottom-left plot (Energy)
+        self.axes_flat[2].set_xlabel('Time (s)', fontweight='bold', fontsize=28)
+        self.axes_flat[2].tick_params(axis='x', which='major', labelsize=24)
 
-        plt.tight_layout()
+        # Setup 4th plot (Energy %) - Bottom Right
+        ax_last = self.axes_flat[3]
+        ax_last.set_title('Relative Energy Error', loc='left', fontweight='bold', fontsize=32)
+        ax_last.set_ylabel('Error (%)', fontweight='bold', fontsize=28)
+        ax_last.set_xlabel('Time (s)', fontweight='bold', fontsize=28)
+        ax_last.tick_params(axis='both', which='major', labelsize=24, length=6, width=2)
+        ax_last.set_xlim(time.min(), time.max())
+        ax_last.set_ylim(-5, 105)
+        ax_last.grid(True, linestyle='--', alpha=0.5, linewidth=1.5)
+        self.line_pct, = ax_last.plot([], [], color=self.colors['pct'], linewidth=self.lw, label='Rel. Error %')
+        ax_last.legend(loc='upper right', fontsize=24, framealpha=0.95, borderpad=0.8)
+
+        plt.tight_layout(pad=2.5)
 
     def _setup_axis(self, ax, title, ylabel, h_data, r_data, e_data):
-        ax.set_title(title, loc='left', fontweight='bold')
-        ax.set_ylabel(ylabel, fontweight='bold')
+        ax.set_title(title, loc='left', fontweight='bold', fontsize=32)
+        ax.set_ylabel(ylabel, fontweight='bold', fontsize=28)
+        ax.tick_params(axis='both', which='major', labelsize=24, length=6, width=2)
         ax.set_xlim(self.time.min(), self.time.max())
 
         # Calculate Y limits
@@ -156,14 +160,14 @@ class ResultVisualizer:
         y_min, y_max = all_vals.min(), all_vals.max()
         pad = (y_max - y_min) * 0.1 if y_max != y_min else 1.0
         ax.set_ylim(y_min - pad, y_max + pad)
-        ax.grid(True, linestyle='--', alpha=0.5)
+        ax.grid(True, linestyle='--', alpha=0.5, linewidth=1.5)
 
         # Initialize Empty Lines
-        l_err, = ax.plot([], [], color=self.colors['err_l'], linewidth=1, alpha=0.6)
+        l_err, = ax.plot([], [], color=self.colors['err_l'], linewidth=2, alpha=0.6)
         l_h, = ax.plot([], [], color=self.colors['h'], linestyle='--', linewidth=self.lw, label='Human')
         l_r, = ax.plot([], [], color=self.colors['r'], linewidth=self.lw, alpha=0.9, label='Robot')
 
-        ax.legend(loc='upper right', framealpha=0.95)
+        ax.legend(loc='upper right', framealpha=0.95, fontsize=24, borderpad=0.8)
 
         # Store references for updating
         self.lines.append({
@@ -179,7 +183,6 @@ class ResultVisualizer:
             t_slice = self.time.iloc[:frame_idx]
             idx = frame_idx
 
-        # Update first 4 subplots
         for item in self.lines:
             item['l_h'].set_data(t_slice, item['d_h'][:idx])
             item['l_r'].set_data(t_slice, item['d_r'][:idx])
@@ -188,12 +191,11 @@ class ResultVisualizer:
                 collection.remove()
             item['ax'].fill_between(t_slice, 0, item['d_err'][:idx], color=self.colors['err_f'], alpha=0.4)
 
-        # Update 5th subplot
         self.line_pct.set_data(t_slice, self.en_pct[:idx])
         return []
 
     def save_static(self, path):
-        self.update_plot(-1)  # Render full data
+        self.update_plot(-1)
         self.fig.savefig(path, dpi=300, bbox_inches='tight')
         print(f"Static Graph saved to: {path}")
 
@@ -226,7 +228,6 @@ class ResultVisualizer:
             print(f"\nFFmpeg error: {e}. Trying GIF...")
             try:
                 gif_path = path.replace('.mp4', '.gif')
-                # Note: Pillow writer might not support progress_callback in all versions
                 ani.save(gif_path, writer='pillow', fps=60, dpi=100)
                 print(f"GIF saved to: {gif_path}")
             except Exception as e2:
@@ -242,20 +243,18 @@ def main(csv_path, anim_fps, verbose, no_shift):
         return
 
     try:
-        df, time, h_radius, r_radius, h_energy, r_energy, h_pos, r_pos, h_rot, r_rot, k = read_csv(csv_path)
+        df, time, h_radius, r_radius, h_energy, r_energy, h_pos, r_pos, k = read_csv(csv_path)
     except Exception as e:
         print(f"CSV Reading Error: {e}")
         return
 
-    # Pass 'not no_shift' because enable_shift should be True if no_shift is False
     enable_shift = not no_shift
-    aligned_r_radius, aligned_r_energy, aligned_r_pos, aligned_r_rot = preprocess(
-        h_radius, r_radius, r_energy, r_pos, r_rot, verbose, enable_shift
+    aligned_r_radius, aligned_r_energy, aligned_r_pos = preprocess(
+        h_radius, r_radius, r_energy, r_pos, verbose, enable_shift
     )
 
-    # Compute metrics
-    radius_data, pos_data, rot_data, energy_data, en_pct = compute_metrics(
-        h_radius, aligned_r_radius, h_pos, aligned_r_pos, h_rot, aligned_r_rot, h_energy, aligned_r_energy, k
+    radius_data, pos_data, energy_data, en_pct = compute_metrics(
+        h_radius, aligned_r_radius, h_pos, aligned_r_pos, h_energy, aligned_r_energy, k
     )
 
     if verbose:
@@ -263,24 +262,19 @@ def main(csv_path, anim_fps, verbose, no_shift):
         print(f"Shifting Enabled:  {enable_shift}")
         print(f"Radius RMSE:       {np.sqrt(np.mean(radius_data[2] ** 2)):.5f} m")
         print(f"Pos Variation RMSE:{np.sqrt(np.mean(pos_data[2] ** 2)):.5f} m")
-        print(f"Rot Variation RMSE:{np.sqrt(np.mean(rot_data[2] ** 2)):.5f} deg")
         print(f"Energy AvgErr:     {np.mean(en_pct):.2f} %")
         print("=" * 40)
 
-    # Initialize Visualizer
-    viz = ResultVisualizer(time, radius_data, pos_data, rot_data, energy_data, en_pct, anim_fps)
+    viz = ResultVisualizer(time, radius_data, pos_data, energy_data, en_pct, anim_fps)
 
-    # Save Animation
     aniext = "_no-shift_video.mp4" if no_shift else "_video.mp4"
     save_path_anim = os.path.splitext(csv_path)[0] + aniext
     viz.save_animation(save_path_anim)
 
-    # Save Static Plot
     plotext = "_no-shift.png" if no_shift else ".png"
     save_path_static = os.path.splitext(csv_path)[0] + plotext
     viz.save_static(save_path_static)
 
-    # Show
     viz.show()
 
 

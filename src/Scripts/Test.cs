@@ -31,8 +31,7 @@ public class Test : MonoBehaviour
     {
         // Initialize CSV header
         _csvContent.AppendLine("Time,HumanRadius,RobotRadius,ScalingFactor,HumanEnergy,RobotEnergy,"+
-                                "hPos_x,hPos_y,hPos_z,rPos_x,rPos_y,rPos_z,"+
-                                "hRot_x,hRot_y,hRot_z,rRot_x,rRot_y,rRot_z");
+                                "hPos_x,hPos_y,hPos_z,rPos_x,rPos_y,rPos_z");
     }
 
     void Update()
@@ -53,7 +52,7 @@ public class Test : MonoBehaviour
         }
     }
 
-  
+
     void StartRecording()
     {
         if (h_sphere == null || r_sphere == null)
@@ -72,10 +71,9 @@ public class Test : MonoBehaviour
 
         _csvContent.Clear();
         _csvContent.AppendLine("Time,HumanRadius,RobotRadius,ScalingFactor,HumanEnergy,RobotEnergy,"+
-                                "hPos_x,hPos_y,hPos_z,rPos_x,rPos_y,rPos_z,"+
-                                "hRot_x,hRot_y,hRot_z,rRot_x,rRot_y,rRot_z");
+                                "hPos_x,hPos_y,hPos_z,rPos_x,rPos_y,rPos_z");
 
-            
+
         _isRecording = true;
         Debug.Log($"<color=green>VALIDATION STARTED.</color> Baseline H: {_initialRadiusH:F4}, Baseline R: {_initialRadiusR:F4}, Scaling Factor: {_scalingFactor:F4}");
     }
@@ -83,14 +81,14 @@ public class Test : MonoBehaviour
     void StopRecording()
     {
         _isRecording = false;
-        
+
         string directory;
         directory = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
-        
+
 
         string filePath = Path.Combine(directory, fileName);
-        
-        try 
+
+        try
         {
             File.WriteAllText(filePath, _csvContent.ToString());
             Debug.Log($"<color=red>VALIDATION STOPPED.</color> Report saved to: {filePath}");
@@ -120,16 +118,13 @@ public class Test : MonoBehaviour
         float energyHnorm = 0.5f * cp_scalingFactor * springStiffness * normDefH * normDefH;
         float energyRnorm = 0.5f * cp_scalingFactor * springStiffness * normDefR * normDefR;
 
-        // Get position and rotation
+        // Position
         Vector3 hPos = h_sphere.transform.position;
         Vector3 rPos = r_sphere.transform.position;
-        Vector3 hRot = h_sphere.transform.eulerAngles;
-        Vector3 rRot = r_sphere.transform.eulerAngles;
 
         // Log data
         string line = $"{Time.time},{currentRadiusH},{currentRadiusR},{_scalingFactor},{energyHnorm},{energyRnorm}," +
-                    $"{hPos.x},{hPos.y},{hPos.z},{rPos.x},{rPos.y},{rPos.z}," +
-                    $"{hRot.x},{hRot.y},{hRot.z},{rRot.x},{rRot.y},{rRot.z}";
+                    $"{hPos.x},{hPos.y},{hPos.z},{rPos.x},{rPos.y},{rPos.z}";
 
         _csvContent.AppendLine(line);
     }
@@ -147,4 +142,3 @@ public class Test : MonoBehaviour
         }
     }
 }
-      
