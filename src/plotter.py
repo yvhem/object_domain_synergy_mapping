@@ -145,7 +145,7 @@ class ResultVisualizer:
         ax_last.set_ylim(-5, 105)
         ax_last.grid(True, linestyle='--', alpha=0.5, linewidth=1.5)
         self.line_pct, = ax_last.plot([], [], color=self.colors['pct'], linewidth=self.lw, label='Rel. Error %')
-        ax_last.legend(loc='upper right', fontsize=24, framealpha=0.95, borderpad=0.8)
+        ax_last.legend(loc='best', fontsize=24, framealpha=0.95, borderpad=0.8)
 
         plt.tight_layout(pad=2.5)
 
@@ -167,7 +167,7 @@ class ResultVisualizer:
         l_h, = ax.plot([], [], color=self.colors['h'], linestyle='--', linewidth=self.lw, label='Human')
         l_r, = ax.plot([], [], color=self.colors['r'], linewidth=self.lw, alpha=0.9, label='Robot')
 
-        ax.legend(loc='upper right', framealpha=0.95, fontsize=24, borderpad=0.8)
+        ax.legend(loc='best', framealpha=0.95, fontsize=24, borderpad=0.8)
 
         # Store references for updating
         self.lines.append({
