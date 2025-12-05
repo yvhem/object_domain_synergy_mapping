@@ -6,20 +6,21 @@
 ---
 The aim of the project is to develop a framework for **retargeting** the motion of a human hand on 
 **different hand models** for **grasping** tasks using **synergies** (correlation of degrees of freedom in 
-patterns of more frequent use).
+patterns of more frequent use). The system pipeline is the following:
 
-![Pipeline](./docs/Pipeline.png)
-
+![Pipeline](./docs/pipeline.png)
 
 ---
-## Dataset
+## Project Video
+[![Project Video](docs/SynergyGraspThumbnail.jpg)](https://drive.google.com/file/d/18Njlz_k2ivAYb39_Or-6fZv68Q3YLAvA/view?usp=sharing)
 
-The human hand data is acquired using a **data glove** (Weart TouchDIVER G1 haptic glove)
-
-_" Each data sample in the final dataset consists of:_
-- _45 joint angle values (3 rotational axes ×15 joints)_
-- _4 input parameters (ThumbClosure, IndexClosure, MiddleClosure, ThumbAbduction)_
-- _1 timestamp indicating when the sample was recorded "_ [1]
+---
+## Dataset 
+[1] The human hand data is acquired using a **data glove** (Weart TouchDIVER G1 haptic glove)
+Each data sample in the final dataset consists of:
+- 45 joint angle values (3 rotational axes ×15 joints)
+- 4 input parameters (ThumbClosure, IndexClosure, MiddleClosure, ThumbAbduction)
+- 1 timestamp indicating when the sample was recorded.
 
 ---
 ## Hand Models
