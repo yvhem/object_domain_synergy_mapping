@@ -24,39 +24,6 @@ def read_csv(csv_path):
     time = df['Time']
     return df, time, h_radius, r_radius, h_energy, r_energy, h_pos, r_pos, k
 
-
-def preprocess(h_radius, r_radius, r_energy, r_pos, verbose, enable_shift=True):
-    shift_idx = 0
-
-    if enable_shift:
-        h_mid = (h_radius.max() + h_radius.min()) / 2.0
-        r_mid = (r_radius.max() + r_radius.min()) / 2.0
-        idx_mid_h = (np.abs(h_radius - h_mid)).argmin()
-        idx_mid_r = (np.abs(r_radius - r_mid)).argmin()
-        shift_idx = idx_mid_r - idx_mid_h
-    elif verbose:
-        print("Shifting disabled by user.")
-
-    if verbose and enable_shift:
-        print(f"Shift Applied: {shift_idx} frames")
-
-    def shift_array(arr, shift):
-        if shift == 0:
-            return arr
-        result = np.roll(arr, -shift, axis=0)
-        if shift > 0:
-            result[-shift:] = result[-shift - 1]
-        elif shift < 0:
-            result[:-shift] = result[-shift]
-        return result
-
-    aligned_r_radius = r_radius.shift(-shift_idx).ffill().bfill()
-    aligned_r_energy = r_energy.shift(-shift_idx).ffill().bfill()
-    aligned_r_pos = shift_array(r_pos, shift_idx)
-
-    return aligned_r_radius, aligned_r_energy, aligned_r_pos
-
-
 def compute_metrics(h_radius, aligned_r_radius, h_pos, aligned_r_pos, h_energy, aligned_r_energy, k):
     # Radius
     scaled_h_radius = h_radius * k
@@ -67,36 +34,23 @@ def compute_metrics(h_radius, aligned_r_radius, h_pos, aligned_r_pos, h_energy, 
     r_start_pos = aligned_r_pos[0]
     h_delta_vec = h_pos - h_start_pos
     r_delta_vec = aligned_r_pos - r_start_pos
-
-    # Magnitudes (Scalar displacement)
     h_move_mag = np.linalg.norm(h_delta_vec, axis=1)
     r_move_mag = np.linalg.norm(r_delta_vec, axis=1)
-
-    # FIX: Error is difference of magnitudes, not magnitude of vector difference
     pos_error_var = np.abs(h_move_mag - r_move_mag)
 
     # Energy
     exp_r_energy = h_energy
     energy_delta = np.abs(aligned_r_energy - exp_r_energy)
 
-    # Energy %
-    epsilon = 1e-9
-    energy_pct = (energy_delta / (exp_r_energy + epsilon)) * 100.0
-    max_energy = exp_r_energy.max()
-    mask_steady = exp_r_energy > (max_energy * 0.05)
-    energy_pct[~mask_steady] = 0
-    energy_pct_smooth = energy_pct.rolling(window=10, center=True).mean().fillna(0)
 
     return (scaled_h_radius, aligned_r_radius, rad_error), \
         (h_move_mag, r_move_mag, pos_error_var), \
-        (exp_r_energy, aligned_r_energy, energy_delta), \
-        energy_pct_smooth
+        (exp_r_energy, aligned_r_energy, energy_delta)
 
 
 class ResultVisualizer:
-    def __init__(self, time, radius_data, pos_data, energy_data, en_pct, _fps):
+    def __init__(self, time, radius_data, pos_data, energy_data, _fps):
         self.time = time
-        self.en_pct = en_pct
         self.fps = _fps
 
         # Styles
@@ -115,7 +69,7 @@ class ResultVisualizer:
         self.lw = 6.0
 
         # Initialize Figure
-        self.fig, self.axes = plt.subplots(2, 2, figsize=(20, 15), sharex=True)
+        self.fig, self.axes = plt.subplots(3, 1, figsize=(15, 25), sharex=True)
         self.axes_flat = self.axes.flatten()
 
         # Data grouping for iteration (Radius=0, Pos=1, Energy=2)
@@ -134,18 +88,6 @@ class ResultVisualizer:
         # Manually add xlabel to bottom-left plot (Energy)
         self.axes_flat[2].set_xlabel('Time (s)', fontweight='bold', fontsize=28)
         self.axes_flat[2].tick_params(axis='x', which='major', labelsize=24)
-
-        # Setup 4th plot (Energy %) - Bottom Right
-        ax_last = self.axes_flat[3]
-        ax_last.set_title('Relative Energy Error', loc='left', fontweight='bold', fontsize=32)
-        ax_last.set_ylabel('Error (%)', fontweight='bold', fontsize=28)
-        ax_last.set_xlabel('Time (s)', fontweight='bold', fontsize=28)
-        ax_last.tick_params(axis='both', which='major', labelsize=24, length=6, width=2)
-        ax_last.set_xlim(time.min(), time.max())
-        ax_last.set_ylim(-5, 105)
-        ax_last.grid(True, linestyle='--', alpha=0.5, linewidth=1.5)
-        self.line_pct, = ax_last.plot([], [], color=self.colors['pct'], linewidth=self.lw, label='Rel. Error %')
-        ax_last.legend(loc='best', fontsize=24, framealpha=0.95, borderpad=0.8)
 
         plt.tight_layout(pad=2.5)
 
@@ -191,7 +133,6 @@ class ResultVisualizer:
                 collection.remove()
             item['ax'].fill_between(t_slice, 0, item['d_err'][:idx], color=self.colors['err_f'], alpha=0.4)
 
-        self.line_pct.set_data(t_slice, self.en_pct[:idx])
         return []
 
     def save_static(self, path):
@@ -237,7 +178,7 @@ class ResultVisualizer:
         plt.show()
 
 
-def main(csv_path, anim_fps, verbose, no_shift):
+def main(csv_path, anim_fps, verbose):
     if not os.path.exists(csv_path):
         print(f"File not found: {csv_path}")
         return
@@ -248,31 +189,22 @@ def main(csv_path, anim_fps, verbose, no_shift):
         print(f"CSV Reading Error: {e}")
         return
 
-    enable_shift = not no_shift
-    aligned_r_radius, aligned_r_energy, aligned_r_pos = preprocess(
-        h_radius, r_radius, r_energy, r_pos, verbose, enable_shift
-    )
-
-    radius_data, pos_data, energy_data, en_pct = compute_metrics(
-        h_radius, aligned_r_radius, h_pos, aligned_r_pos, h_energy, aligned_r_energy, k
+    radius_data, pos_data, energy_data = compute_metrics(
+        h_radius, r_radius, h_pos, r_pos, h_energy, r_energy, k
     )
 
     if verbose:
         print("=" * 40 + "\n      GLOBAL RMSE SUMMARY       \n" + "=" * 40)
-        print(f"Shifting Enabled:  {enable_shift}")
         print(f"Radius RMSE:       {np.sqrt(np.mean(radius_data[2] ** 2)):.5f} m")
         print(f"Pos Variation RMSE:{np.sqrt(np.mean(pos_data[2] ** 2)):.5f} m")
-        print(f"Energy AvgErr:     {np.mean(en_pct):.2f} %")
         print("=" * 40)
 
-    viz = ResultVisualizer(time, radius_data, pos_data, energy_data, en_pct, anim_fps)
+    viz = ResultVisualizer(time, radius_data, pos_data, energy_data, anim_fps)
 
-    aniext = "_no-shift_video.mp4" if no_shift else "_video.mp4"
-    save_path_anim = os.path.splitext(csv_path)[0] + aniext
+    save_path_anim = os.path.splitext(csv_path)[0] + "_video.mp4"
     viz.save_animation(save_path_anim)
 
-    plotext = "_no-shift.png" if no_shift else ".png"
-    save_path_static = os.path.splitext(csv_path)[0] + plotext
+    save_path_static = os.path.splitext(csv_path)[0] + ".png"
     viz.save_static(save_path_static)
 
     viz.show()
@@ -283,8 +215,7 @@ if __name__ == "__main__":
     parser.add_argument("path", help="CSV file path")
     parser.add_argument("--fps", help="Animation FPS", default=60)
     parser.add_argument("-v", "--verbose", action="store_true", help="Print details")
-    parser.add_argument("--no-shift", action="store_true", help="Disable automatic time shifting/alignment")
 
     args = parser.parse_args()
 
-    main(args.path, args.fps, args.verbose, args.no_shift)
+    main(args.path, args.fps, args.verbose)
