@@ -36,7 +36,8 @@ def compute_metrics(h_radius, aligned_r_radius, h_pos, aligned_r_pos, h_energy, 
     r_delta_vec = aligned_r_pos - r_start_pos
     h_move_mag = np.linalg.norm(h_delta_vec, axis=1)
     r_move_mag = np.linalg.norm(r_delta_vec, axis=1)
-    pos_error_var = np.abs(h_move_mag - r_move_mag)
+    diff_vec = h_delta_vec - r_delta_vec
+    pos_error_var = np.linalg.norm(diff_vec, axis=1)
 
     # Energy
     exp_r_energy = h_energy

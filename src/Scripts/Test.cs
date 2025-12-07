@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Globalization;
 using WeArt.Components;
 
 public class Test : MonoBehaviour
@@ -17,6 +18,8 @@ public class Test : MonoBehaviour
     public float springStiffness = 1.0f;
     [Tooltip("File name for the CSV report.")]
     public string fileName = "GraspValidationReport.csv";
+    [SerializeField]
+    public string saveDirectory;
 
     // Internal state
     private bool _isRecording = false;
@@ -52,7 +55,7 @@ public class Test : MonoBehaviour
         }
     }
 
-
+  
     void StartRecording()
     {
         if (h_sphere == null || r_sphere == null)
@@ -73,7 +76,7 @@ public class Test : MonoBehaviour
         _csvContent.AppendLine("Time,HumanRadius,RobotRadius,ScalingFactor,HumanEnergy,RobotEnergy,"+
                                 "hPos_x,hPos_y,hPos_z,rPos_x,rPos_y,rPos_z");
 
-
+            
         _isRecording = true;
         Debug.Log($"<color=green>VALIDATION STARTED.</color> Baseline H: {_initialRadiusH:F4}, Baseline R: {_initialRadiusR:F4}, Scaling Factor: {_scalingFactor:F4}");
     }
@@ -82,16 +85,24 @@ public class Test : MonoBehaviour
     {
         _isRecording = false;
 
-        string directory;
-        directory = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
+        string directory = saveDirectory;
 
+        if (string.IsNullOrEmpty(directory))
+        {
+            Debug.LogError("Save directory is not set in the Inspector.");
+            return;
+        }
+
+        // Crea la cartella se non esiste
+        if (!Directory.Exists(directory))
+            Directory.CreateDirectory(directory);
 
         string filePath = Path.Combine(directory, fileName);
 
         try
         {
             File.WriteAllText(filePath, _csvContent.ToString());
-            Debug.Log($"<color=red>VALIDATION STOPPED.</color> Report saved to: {filePath}");
+            Debug.Log($"<color=red>VALIDATION STOPPED.</color> Report salvato in: {filePath}");
         }
         catch (System.Exception e)
         {
@@ -106,8 +117,8 @@ public class Test : MonoBehaviour
         float currentRadiusR = r_sphere.Radius;
 
         // Compute Deltas (normalized)
-        float deformationH = Mathf.Max(0, _initialRadiusH - currentRadiusH);
-        float deformationR = Mathf.Max(0, _initialRadiusR - currentRadiusR);
+        float deformationH = Mathf.Abs(_initialRadiusH - currentRadiusH);
+        float deformationR = Mathf.Abs(_initialRadiusR - currentRadiusR);
         float normDefH = deformationH / _initialRadiusH;
         float normDefR = deformationR / _initialRadiusR;
 
@@ -123,8 +134,15 @@ public class Test : MonoBehaviour
         Vector3 rPos = r_sphere.transform.position;
 
         // Log data
-        string line = $"{Time.time},{currentRadiusH},{currentRadiusR},{_scalingFactor},{energyHnorm},{energyRnorm}," +
-                    $"{hPos.x},{hPos.y},{hPos.z},{rPos.x},{rPos.y},{rPos.z}";
+        string line = string.Format(CultureInfo.InvariantCulture, 
+            "{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}",
+            Time.time, 
+            currentRadiusH, currentRadiusR, 
+            _scalingFactor, 
+            energyHnorm, energyRnorm,
+            hPos.x, hPos.y, hPos.z, 
+            rPos.x, rPos.y, rPos.z
+        );
 
         _csvContent.AppendLine(line);
     }
