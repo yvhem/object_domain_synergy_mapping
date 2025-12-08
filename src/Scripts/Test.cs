@@ -2,7 +2,6 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Globalization;
 using WeArt.Components;
 
 public class Test : MonoBehaviour
@@ -12,7 +11,7 @@ public class Test : MonoBehaviour
     public VirtualSphere h_sphere;
     [Tooltip("Robot Virtual Sphere")]
     public VirtualSphere r_sphere;
-    
+
     [Header("Validation Settings")]
     [Tooltip("1.0 for normalized comparison.")]
     public float springStiffness = 1.0f;
@@ -55,7 +54,7 @@ public class Test : MonoBehaviour
         }
     }
 
-  
+
     void StartRecording()
     {
         if (h_sphere == null || r_sphere == null)
@@ -76,7 +75,7 @@ public class Test : MonoBehaviour
         _csvContent.AppendLine("Time,HumanRadius,RobotRadius,ScalingFactor,HumanEnergy,RobotEnergy,"+
                                 "hPos_x,hPos_y,hPos_z,rPos_x,rPos_y,rPos_z");
 
-            
+
         _isRecording = true;
         Debug.Log($"<color=green>VALIDATION STARTED.</color> Baseline H: {_initialRadiusH:F4}, Baseline R: {_initialRadiusR:F4}, Scaling Factor: {_scalingFactor:F4}");
     }
@@ -126,7 +125,7 @@ public class Test : MonoBehaviour
         float _ncpH = h_sphere.referencePoints.Length;
         float _ncpR = r_sphere.referencePoints.Length;
         float cp_scalingFactor= _ncpH / _ncpR;
-        float energyHnorm = 0.5f * cp_scalingFactor * springStiffness * normDefH * normDefH;
+        float energyHnorm = 0.5f  * springStiffness * normDefH * normDefH;
         float energyRnorm = 0.5f * cp_scalingFactor * springStiffness * normDefR * normDefR;
 
         // Position
@@ -134,15 +133,8 @@ public class Test : MonoBehaviour
         Vector3 rPos = r_sphere.transform.position;
 
         // Log data
-        string line = string.Format(CultureInfo.InvariantCulture, 
-            "{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11}",
-            Time.time, 
-            currentRadiusH, currentRadiusR, 
-            _scalingFactor, 
-            energyHnorm, energyRnorm,
-            hPos.x, hPos.y, hPos.z, 
-            rPos.x, rPos.y, rPos.z
-        );
+        string line = $"{Time.time},{currentRadiusH},{currentRadiusR},{_scalingFactor},{energyHnorm},{energyRnorm}," +
+                    $"{hPos.x},{hPos.y},{hPos.z},{rPos.x},{rPos.y},{rPos.z}";
 
         _csvContent.AppendLine(line);
     }

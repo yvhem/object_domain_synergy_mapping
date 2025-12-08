@@ -36,8 +36,7 @@ def compute_metrics(h_radius, aligned_r_radius, h_pos, aligned_r_pos, h_energy, 
     r_delta_vec = aligned_r_pos - r_start_pos
     h_move_mag = np.linalg.norm(h_delta_vec, axis=1)
     r_move_mag = np.linalg.norm(r_delta_vec, axis=1)
-    diff_vec = h_delta_vec - r_delta_vec
-    pos_error_var = np.linalg.norm(diff_vec, axis=1)
+    pos_error_var = np.abs(h_move_mag - r_move_mag)
 
     # Energy
     exp_r_energy = h_energy
@@ -179,7 +178,7 @@ class ResultVisualizer:
         plt.show()
 
 
-def main(csv_path, anim_fps, verbose):
+def main(csv_path, anim_fps, verbose, mode):
     if not os.path.exists(csv_path):
         print(f"File not found: {csv_path}")
         return
@@ -202,13 +201,13 @@ def main(csv_path, anim_fps, verbose):
 
     viz = ResultVisualizer(time, radius_data, pos_data, energy_data, anim_fps)
 
-    save_path_anim = os.path.splitext(csv_path)[0] + "_video.mp4"
-    viz.save_animation(save_path_anim)
+    if mode in (1,3):
+        save_path_static = os.path.splitext(csv_path)[0] + ".png"
+        viz.save_static(save_path_static)
 
-    save_path_static = os.path.splitext(csv_path)[0] + ".png"
-    viz.save_static(save_path_static)
-
-    viz.show()
+    if mode in (2,3):
+        save_path_anim = os.path.splitext(csv_path)[0] + "_video.mp4"
+        viz.save_animation(save_path_anim)
 
 
 if __name__ == "__main__":
@@ -216,7 +215,8 @@ if __name__ == "__main__":
     parser.add_argument("path", help="CSV file path")
     parser.add_argument("--fps", help="Animation FPS", default=60)
     parser.add_argument("-v", "--verbose", action="store_true", help="Print details")
+    parser.add_argument( "--mode", type=int, choices=[1,2,3], default=1 , help="1. Plots; 2. Animation; 3. Both")
 
     args = parser.parse_args()
 
-    main(args.path, args.fps, args.verbose)
+    main(args.path, args.fps, args.verbose, args.mode)
