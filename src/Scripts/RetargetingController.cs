@@ -418,42 +418,36 @@ namespace WeArt.Components
         private void IntegrateVelocities(Vector<double> dq, float dt) {
             if (dq == null || dq.Count != _dof) return;
             int idx = 0;
+
             for (int i=0; i < r_joints.Length; i++) {
                 if (r_joints[i] == null) continue;
-                
-                var type = r_jointTypes[i]; 
-                var body = _r_bodies[i];
-                
-                if (body == null) { 
-                    idx += (type == Kinematics.JointType.HingeXY) ? 2 : (type == Kinematics.JointType.Ball ? 3 : 1); continue; 
-                }
 
-                float vx = 0, vy = 0, vz = 0;
-                if ((type == Kinematics.JointType.HingeX || type == Kinematics.JointType.HingeXY || type == Kinematics.JointType.Ball) && idx < dq.Count) 
-                    vx = (float)dq[idx++] * velocityGain;
-                if ((type == Kinematics.JointType.HingeY || type == Kinematics.JointType.HingeXY || type == Kinematics.JointType.Ball) && idx < dq.Count)
-                    vy = (float)dq[idx++] * velocityGain;
-                if ((type == Kinematics.JointType.HingeZ || type == Kinematics.JointType.Ball) && idx < dq.Count)
-                    vz = (float)dq[idx++] * velocityGain;
-                
-                if (body.jointType == ArticulationJointType.RevoluteJoint) { 
-                    float deltaSpeed = (vx + vy + vz); 
-                    float deltaDeg = deltaSpeed * Mathf.Rad2Deg * dt; 
-                    var drive = body.xDrive; 
-                    drive.target += deltaDeg; 
-                    body.xDrive = drive; 
-                } else if (body.jointType == ArticulationJointType.SphericalJoint) { 
-                    var xDrive = body.xDrive; 
-                    xDrive.target += vx * Mathf.Rad2Deg * dt; 
-                    body.xDrive = xDrive; 
-                    
-                    var yDrive = body.yDrive; 
-                    yDrive.target += vy * Mathf.Rad2Deg * dt; 
-                    body.yDrive = yDrive; 
-                    
-                    var zDrive = body.zDrive; 
-                    zDrive.target += vz * Mathf.Rad2Deg * dt; 
-                    body.zDrive = zDrive; }
+                var body = _r_bodies[i];
+                var type = r_jointTypes[i];
+
+                // get velocity for this joint
+                float velocity = (float)dq[idx];
+
+                // increment axis based on DoF
+                if (type == Kinematics.JointType.HingeXY) idx += 2;
+                else if (type == Kinematics.JointType.Ball) idx += 3;
+                else idx += 1;
+
+                if (body == null) continue;
+
+                if (body.jointType == ArticulationJointType.RevoluteJoint) {
+                    // URDF importer aligns rotation axis to xDrive
+                    float deltaDeg = velocity * velocityGain * Mathf.Rad2Deg * dt;
+
+                    var drive = body.xDrive;
+                    drive.target += deltaDeg;
+
+                    // clamp within limits
+                    //if (drive.upperLimit > drive.lowerLimit)
+                    //    drive.target = Mathf.Clamp(drive.target, drive.lowerLimit, drive.upperLimit);
+
+                    body.xDrive = drive;
+                }
             }
         }
 
