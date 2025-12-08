@@ -1,1 +1,169 @@
 \chapter{Results}\label{Ch:results}
+
+In this chapter, we present the experimental results obtained from the validation of the motion retargeting framework. The analysis is divided into two parts: a quantitative evaluation based on the metrics defined in Chapter \ref{Ch:setup}, and a qualitative assessment of the grasping capabilities on standard geometric objects.
+
+The experiments were performed using the three robotic hands described in the previous chapter: the Barrett Hand, the Mia Hand, and the Shadow Dexterous Hand. For the quantitative analysis, we recorded data during a standardized grasping task where the user closes their hand (shrinking the virtual sphere, see Figure \ref{fig:sphere_grasp}) and translates it within the workspace. To isolate the performance of the retargeting algorithm from potential noise, these specific plots were generated using keyboard teleoperation to simulate a nominal closing motion. The qualitative validation, instead, uses the data recorded from the Weart Glove during natural human grasps.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/VirtualSpheres/Barrett_Virtual_Sphere.png}
+        \caption{Virtual sphere representation for the Barrett Hand.}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/VirtualSpheres/Mia_Virtual_Sphere.png}
+        \caption{Virtual sphere representation for the Mia Hand.}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/VirtualSpheres/Shadow_Virtual_Sphere.png}
+        \caption{Virtual sphere representation for the Shadow Dexterous Hand. On the left is the human hand, on the right the robot hand.}
+    \end{subfigure}
+    \caption{Virtual sphere representations for the robotic hands.}
+    \label{fig:sphere_grasp}
+\end{figure}
+
+\section{Quantitative analysis}
+We analyze the performance of the system in terms of geometric fidelity (radius and position tracking) and energetic fidelity (elastic energy estimation).
+
+\subsection{Barrett Hand}
+The Barrett Hand represents a significant test case due to its non-anthropomorphic structure and low number of actuated degrees of freedom (4 motors).
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.55\textwidth]{images/Test/Barrett_GraspValidation.png}
+    \caption{Performance metrics for the Barrett Hand.}
+    \label{fig:results_barrett}
+\end{figure}
+
+\paragraph{Radius comparison} As shown in the top graph of Figure \ref{fig:results_barrett}, the retargeting algorithm succesfully maps the closing motion: the human hand (blue dashed line) starts the grasp at $t \approx 2.2$ s, reducing the virtual sphere radius from $\approx 0.17$ m to a steady-state value of $\approx 0.075$ m; the Barrett Hand (orange solid line) follows this reference closely. We can note how at first the robot radius slightly increases before starting to close, which may be due to the initial configuration.
+
+We can also note how the robot achieves a smaller final radius ($\approx 0.06$ m) compared to the human hand, which is expected given the different kinematic structures: in fact, the Barrett Hand is capable of fully closing its fingers as we said in Chapter \ref{Ch:setup}, while the human hand cannot completely close around a sphere due to anatomical constraints.
+
+\paragraph{Position variation} The middle graph illustrates the tracking of the hand position, represented by the center of the virtual sphere. The robot accurately follows the direction and profile of the human hand movement, with some differences in magnitude: the human hand translates by $\approx 0.11$ m, while the Barrett Hand reaches a displacement of $\approx 0.065$m. This is due to the physical parameters (stiffness, damping, force limit) we set for the imported URDF model of the Barrett Hand in the simulation environment in order to achieve stable grasps.
+
+\paragraph{Elastic energy} The bottom graph shows the elastic potential energy stored in the grasp, which represents grasp intensity. We can identify two key observations: 
+\begin{enumerate}
+    \item there is a "lag" between the human input and the robot response (starting at $t \approx 2.3$ s for the human and $t \approx 2.4$ s for the robot). This is a consequence of the radius tracking performance discussed earlier, where the robot radius initially increases before closing;
+    \item the steady-state energy of the robot stabilizes at a higher value ($\approx 0.37$ J) compared to the human reference ($\approx 0.25$ J), indicating a very firm grasp.
+\end{enumerate}
+
+\subsection{Mia Hand}
+The Mia Hand shares the underactuated nature of the Barrett Hand but features an anthropomorphic design, as we discussed in Chapter \ref{Ch:setup}.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.55\textwidth]{images/Test/Mia_GraspValidation.png}
+    \caption{Performance metrics for the Mia Hand.}
+    \label{fig:results_mia}
+\end{figure}
+
+\paragraph{Radius comparison} From the top graph in Figure \ref{fig:results_mia} is clear that the Mia Hand tracks the human reference accurately during the closing motion, showing a similar trend to the Barrett Hand. However, in this case the radius does not exhibit an initial increase before starting to close.
+
+\paragraph{Position variation} In the position tracking graph (middle), we observe that the Mia Hand adopts a more conservative approach compared to the Barrett Hand. While it follows the direction of the human hand movement, the overall displacement is smaller, with the Mia Hand translating by $\approx 0.04$ m compared to the human hand's $\approx 0.11$ m. This difference is again attributable to the tuning we performed on the physical parameters of the Mia Hand model in Unity.
+
+\paragraph{Elastic energy} As for the energy plot (bottom), the main difference between the Mia Hand and the Barrett Hand is the absence of a lag in the robot response: the Mia Hand begins to store elastic energy at the same time as the human hand. The steady-state energy is again higher for the robot compared to the human reference, ensuring a firm grasp.
+
+\subsection{Shadow Dexterous Hand}
+The Shadow Dexterous Hand, being highly actuated and kinematically redundant for the grasping task, presents the closest approximation to the human hand among the three robotic hands considered.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.55\textwidth]{images/Test/Shadow_GraspValidation.png}
+    \caption{Performance metrics for the Shadow Dexterous Hand.}
+    \label{fig:results_shadow}
+\end{figure}
+
+\paragraph{Radius comparison} The radius tracking performance (top graph of Figure \ref{fig:results_shadow}) shows once again the initial increase in radius. Nonetheless, even in this case of a highly dexterous hand that is harder to control, the retargeting algorithm manages to follow the reference closing motion without significant issues or deviations.
+
+\paragraph{Position variation} The motion of the virtual sphere of the Shadow Hand does not result in a substantial translation, with a displacement of only $\approx 0.02$ m. This conservative behavior is likely due to the high number of degrees of freedom and the complexity of coordinating them effectively during the grasping task.
+
+\paragraph{Elastic energy} The energy profile (bottom) reports the same lag observed in the Barrett Hand case. Moreover, the main difference between this and the previous two hands lies in the steady-state energy level: this is the only hand that stabilizes at a lower energy ($\approx 0.11$ J) compared to the human reference. This could be already inferred from the radius plot, where the final robot radius is slightly larger than the human one, indicating a less intense grasp.
+
+\section{Impact of redundancy resolution}
+A key component of our control framework is the redundancy resolution strategy described in Chapter \ref{Ch:framework}, which exploits the null space of the robot Jacobian to optimize the internal configuration of the robot. This additional optimization did not show significant effects on the performance metrics analyzed in the previous section, as they only consider a single closing motion. Therefore, the primary task, that is tracking the virtual sphere so as to perform a stable grasp, can be achieved without leveraging redundancy, even in the case of the dexterous Shadow Hand. However, our experiments highlighted how redundancy resolution plays a crucial role when it comes to maintain a stable and natural behavior over time, when the user performs multiple grasps and releases in sequence.
+
+\section{Qualitative validation}
+The various grasping tasks with each robotic hand were performed on a ball, a cube, and a cylinder. These shapes were chosen for their simplicity and their ability to represent common grasping scenarios. In the following we show representative images of each robotic hand successfully grasping the objects using the motion retargeting framework.
+
+\subsection{Barrett Hand}
+The Barrett Hand demonstrated robust performance across all three test objects. In Figure \ref{fig:grasp_barrett} we can see how it effectively conforms to the shape of each object, achieving secure grasps: these resulted from an initial configuration where the three fingers were open in a claw-like posture.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/Grasp/Barrett/Barrett_Grasp_Ball.png}
+        \caption{Barrett Hand grasping a ball.}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/Grasp/Barrett/Barrett_Grasp_Cube.png}
+        \caption{Barrett Hand grasping a cube.}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/Grasp/Barrett/Barrett_Grasp_Cylinder.png}
+        \caption{Barrett Hand grasping a cylinder.}
+    \end{subfigure}
+    \caption{Barrett Hand grasping standard geometric objects.}
+    \label{fig:grasp_barrett}
+\end{figure}
+
+\subsection{Mia Hand}
+Figure \ref{fig:grasp_mia} shows the Mia Hand succesfully grasping the three objects from an initial open configuration. The anthropomorphic design and the underactuation of this hand allowed for a very simple yet effective grasping strategy, where the fingers naturally adapt to the shape of the objects upon collision.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/Grasp/Mia/Mia_Grasp_Ball.png}
+        \caption{Mia Hand grasping a ball.}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/Grasp/Mia/Mia_Grasp_Cube.png}
+        \caption{Mia Hand grasping a cube.}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/Grasp/Mia/Mia_Grasp_Cylinder.png}
+        \caption{Mia Hand grasping a cylinder.}
+    \end{subfigure}
+    \caption{Mia Hand grasping standard geometric objects.}
+    \label{fig:grasp_mia}
+\end{figure}
+
+\subsection{Shadow Hand}
+Finally, the Shadow Dexterous Hand showed some different behavior compared to the previous two robotic hands. Due to its high dexterity, it was harder for it to adapt to the simple closing motion of the human hand, resulting in some strange finger configurations during the grasps, as shown in Figure \ref{fig:grasp_shadow}.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/Grasp/Shadow/Shadow_Grasp_Ball.png}
+        \caption{Shadow Hand grasping a ball.}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/Grasp/Shadow/Shadow_Grasp_Cube.png}
+        \caption{Shadow Hand grasping a cube.}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{images/Grasp/Shadow/Shadow_Grasp_Cylinder.png}
+        \caption{Shadow Hand grasping a cylinder.}
+    \end{subfigure}
+    \caption{Shadow Hand grasping standard geometric objects.}
+    \label{fig:grasp_shadow}
+\end{figure}

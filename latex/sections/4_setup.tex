@@ -240,14 +240,6 @@ where $k_s$ is the spring stiffness, for simplicity set to 1. Having now both hu
     e_\text{energy}(t) = |U_R(t) - U_H(t)|
 \end{equation}
 
-\paragraph{Relative percentage error} To normalize the energy performance, we compute the relative percentage error. To avoid numerical instability when the energy is near zero (e.g., when the hand is open), we introduce a small constant $\epsilon=1 \times 10^{-9}$ and apply a conditional mask to zero out the error during idle phases (when $U_H(t) \leq 5\%$ of its maximum).
-\begin{equation}
-    e_{\%}(t) = \frac{|U_R(t) - U_H(t)|}{U_H(t) + \epsilon} \times 100
-\end{equation}
-
-Finally, for an easy interpretation of the results, we smooth the percentage error using a moving average filter $\mathcal{S}$ over a window of 10 frames:
-\[ e_{\%, \text{smooth}}(t) = \mathcal{S}(e_{\%}(t)) \]
-
 \section{Qualitative validation}
 The quantitative metrics defined above provide a measure of kinematic accuracy, but they do not capture the functional success of a grasp in a practical scenario. To assess the applicability of the retargeting algorithm in real-world manipulation tasks, we also perform qualitative evaluations by simulating various grasping tasks within the Unity environment.
 
