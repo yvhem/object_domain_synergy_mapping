@@ -8,7 +8,7 @@ The aim of the project is to develop a framework for **retargeting** the motion 
 **different hand models** for **grasping** tasks using **synergies** (correlation of degrees of freedom in 
 patterns of more frequent use). The system pipeline is the following:
 
-![Pipeline](./docs/pipeline.png)
+<img src="./docs/Pipeline.png" width="500" alt="Pipeline">
 
 ---
 ## Project Video
