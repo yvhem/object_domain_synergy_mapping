@@ -9,9 +9,10 @@ public class Test : MonoBehaviour
     [Header("References")]
     [Tooltip("Human Virtual Sphere")]
     public VirtualSphere h_sphere;
+    public Transform h_palm;
     [Tooltip("Robot Virtual Sphere")]
     public VirtualSphere r_sphere;
-
+    
     [Header("Validation Settings")]
     [Tooltip("1.0 for normalized comparison.")]
     public float springStiffness = 1.0f;
@@ -54,7 +55,7 @@ public class Test : MonoBehaviour
         }
     }
 
-
+  
     void StartRecording()
     {
         if (h_sphere == null || r_sphere == null)
@@ -63,19 +64,24 @@ public class Test : MonoBehaviour
             return;
         }
 
-        _initialRadiusH = h_sphere.Radius;
+        float h_globalScale = Mathf.Abs(h_palm.lossyScale.x);
+        _initialRadiusH = h_sphere.Radius * h_globalScale; 
         _initialRadiusR = r_sphere.Radius;
 
-        if (_initialRadiusH > 0)
-            _scalingFactor = _initialRadiusR / _initialRadiusH;
-        else
+        if (_initialRadiusH < 0.001f)
+        {
+            Debug.LogWarning($"Human Radius too small ({_initialRadiusH}). Defaulting Scale to 1.");
             _scalingFactor = 1.0f;
+        }
+        else
+            _scalingFactor = _initialRadiusR / _initialRadiusH;
+        
 
         _csvContent.Clear();
         _csvContent.AppendLine("Time,HumanRadius,RobotRadius,ScalingFactor,HumanEnergy,RobotEnergy,"+
                                 "hPos_x,hPos_y,hPos_z,rPos_x,rPos_y,rPos_z");
 
-
+            
         _isRecording = true;
         Debug.Log($"<color=green>VALIDATION STARTED.</color> Baseline H: {_initialRadiusH:F4}, Baseline R: {_initialRadiusR:F4}, Scaling Factor: {_scalingFactor:F4}");
     }
@@ -92,7 +98,6 @@ public class Test : MonoBehaviour
             return;
         }
 
-        // Crea la cartella se non esiste
         if (!Directory.Exists(directory))
             Directory.CreateDirectory(directory);
 
@@ -111,26 +116,27 @@ public class Test : MonoBehaviour
 
     void PerformValidationStep()
     {
-        // Current radii
-        float currentRadiusH = h_sphere.Radius;
+        float h_globalScale = Mathf.Abs(h_palm.lossyScale.x);
+        
+        // Radius
+        float currentRadiusH = h_sphere.Radius * h_globalScale;
         float currentRadiusR = r_sphere.Radius;
 
-        // Compute Deltas (normalized)
+        // Position
+        Vector3 hPos = h_sphere.transform.position; 
+        Vector3 rPos = r_sphere.transform.position;
+
         float deformationH = Mathf.Abs(_initialRadiusH - currentRadiusH);
         float deformationR = Mathf.Abs(_initialRadiusR - currentRadiusR);
-        float normDefH = deformationH / _initialRadiusH;
-        float normDefR = deformationR / _initialRadiusR;
+        float normDefH = (_initialRadiusH > 0) ? deformationH / _initialRadiusH : 0;
+        float normDefR = (_initialRadiusR > 0) ? deformationR / _initialRadiusR : 0;
 
-        // Compute Energy (normalized)
-        float _ncpH = h_sphere.referencePoints.Length;
-        float _ncpR = r_sphere.referencePoints.Length;
-        float cp_scalingFactor= _ncpH / _ncpR;
-        float energyHnorm = 0.5f  * springStiffness * normDefH * normDefH;
+        // Energy
+        float _ncpH = (h_sphere.referencePoints != null) ? h_sphere.referencePoints.Length : 1;
+        float _ncpR = (r_sphere.referencePoints != null) ? r_sphere.referencePoints.Length : 1;
+        float cp_scalingFactor = (_ncpR > 0) ? _ncpH / _ncpR : 1;
+        float energyHnorm = 0.5f * springStiffness * normDefH * normDefH;
         float energyRnorm = 0.5f * cp_scalingFactor * springStiffness * normDefR * normDefR;
-
-        // Position
-        Vector3 hPos = h_sphere.transform.position;
-        Vector3 rPos = r_sphere.transform.position;
 
         // Log data
         string line = $"{Time.time},{currentRadiusH},{currentRadiusR},{_scalingFactor},{energyHnorm},{energyRnorm}," +

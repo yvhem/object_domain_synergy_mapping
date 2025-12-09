@@ -202,13 +202,18 @@ namespace WeArt.Components
         private void PerformRobotRetargeting()
         {
             var v_h = Vector<double>.Build.Dense(h_refPoints.Length * 3);
+            float scaleFactor = Mathf.Abs(h_palm.lossyScale.x);
+
             if (Time.deltaTime > 1e-5)
             {
                 for (int i=0; i < h_refPoints.Length; i++)
                 {
                     if (h_refPoints[i] == null) continue;
+                    
                     Vector3 curr = h_palm.InverseTransformPoint(h_refPoints[i].position);
                     Vector3 vel = (curr - _h_prevPos[i]) / Time.deltaTime;
+                    vel *= scaleFactor; 
+
                     v_h[i*3] = vel.x; v_h[i*3 + 1] = vel.y; v_h[i*3 + 2] = vel.z;
                 }
             }
@@ -220,7 +225,14 @@ namespace WeArt.Components
             Matrix<double> J_r_pinv = PInv(J_r);
             Matrix<double> A_r = r_sphere.ComputeMatrixA(r_palm);
 
-            float k = (h_sphere.Radius > 1e-5f) ? r_sphere.Radius / h_sphere.Radius : 1.0f;
+            float humanGlobalScale = Mathf.Abs(h_palm.lossyScale.x);  
+            float h_worldRadius = h_sphere.Radius * humanGlobalScale;
+            float k = 1.0f;
+            if (h_worldRadius > 0.001f) 
+                k = r_sphere.Radius / h_worldRadius;
+            else 
+                k = 1.0f; 
+
             Matrix<double> K_c = Matrix<double>.Build.DenseIdentity(7, 7);
             K_c[0, 0] = k; K_c[1, 1] = k; K_c[2, 2] = k;
 
@@ -295,7 +307,6 @@ namespace WeArt.Components
 
         private void ProcessWeArtInput()
         {
-            // Input in tempo reale dai thimble WeArt
             if (thumbThimble != null)
             {
                 _synergyInput[0] = thumbThimble.Closure.Value;
