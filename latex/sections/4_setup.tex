@@ -1,18 +1,268 @@
 \chapter{Experimental setup}\label{Ch:setup}
 
+In this chapter, we describe the complete hardware and software architecture developed to validate the proposed retargeting framework. We will first go through the data flow from the input device to the simulation environment, delve into the software implementation of the control algorithm, present the specific robotic hand models used in our experiments, and finally define the metrics employed to evaluate the performance of the whole architecture.
+
 \section{System overview}
-% glove -> python -> unity
-\subsection{Hardware}
-% weart glove + (simulated) robotic hand
+The motion retargeting pipeline shown in Figure \ref{fig:system_overview} is designed as a modular system composed of three main blocks: the \textit{input layer} (haptic glove and reconstruction server), the \textit{retargeting layer} (unity simulation and retargeting logic), and the \textit{output layer} (robotic hand models).
 
-\subsection{Software}
-% data flow diagram + description of each module
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}[
+        node distance=3.5cm and 3.5cm, 
+        font=\small\sffamily,
+        >=Latex,
+        % styles
+        baseBlock/.style={rectangle, thick, align=center, rounded corners=4pt, minimum height=1.3cm, text width=3.2cm, drop shadow={opacity=0.25, shadow xshift=2pt, shadow yshift=-2pt}},
+        % component styles
+        styleInput/.style={baseBlock, draw=green!40!black, fill=green!15},
+        styleLogic/.style={baseBlock, draw=blue!50!black, fill=blue!15},
+        styleOutput/.style={baseBlock, draw=orange!60!black, fill=orange!15},
+        % container styles
+        container/.style={dashed, thick, inner sep=0.3cm, rounded corners=8pt},
+        cntInput/.style={container, draw=green!40!black!40, fill=green!6},
+        cntLogic/.style={container, draw=blue!40!black!40, fill=blue!6},
+        cntOutput/.style={container, draw=orange!40!black!40, fill=orange!6},
+        % label styles
+        layerLabel/.style={text=black!65, font=\bfseries, align=center},
+        arrowLbl/.style={font=\footnotesize, align=center, text=black!90, inner sep=3pt},
+        conn/.style={->, thick, draw=black!75, rounded corners=5pt}
+    ]
 
-\section{Input layer}
-% weart glove and neural network
+    % nodes
 
-\section{Software}
-% unity scripts, kinematics library
+    % row 1: input layer
+    \node [styleInput] (glove) {Weart\\TouchDIVER G1};
+    \node [styleInput, right=of glove] (server) {Python server};
 
-\section{Robotic models}
-% barrett hand
+    % row 2: retargeting layer
+    \node [styleLogic, below=of glove] (vhand) {Virtual\\human hand};
+    \node [styleLogic, right=of vhand] (algo) {Retargeting\\algorithm};
+
+    % row 3: output layer
+    \node [styleOutput, below=2.0cm of algo] (rhand) {Robotic\\hand model};
+
+    % containers and labels
+    \begin{scope}[on background layer]
+        % block 1: input layer
+        \node [cntInput, fit=(glove) (server)] (boxInput) {};
+        \node [layerLabel, above=0.1cm of boxInput] {Input layer};
+        
+        % block 2: retargeting layer
+        \node [cntLogic, fit=(vhand) (algo)] (boxLogic) {};
+        \node [layerLabel, above=0.1cm of boxLogic] {Retargeting layer (Unity)};
+
+        % block 3: output layer
+        \node [cntOutput, fit=(rhand), minimum width=4cm] (boxOutput) {};
+        \node [layerLabel, left=0.2cm of boxOutput, anchor=east] {Output layer};
+    \end{scope}
+
+    % connections
+
+    % 1. Acquisition
+    \draw [conn] (glove) -- node[arrowLbl, above] {\textbf{1. Acquisition}\\Sensor data} (server);
+
+    % 2. Pose Reconstruction & 3. Transmission
+    \draw [conn] (server.south) 
+        -- ++(0,-1.6) coordinate(turn1) 
+        node[midway, right, xshift=2pt, font=\footnotesize, text=black!80, align=left] {\textbf{2. Pose}\\ \textbf{reconstruction}}
+        -- (turn1 -| vhand.north) coordinate(turn2) 
+        -- (vhand.north)
+        node[midway, left, arrowLbl, align=right] {\textbf{3. Transmission}\\Joint angles};
+
+    % 4. Retargeting
+    \draw [conn] (vhand) -- node[arrowLbl, above] {\textbf{4. Retargeting}\\Deformation} (algo);
+
+    % 5. Actuation
+    \draw [conn] (algo) -- node[arrowLbl, right, xshift=3pt] {\textbf{5. Actuation}\\Joint velocities} (rhand);
+
+    \end{tikzpicture}
+    \caption{System architecture overview showing the complete motion retargeting pipeline. The data flows from the haptic glove through the reconstruction server, into the Unity-based retargeting layer, and finally to the robotic hand model for actuation.}
+    \label{fig:system_overview}
+\end{figure}
+
+The data flow consists of the following steps:
+\begin{enumerate}
+    \item \textit{Acquisition}: the user wears the Weart TouchDIVER G1 haptic glove, which captures sensor data (finger closure and abduction) that are sent to a Python server.
+    \item \textit{Reconstruction}: the Python server processes the glove inputs using a neural network \cite{primiceri2025motion} to reconstruct the full pose of the virtual human hand in Unity.
+    \item \textit{Transmission}: the reconstructed joint angles are sent to the Unity simulation environment in real-time.
+    \item \textit{Retargeting}: inside Unity, the retargeting algorithm detailed in Chapter \ref{Ch:framework} computes the deformation of the virtual sphere and derives the corresponding joint velocities for the target robotic hand model.
+    \item \textit{Actuation}: the resulting joint velocities are integrated to update the visual pose of the robotic hand in the simulation.
+\end{enumerate}
+
+\section{Human input layer}
+The input interface is the Weart TouchDIVER G1, a wearable haptic device capable of tracking hand movements and rendering force, texture, and thermal cues. For the scope of this work, we focus on its motion tracking capabilities: it provides raw data about the closure of the thumb, index, and middle fingers, as well as the abduction of the thumb relative to the palm.
+
+Since the glove does not track the ring and pinky fingers, nor the individual phalanx rotations (MCP, PIP, DIP) explicitly, the raw sensor data is insufficient for teleoperation. To address this limitation, we employ the reconstruction module developed by Primiceri et al. \cite{primiceri2025motion}: a Python script acts as a server listening for incoming data from the glove, and feeds this data into a pre-trained neural network which outputs a 62-dimensional vector containing the sine and cosine encodings of all 15 human hand joints; this vector is then converted back into Euler angles and sent to the Unity client.
+
+\section{Software implementation}
+The core logic of the project is implemented in C\# in the Unity engine. The implementation relies on the \texttt{MathNet.Numerics} library for efficient linear algebra computations, such as matrix multiplications and pseudoinverses.
+
+\paragraph{Communication} A dedicated thread handles the TCP communication with the Python server to separate the network operations from the main Unity thread, so as to not interfere with the simulation's frame rate. The received human pose $\bs{q}_h$ is applied to a kinematic model of the human hand, which serves as the \textit{master} for the retargeting algorithm.
+
+\paragraph{Kinematic solver} To guarantee the system is adaptable to different robots, we developed a generalized \texttt{Kinematics} library: unlike standard solutions that hardcode the Jacobian matrix for a specific robot, our implementation computes the robot Jacobian $\bs{J}_r$ dynamically. We define the robot structure in the Unity inspector by assigning a list of joint Transforms and their corresponding types (e.g., \texttt{HingeX}, \texttt{HingeY}, \texttt{HingeZ}, or \texttt{Ball}), allowing the software to handle any serial kinematic chain without code modification.
+
+\paragraph{Virtual sphere} The \texttt{VirtualSphere} script implements the mathematical framework described in Chapter \ref{Ch:framework} for the deformation and retargeting logic. It takes as input an array of \texttt{Transform} objects representing the reference points, and at every update:
+\begin{enumerate}
+    \item it extracts the local positions of the reference points with respect to the palm;
+    \item it computes the \textit{minimum enclosing ball} using Welzl's algorithm;
+    \item it constructs the interaction matrix $\bs{A}$ from Eq. \refeq {eq:interaction_matrix} based on the sphere's current center and radius.
+\end{enumerate}
+This script is attached to both the human hand and the robotic hand, providing the necessary matrices $\bs{A}_h$ and $\bs{A}_r$ to the main controller.
+
+\paragraph{Code} The complete source code developed for this project is open source and available on GitHub. \footnote{\url{https://github.com/yvhem/object_domain_synergy_mapping}}.
+
+\section{Robot models}
+To evaluate the flexibility of the object-based retargeting approach \cite{gioioso2013mapping}, we selected robotic hands with significantly different kinematic structures to that of the human hand. In our experiments, we used three specific models: the \textit{Barrett Hand}, the \textit{Mia Hand}, and the \textit{Shadow Dexterous Hand}. The kinematic descriptions (URDF models) for the Barrett and Mia hands were obtained from the embodiment framework by Fabisch et al. \cite{Fabisch2022}, while the Shadow Hand model was sourced from the Bunny-VisionPro framework \cite{bunny-visionpro}. All of them provide a full implementation of the physical properties (dynamics, collisions, limits, etc.) for realistic experiments, and were imported into Unity using the \textit{URDF Importer} package.
+
+\subsection{Barrett Hand}
+The \textit{Barrett Hand} (Figure \ref{fig:barrett_hand}) is a multi-fingered programmable grasper whose kinematic structure is deeply different from the human hand, making it an interesting candidate for testing the robustness of the virtual sphere retargeting method.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=0.55\textwidth]{images/barrett_hand1}
+        \caption{Kinematic structure}
+        \label{fig:barrett_structure}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=0.9\textwidth]{images/barrett_hand2}
+        \caption{Grasping an egg}
+        \label{fig:barrett_grasp}
+    \end{subfigure}
+    \caption{The Barrett Hand. (a) shows the hand in an open configuration, highlighting the three-finger design (Source: ROS.org). (b) demonstrates the adaptability of the hand grasping an egg (Source: Barrett Technology).}
+    \label{fig:barrett_hand}
+\end{figure}
+
+\paragraph{Kinematics} It consists of three fingers: one finger is fixed, while the other two can rotate synchronously around the palm (\textit{spread motion}) up to $180^\circ$. This allows the hand to change its configuration dynamically, switching from a parallel grasp with the three fingers aligned, to an opposition grasp with the two rotating fingers opposing the fixed one.
+
+\paragraph{Actuation} The hand has 8 axes of motion but is \textit{underactuated}, driven by only 4 motors: one controls the spread of the two movable fingers, and the other three control the flexion of each finger independently. \footnote{BarrettHand BH8-282 specs: \url{https://barrett.com/barretthand}} A proprietary "\textit{TorqueSwitch}" mechanism couples the proximal and distal links: the distal link remains stationary until the proximal link encounters resistance, at which point the distal link curls to enclose the object. However, we are interested in evaluating the retargeting performance based on kinematics alone; therefore, in our kinematic model of the Barrett Hand, we treat all 8 axes as independent degrees of freedom.
+
+\subsection{Mia Hand}
+The \textit{Mia Hand} (Figure \ref{fig:mia_hand}) by Prensilia is an anthropomorphic end-effector designed primarily for prosthetics and research applications. Unlike the Barrett Hand, the Mia Hand has a kinematic structure that resembles that of the human hand, although with less dexterity.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.4\textwidth}
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/mia_hand}
+        \caption{Anthropomorphic structure}
+        \label{fig:mia_structure}
+    \end{subfigure}
+    \hspace{1cm}
+    \begin{subfigure}[b]{0.4\textwidth}
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/mia_hand_cylindrical_grip}
+        \caption{Cylindrical grasp}
+        \label{fig:mia_cylindrical}
+    \end{subfigure}
+    \caption{The Mia Hand. (a) shows the hand's resting posture, highlighting the mechanical design and soft pads. (b) shows the hand performing a cylindrical grasp, demonstrating finger coordination. Source: Prensilia.}
+    \label{fig:mia_hand}
+\end{figure}
+
+\paragraph{Kinematics} The Mia Hand's dimensions are similar to an average human hand (palm width 83 mm). It consists of five fingers and an opposable thumb, designed to perform various grasp types such as cylindrical, spherical, and lateral grasps. \footnote{Technical specification of the Mia Hand can be found at: \url{https://www.mia-hand.com/}}
+
+\paragraph{Actuation} To keep a lightweight profile (approx. 540 g), the Mia Hand employs an underactuated mechanism driven by 3 motors actuating the flexion/extension of the fingers and the opposition of the thumb. Again, like for the Barrett Hand, in our simulation we treat the hand's kinematic chain as fully articulated, meaning we control the individual joints of the fingers independently. Consequently, the kinematic model has more degrees of freedom ($N \approx 15$) than the virtual sphere task ($N=7$), making the system \textit{kinematically redundant} with respect to it. We therefore employ the redundancy resolution strategy described in Chapter \ref{Ch:framework} to distribute the motion among the joints, keeping them away from their mechanical limits while tracking the object deformation.
+
+\subsection{Shadow Dexterous Hand}
+The \textit{Shadow Dexterous Hand} (Figure \ref{fig:shadow_hand}) is one of the most advanced anthropomorphic end-effectors available on the market, designed to reproduce the kinematics and dexterity of the human hand as closely as possible.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, height=5cm, keepaspectratio]{images/shadow_hand1}
+        \caption{Open configuration}
+        \label{fig:shadow_side}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, height=5cm, keepaspectratio]{images/shadow_hand2}
+        \caption{Tool use}
+        \label{fig:shadow_tool}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.3\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, height=5cm, keepaspectratio]{images/shadow_hand3}
+        \caption{Grasping an object}
+        \label{fig:shadow_grasp}
+    \end{subfigure}
+    \caption{The Shadow Dexterous Hand. Its 24 degrees of freedom allow it to perform complex manipulation tasks, from power grasps to precision tool use. Source: Shadow Robot.}
+    \label{fig:shadow_hand}
+\end{figure}
+
+\paragraph{Kinematics} The Shadow Hand has 24 joints (actuated and passive) providing 20 independent degrees of freedom: the thumb has 5 joints and 5 DoF, allowing for complex opposition movements, while each of the four fingers has 4 joints but only 3 DoF due to the mechanical coupling of the distal joint (DIP) and the middle joint (PIP). This design ensures that the angle of the middle joint is always greater than or equal to that of the distal joint, mimicking the natural behavior of human fingers. The little finger has an extra joint in the palm to allow for opposition (forming a palm arch). The wrist provides 2 DoF. 
+
+\paragraph{Actuation} Unlike the significantly underactuated Barrett and Mia hands, the Shadow Hand is highly actuated: indeed, it has 24 joints driven by 20 electric "\textit{Smart Motors}" located in the forearm base, which transmit force to the joints via tendons. \footnote{Shadow Dexterous Hand technical specification: \url{https://shadowrobot.com/}} This high number of degrees of freedom makes the Shadow Hand highly \textit{kinematically redundant} with respect to the 7-DoF virtual sphere task. Therefore, the redundancy resolution strategy defined in Eq. \refeq{eq:redundant_control_law} becomes crucial to stabilize the internal configuration of the hand keeping the 20 actuated joints away from their mechanical limits, while the virtual sphere accurately defines the overall grasp shape.
+
+\section{Evaluation metrics}
+To quantitatively assess the performance of the retargeting algorithm, we define a set of metrics that measure how well the robotic hand tracks the desired object deformation and how effectively it uses its kinematic capabilities. Since the virtual sphere represents the core of our control strategy, these metrics focus on comparing the state of the virtual sphere of the robot against that of the human over time.
+
+We define $t_0$ as the start time of the experiment. The subscripts $H$ and $R$ denote the Human (reference) and Robot (measured) quantities, respectively.
+
+\subsection{Geometry metrics}
+These metrics evaluate how accurately the robotic hand tracks the translation and radial deformation of the virtual object.
+
+\paragraph{Radius error} This metric measures the ability of the system to replicate the scaling of the sphere, namely opening and closing of the hand. Since the robot and human hands have different sizes, the radius of the human sphere $r_H$ must be scaled by a factor $k_{sc}$ (defined in Eq. \ref{eq:scaling_factor}) before comparison. The absolute radius error $e_\text{rad}(t)$ is defined as:
+\begin{equation}
+    e_\text{rad}(t) = |r_R(t) - k_{sc}r_H(t)|
+\end{equation}
+
+\paragraph{Position variation error} This metric assesses the "drift" of the object within the hand. Ideally, if the human hand translates the sphere by a certain vector, the robot should replicate that same displacement vector, scaled according to the workspace dimensions defined by the hand size ratio $k_{sc}$. We therefore compare the displacement relative to the initial position at $t_0$.
+
+Let $\bs{p}(t) = [x,y,z]^T$ be the position of the sphere center. The relative displacement is defined as:
+\[ \Delta \bs{p}(t) = \bs{p}(t) - \bs{p}(t_0) \]
+
+The position variation error $e_\text{pos}(t)$ is then obtained as the magnitude of the difference between the scaled human displacement and the robot displacement:
+\begin{equation}
+    e_\text{pos}(t) = ||k_{sc}\Delta \bs{p}_H(t) - \Delta \bs{p}_R(t)||
+\end{equation}
+
+\subsection{Energy metrics}
+Besides the geometry of the virtual sphere, we are also interested in evaluating the \textit{intensity} of the grasp. In the virtual sphere framework, the deformation of the object corresponds to an accumulation of elastic potential energy in the virtual stiffness model.
+
+\paragraph{Elastic energy error} Let $r_t$ and $r(t_0)$ be the virtual sphere radius at time $t$ and the initial radius, respectively. The normalized deformation $\Delta(t)$ is computed as the absolute relative change in radius. For the human and robot spheres, this is defined respectively as:
+\begin{equation}
+    \Delta_H(t) = \frac{|r_H(t) - r_H(t_0)|}{r_H(t_0)}, \quad \Delta_R(t) = \frac{|r_R(t) - r_R(t_0)|}{r_R(t_0)}
+\end{equation}
+Unlike the radius error, this metric considers the normalized strain on the object regardless of its absolute size.
+
+To compare the energy stored by hands with different numbers of fingers, and thus different numbers of reference points on the sphere, we introduce a contact point ratio $k_{cp} = N_H/N_R$, where $N_H$ and $N_R$ are the number of reference points for the human and the robot, respectively.
+
+The elastic potential energy for the human ($U_H$) and the normalized energy for the robot ($U_R$) are computed as:
+\begin{equation}
+    U_H(t) = \frac{1}{2} k_s \Delta^2_H(t), \quad U_R(t) = \frac{1}{2} k_{cp} k_s \Delta^2_R(t)
+\end{equation}
+where $k_s$ is the spring stiffness constant. The absolute energy error is finally defined as:
+\begin{equation}
+    e_\text{energy}(t) = |U_R(t) - U_H(t)|
+\end{equation}
+
+\section{Qualitative validation}
+The quantitative metrics defined above provide a measure of kinematic accuracy, but they do not capture the functional success of a grasp in a practical scenario. To assess the applicability of the retargeting algorithm in real-world manipulation tasks, we also perform qualitative evaluations by simulating various grasping tasks within the Unity environment.
+
+We selected three objects of standard geometric shapes to test different grasp types:
+\begin{itemize}
+    \item \textit{Sphere}: to test spherical grasps and the ability to conform to curved surfaces.
+    \item \textit{Cube}: to evaluate the ability of the robotic fingers to adapt to flat surfaces and edges.
+    \item \textit{Cylinder}: to assess the performance in cylindrical grasps, which are common in everyday tasks.
+\end{itemize}
+
+For each object, we simulate a grasping task using the Weart glove as the input device. We visually inspect the resulting robotic motion to determine two key aspects:
+\begin{itemize}
+    \item Whether the robot fingers enclose around the object in a natural way without unfeasible interpenetration or unnatural internal joint configurations;
+    \item whether the virtual object remains stably within the robotic hand during the closure phase.
+\end{itemize}
+
+\subsection{Simulation physics setup}
+Simulating contact interactions between rigid bodies in Unity is complex, and a wrong configuration can lead to unrealistic behaviors such as the two models flying away from each other. 
+
+To mitigate this issue and simualate a realistic interaction, we introduced linear and angular \textit{damping} to the manipulated objects. This mimics the effect of \textit{friction} between the hand and the object, preventing this latter from reacting too abruptly to sudden contact forces.
+
+Furthermore, we disabled gravity for the target objects. Since our experimental setup focuses strictly on the \textit{grasping} phase, we skip the \textit{approach} phase (where the hand moves towards the object) and fix the base of the robotic hand in space. Disabling gravity allows the object to remain suspended in the "grasping workspace", ensuring that the evaluation focuses solely on the closure of the fingers and the synergy mapping, rather than the robot's ability to chase a falling object.
+
+Finally, it is important to note that the outcome of these tests is heavily influenced by the quality of the \textit{colliders} of the robotic models: inaccurate or simplified collision meshes, such as box colliders, can lead to missed contacts or interpenetrations, affecting the realism of the grasp.

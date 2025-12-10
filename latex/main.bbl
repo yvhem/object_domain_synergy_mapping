@@ -19,45 +19,6 @@
 
 \refsection{0}
   \datalist[entry]{none/global//global/global}
-    \entry{santello1998postural}{article}{}
-      \name{author}{3}{}{%
-        {{hash=7f6acc1c66146ea0f7e2969608687ce5}{%
-           family={Santello},
-           familyi={S\bibinitperiod},
-           given={Marco},
-           giveni={M\bibinitperiod}}}%
-        {{hash=1a73c467c48c624023ebc04b2c7cd454}{%
-           family={Flanders},
-           familyi={F\bibinitperiod},
-           given={Martha},
-           giveni={M\bibinitperiod}}}%
-        {{hash=93e0c190bf5c2c3642c0d0dd7ec392c9}{%
-           family={Soechting},
-           familyi={S\bibinitperiod},
-           given={John\bibnamedelima F},
-           giveni={J\bibinitperiod\bibinitdelim F\bibinitperiod}}}%
-      }
-      \list{publisher}{1}{%
-        {Soc Neuroscience}%
-      }
-      \strng{namehash}{8a53240cc4e926e5c700564ac11d4d36}
-      \strng{fullhash}{8a53240cc4e926e5c700564ac11d4d36}
-      \strng{bibnamehash}{8a53240cc4e926e5c700564ac11d4d36}
-      \strng{authorbibnamehash}{8a53240cc4e926e5c700564ac11d4d36}
-      \strng{authornamehash}{8a53240cc4e926e5c700564ac11d4d36}
-      \strng{authorfullhash}{8a53240cc4e926e5c700564ac11d4d36}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{journaltitle}{The Journal of Neuroscience}
-      \field{number}{23}
-      \field{title}{Postural hand synergies for tool use}
-      \field{volume}{18}
-      \field{year}{1998}
-      \field{pages}{10105\bibrangedash 10115}
-      \range{pages}{11}
-    \endentry
     \entry{gioioso2013mapping}{article}{}
       \name{author}{4}{}{%
         {{hash=5aa578b19f4b450daec9b4096a1b6970}{%
@@ -90,8 +51,8 @@
       \strng{authorbibnamehash}{8efc1f1c24fed4dbff89ef7debfe9dbc}
       \strng{authornamehash}{0321fd6df1904498da7fea7e4d52ddec}
       \strng{authorfullhash}{8efc1f1c24fed4dbff89ef7debfe9dbc}
-      \field{sortinit}{2}
-      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{IEEE Transactions on Robotics}
@@ -102,13 +63,44 @@
       \field{pages}{825\bibrangedash 837}
       \range{pages}{13}
     \endentry
-    \entry{weart_website}{misc}{}
-      \field{sortinit}{4}
-      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+    \entry{santello1998postural}{article}{}
+      \name{author}{3}{}{%
+        {{hash=7f6acc1c66146ea0f7e2969608687ce5}{%
+           family={Santello},
+           familyi={S\bibinitperiod},
+           given={Marco},
+           giveni={M\bibinitperiod}}}%
+        {{hash=1a73c467c48c624023ebc04b2c7cd454}{%
+           family={Flanders},
+           familyi={F\bibinitperiod},
+           given={Martha},
+           giveni={M\bibinitperiod}}}%
+        {{hash=93e0c190bf5c2c3642c0d0dd7ec392c9}{%
+           family={Soechting},
+           familyi={S\bibinitperiod},
+           given={John\bibnamedelima F},
+           giveni={J\bibinitperiod\bibinitdelim F\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Soc Neuroscience}%
+      }
+      \strng{namehash}{8a53240cc4e926e5c700564ac11d4d36}
+      \strng{fullhash}{8a53240cc4e926e5c700564ac11d4d36}
+      \strng{bibnamehash}{8a53240cc4e926e5c700564ac11d4d36}
+      \strng{authorbibnamehash}{8a53240cc4e926e5c700564ac11d4d36}
+      \strng{authornamehash}{8a53240cc4e926e5c700564ac11d4d36}
+      \strng{authorfullhash}{8a53240cc4e926e5c700564ac11d4d36}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{howpublished}{\url{https://weart.it/}}
-      \field{note}{Accessed: 2025-06-13}
-      \field{title}{Weart Website}
+      \field{journaltitle}{The Journal of Neuroscience}
+      \field{number}{23}
+      \field{title}{Postural hand synergies for tool use}
+      \field{volume}{18}
+      \field{year}{1998}
+      \field{pages}{10105\bibrangedash 10115}
+      \range{pages}{11}
     \endentry
     \entry{primiceri2025motion}{misc}{}
       \name{author}{4}{}{%
@@ -139,8 +131,8 @@
       \strng{authorbibnamehash}{9a8cdbf1ce2dba3aed37d8f005696f7f}
       \strng{authornamehash}{5f4e50730925889bd23b13d7f2317159}
       \strng{authorfullhash}{9a8cdbf1ce2dba3aed37d8f005696f7f}
-      \field{sortinit}{6}
-      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{howpublished}{M.Sc. Project Report, Sapienza University of Rome}
@@ -148,6 +140,120 @@
       \field{note}{Code available at: \url{https://github.com/serenatrovalusci/Hand-Motion-Reconstruction-from-Minimal-Inputs-through-Latent-Space-Learning}}
       \field{title}{Motion Retargeting on a Human Hand Model}
       \field{year}{2025}
+    \endentry
+    \entry{Fabisch2022}{inproceedings}{}
+      \name{author}{6}{}{%
+        {{hash=cc6819194087111c0aa1995a77f6dc32}{%
+           family={Fabisch},
+           familyi={F\bibinitperiod},
+           given={Alexander},
+           giveni={A\bibinitperiod}}}%
+        {{hash=58c367f71a1d9627095ad20ee7c9dca6}{%
+           family={Uliano},
+           familyi={U\bibinitperiod},
+           given={Manuela},
+           giveni={M\bibinitperiod}}}%
+        {{hash=88906b2dbe5eb31bc94e211df0d067ba}{%
+           family={Marschner},
+           familyi={M\bibinitperiod},
+           given={Dennis},
+           giveni={D\bibinitperiod}}}%
+        {{hash=7a7b962f2146a1f4cd3c128854229199}{%
+           family={Laux},
+           familyi={L\bibinitperiod},
+           given={Melvin},
+           giveni={M\bibinitperiod}}}%
+        {{hash=cfb5fde05fbcf7a02751a588ccecb8d8}{%
+           family={Brust},
+           familyi={B\bibinitperiod},
+           given={Johannes},
+           giveni={J\bibinitperiod}}}%
+        {{hash=2f8e9842e9abede0e017ae8543a83d85}{%
+           family={Controzzi},
+           familyi={C\bibinitperiod},
+           given={Marco},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{ee3cab3981749f9e549c15e58b4c739e}
+      \strng{fullhash}{c741f9a60d0124d2914bd9e4a430bf89}
+      \strng{bibnamehash}{c741f9a60d0124d2914bd9e4a430bf89}
+      \strng{authorbibnamehash}{c741f9a60d0124d2914bd9e4a430bf89}
+      \strng{authornamehash}{ee3cab3981749f9e549c15e58b4c739e}
+      \strng{authorfullhash}{c741f9a60d0124d2914bd9e4a430bf89}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2022 IEEE-RAS 21st International Conference on Humanoid Robots (Humanoids)}
+      \field{title}{A Modular Approach to the Embodiment of Hand Motions from Human Demonstrations}
+      \field{year}{2022}
+      \field{pages}{801\bibrangedash 808}
+      \range{pages}{8}
+      \verb{doi}
+      \verb 10.1109/Humanoids53995.2022.10000165
+      \endverb
+    \endentry
+    \entry{bunny-visionpro}{article}{}
+      \name{author}{8}{}{%
+        {{hash=f393ece0fab0fcd542db917cc615ee69}{%
+           family={Ding},
+           familyi={D\bibinitperiod},
+           given={Runyu},
+           giveni={R\bibinitperiod}}}%
+        {{hash=90b5e5009800fc3991f5f2868b3e76e0}{%
+           family={Qin},
+           familyi={Q\bibinitperiod},
+           given={Yuzhe},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=aa7fb3e9e7b5eb447fdcd439cfb18408}{%
+           family={Zhu},
+           familyi={Z\bibinitperiod},
+           given={Jiyue},
+           giveni={J\bibinitperiod}}}%
+        {{hash=237620c5045a1b0b2ab4856bb59375a1}{%
+           family={Jia},
+           familyi={J\bibinitperiod},
+           given={Chengzhe},
+           giveni={C\bibinitperiod}}}%
+        {{hash=e3b1184276f2ab6cc2d132f92556be1a}{%
+           family={Yang},
+           familyi={Y\bibinitperiod},
+           given={Shiqi},
+           giveni={S\bibinitperiod}}}%
+        {{hash=530994f35dcd3db12eeca41b0a54f76e}{%
+           family={Yang},
+           familyi={Y\bibinitperiod},
+           given={Ruihan},
+           giveni={R\bibinitperiod}}}%
+        {{hash=b21d751b50214e5e719eb624ac756bc0}{%
+           family={Qi},
+           familyi={Q\bibinitperiod},
+           given={Xiaojuan},
+           giveni={X\bibinitperiod}}}%
+        {{hash=84a57ab121539e94069a33b4d40492c1}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Xiaolong},
+           giveni={X\bibinitperiod}}}%
+      }
+      \strng{namehash}{e9029b33e02a792e815bc218bc41519a}
+      \strng{fullhash}{2e3acf0ec44c39ec13285f0f6775524b}
+      \strng{bibnamehash}{e9029b33e02a792e815bc218bc41519a}
+      \strng{authorbibnamehash}{e9029b33e02a792e815bc218bc41519a}
+      \strng{authornamehash}{e9029b33e02a792e815bc218bc41519a}
+      \strng{authorfullhash}{2e3acf0ec44c39ec13285f0f6775524b}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Bunny-VisionPro: Real-Time Bimanual Dexterous Teleoperation for Imitation Learning}
+      \field{year}{2024}
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/2407.03162
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/2407.03162
+      \endverb
     \endentry
   \enddatalist
 \endrefsection

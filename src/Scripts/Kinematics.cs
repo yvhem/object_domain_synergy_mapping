@@ -87,17 +87,21 @@ public static class Kinematics
         int idx = 0;
         for (int i=0; i < joints.Length; i++)
         {
-            if (joints[i] == null || i >= types.Length) continue;
-            Vector3 e = joints[i].localEulerAngles;
-            var type = types[i];
+            if (joints[i] == null) continue;
 
-            float x = (e.x > 180 ? e.x - 360 : e.x) * Mathf.Deg2Rad;
-            float y = (e.y > 180 ? e.y - 360 : e.y) * Mathf.Deg2Rad;
-            float z = (e.z > 180 ? e.z - 360 : e.z) * Mathf.Deg2Rad;
+            // check for articulation body
+            var ab = joints[i].GetComponent<ArticulationBody>();
+            float angle = 0f;
+            if (ab != null && ab.jointType == ArticulationJointType.RevoluteJoint)
+                angle = ab.jointPosition[0];
+            else { // fallback to transform
+                Vector3 e = joints[i].localEulerAngles;
+                var type = types[i];
+                float val = (type == JointType.HingeX) ? e.x : (type == JointType.HingeY) ? e.y : e.z; 
+                angle = (val > 180 ? val - 360 : val) * Mathf.Deg2Rad;
+            }
 
-            if (type == JointType.HingeX || type == JointType.HingeXY || type == JointType.Ball) q[idx++] = x;
-            if (type == JointType.HingeY || type == JointType.HingeXY || type == JointType.Ball) q[idx++] = y;
-            if (type == JointType.HingeZ || type == JointType.Ball) q[idx++] = z;
+            q[idx++] = angle;
         }
         return q;
     }

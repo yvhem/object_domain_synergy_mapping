@@ -1,5 +1,21 @@
 \chapter{Conclusion}\label{Ch:conclusion}
 
+In this work, we developed a system to control robotic hands using the motion of a human hand. We used a method called the \textit{virtual sphere}, which simplifies the problem by looking at how the hand interacts with an object rather than mapping the joints directly. We tested this system in a simulation with three different robotic hands: the Barrett Hand, the Mia Hand, and the Shadow Dexterous Hand.
+
 \section{Summary}
+Our experiments showed that the virtual sphere method is effective for controlling robotic hands with very different kinematic structures. Here is a summary of our main findings:
+\begin{itemize}
+    \item The system succesfully mapped the opening and closing of the human hand to all three robots, which managed to track the human radius changes well.
+    \item All robots followed the direction of the human hand correctly, demonstrating the ability of the method to adapt to different initial configurations, which still affect the final grasping posture.
+    \item The settings of the physical parameters of each robot, such as stiffness and damping, played a crucial role in the quality of the retargeted motion as well as the grasping success.
+    \item The secondary objective of keeping the robot joints in their mid-range values did not have a significant impact on the single grasping tasks performed in this work. However, it showed a stabilizing effect on the robot posture in long sequences of motion, preventing extreme and unnatural joint configurations.
+    \item All hands could grasp standard objects succesfully, proving that the method works for different shapes.
+\end{itemize}
 
 \section{Future work}
+There are several ways to improve and extend this work in the future:
+\begin{enumerate}
+    \item So far, we have only tested the system in the Unity simulator. The next step is to connect real robotic hands to the system to see how friction, sensor noise, and communication delays affect performance in the real world.
+    \item The Weart TouchDIVER glove can produce forces and vibrations. Currently, communication goes only one way (from glove to Unity). We could send collision data from Unity back to the glove so the user can feel the object being grasped.
+    \item We used a sphere to represent the virtual object. Using different shapes, like an ellipsoid, might help grasp long or thin objects more accurately.
+\end{enumerate}

@@ -13,7 +13,7 @@ namespace WeArt.Components
 {
     public class RetargetingController : MonoBehaviour
     {
-        public enum ControlMode { Network, Dataset }
+        public enum ControlMode { Network, Dataset, WeArt}
 
         [Header("Control Mode")]
         public ControlMode inputSource = ControlMode.Network;
@@ -32,6 +32,11 @@ namespace WeArt.Components
         
         public Transform[] h_refPoints;     // ph
         private Vector3[] _h_prevPos;
+
+        [Header("WeArt Thimbles")]
+        [SerializeField] private WeArtThimbleTrackingObject thumbThimble;
+        [SerializeField] private WeArtThimbleTrackingObject indexThimble;
+        [SerializeField] private WeArtThimbleTrackingObject middleThimble;
 
         [Header("Robot configuration")]
         public Transform r_palm;
@@ -66,7 +71,7 @@ namespace WeArt.Components
 
         private int _dof;
         
-        // --- Network State ---
+        // network state
         private TcpClient _client;
         private NetworkStream _stream;
         private Thread _netThread;
@@ -76,14 +81,14 @@ namespace WeArt.Components
         private volatile bool _active = true;
         private readonly object _lock = new object();
 
-        // --- Dataset State ---
+        // dataset state
         private List<float[]> _recordedFrames = new List<float[]>();
         private float _playbackTime = 0f;
         private int _currentFrameIndex = 0;
 
         void Start()
         {
-            // Setup Physics
+            // setup physics
             _r_bodies = new ArticulationBody[r_joints.Length];
             for (int i = 0; i < r_joints.Length; i++)
             {
@@ -97,19 +102,19 @@ namespace WeArt.Components
             _dof = Kinematics.GetDoF(r_joints, r_jointTypes);
             _incomingAngles = Vector<double>.Build.Dense(45);
             
-            // Setup Human Reference Tracking
+            // setup human reference tracking
             _h_prevPos = new Vector3[h_refPoints.Length];
             for (int i=0; i < h_refPoints.Length; i++)
                 if (h_refPoints[i] != null) _h_prevPos[i] = h_palm.InverseTransformPoint(h_refPoints[i].position);
 
             AssignSphereRefs();
 
-            // Setup Dataset and first pose
+            // setup dataset and first pose
             LoadTestDataset();
             if (inputSource == ControlMode.Dataset && _recordedFrames.Count > 0)
                 ApplyFrameToInput(0);
         
-            // Setup Network
+            // setup network
             _netThread = new Thread(NetworkLoop) { IsBackground = true };
             _netThread.Start();
         }
@@ -159,24 +164,30 @@ namespace WeArt.Components
 
         void Update()
         {
-            // Dataset playback
+            // dataset playback
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 isPlayingDataset = !isPlayingDataset;
                 Debug.Log(isPlayingDataset ? "Motion Started" : "Motion Paused");
             }
 
-            // Input processing
+            // input processing
             if (inputSource == ControlMode.Network)
                 ProcessKeyboardInput();
 
             else if (inputSource == ControlMode.Dataset)
                 ProcessDatasetInput();
+            
+            else if (inputSource == ControlMode.WeArt)
+                ProcessWeArtInput();
 
             if (_hasData)
             {
                 Vector<double> angles;
-                lock (_lock) { angles = _incomingAngles.Clone(); _hasData = false; }
+                lock (_lock) { 
+                    angles = _incomingAngles.Clone(); 
+                    _hasData = false; 
+                }
                 ApplyHumanPose(angles);
             }
             
@@ -191,13 +202,18 @@ namespace WeArt.Components
         private void PerformRobotRetargeting()
         {
             var v_h = Vector<double>.Build.Dense(h_refPoints.Length * 3);
+            float scaleFactor = Mathf.Abs(h_palm.lossyScale.x);
+
             if (Time.deltaTime > 1e-5)
             {
                 for (int i=0; i < h_refPoints.Length; i++)
                 {
                     if (h_refPoints[i] == null) continue;
+                    
                     Vector3 curr = h_palm.InverseTransformPoint(h_refPoints[i].position);
                     Vector3 vel = (curr - _h_prevPos[i]) / Time.deltaTime;
+                    vel *= scaleFactor; 
+
                     v_h[i*3] = vel.x; v_h[i*3 + 1] = vel.y; v_h[i*3 + 2] = vel.z;
                 }
             }
@@ -209,7 +225,14 @@ namespace WeArt.Components
             Matrix<double> J_r_pinv = PInv(J_r);
             Matrix<double> A_r = r_sphere.ComputeMatrixA(r_palm);
 
-            float k = (h_sphere.Radius > 1e-5f) ? r_sphere.Radius / h_sphere.Radius : 1.0f;
+            float humanGlobalScale = Mathf.Abs(h_palm.lossyScale.x);  
+            float h_worldRadius = h_sphere.Radius * humanGlobalScale;
+            float k = 1.0f;
+            if (h_worldRadius > 0.001f) 
+                k = r_sphere.Radius / h_worldRadius;
+            else 
+                k = 1.0f; 
+
             Matrix<double> K_c = Matrix<double>.Build.DenseIdentity(7, 7);
             K_c[0, 0] = k; K_c[1, 1] = k; K_c[2, 2] = k;
 
@@ -282,6 +305,18 @@ namespace WeArt.Components
             }
         }
 
+        private void ProcessWeArtInput()
+        {
+            if (thumbThimble != null)
+            {
+                _synergyInput[0] = thumbThimble.Closure.Value;
+                _synergyInput[3] = thumbThimble.Abduction.Value;
+            }
+            if (indexThimble != null)
+                _synergyInput[1] = indexThimble.Closure.Value;
+            if (middleThimble != null)
+                _synergyInput[2] = middleThimble.Closure.Value;
+        }
         private void ApplyFrameToInput(int index)
         {
             if (index < 0 || index >= _recordedFrames.Count) return;
@@ -364,38 +399,92 @@ namespace WeArt.Components
             byte[] sendBuf = new byte[16]; byte[] recvBuf = new byte[45 * 4]; float[] floats = new float[45]; 
             while (_active) { 
                 try { 
-                    _client = new TcpClient(); _client.Connect(ipAddress, port); _stream = _client.GetStream(); 
+                    _client = new TcpClient(); 
+                    _client.Connect(ipAddress, port); 
+                    _stream = _client.GetStream(); 
                     while (_active && _client.Connected) { 
                         Buffer.BlockCopy(_synergyInput, 0, sendBuf, 0, 16); 
                         _stream.Write(sendBuf, 0, 16); 
-                        int read = 0; while (read < recvBuf.Length && _active) { int chunk = _stream.Read(recvBuf, read, recvBuf.Length - read); if (chunk == 0) throw new Exception("Disconnect"); read += chunk; } 
+                        int read = 0; 
+                        while (read < recvBuf.Length && _active) { 
+                            int chunk = _stream.Read(recvBuf, read, recvBuf.Length - read); 
+                            if (chunk == 0) throw new Exception("Disconnect"); 
+                            read += chunk; 
+                        } 
                         Buffer.BlockCopy(recvBuf, 0, floats, 0, recvBuf.Length); 
                         var vec = Vector<double>.Build.DenseOfArray(Array.ConvertAll(floats, x => (double)x)); 
-                        lock (_lock) { _incomingAngles = vec; _hasData = true; } 
+                        lock (_lock) { 
+                            _incomingAngles = vec; 
+                            _hasData = true; 
+                        } 
                     } 
-                } catch { if (_active) Thread.Sleep(2000); } finally { _stream?.Close(); _client?.Close(); } 
+                } catch { 
+                    if (_active) Thread.Sleep(2000); 
+                } finally { 
+                    _stream?.Close(); _client?.Close(); 
+                } 
             } 
         }
 
         private void IntegrateVelocities(Vector<double> dq, float dt) {
             if (dq == null || dq.Count != _dof) return;
             int idx = 0;
+
             for (int i=0; i < r_joints.Length; i++) {
                 if (r_joints[i] == null) continue;
-                var type = r_jointTypes[i]; var body = _r_bodies[i];
-                if (body == null) { idx += (type == Kinematics.JointType.HingeXY) ? 2 : (type == Kinematics.JointType.Ball ? 3 : 1); continue; }
-                float vx = 0, vy = 0, vz = 0;
-                if ((type == Kinematics.JointType.HingeX || type == Kinematics.JointType.HingeXY || type == Kinematics.JointType.Ball) && idx < dq.Count) vx = (float)dq[idx++] * velocityGain;
-                if ((type == Kinematics.JointType.HingeY || type == Kinematics.JointType.HingeXY || type == Kinematics.JointType.Ball) && idx < dq.Count) vy = (float)dq[idx++] * velocityGain;
-                if ((type == Kinematics.JointType.HingeZ || type == Kinematics.JointType.Ball) && idx < dq.Count) vz = (float)dq[idx++] * velocityGain;
-                if (body.jointType == ArticulationJointType.RevoluteJoint) { float deltaSpeed = (vx + vy + vz); float deltaDeg = deltaSpeed * Mathf.Rad2Deg * dt; var drive = body.xDrive; drive.target += deltaDeg; body.xDrive = drive; }
-                else if (body.jointType == ArticulationJointType.SphericalJoint) { var xDrive = body.xDrive; xDrive.target += vx * Mathf.Rad2Deg * dt; body.xDrive = xDrive; var yDrive = body.yDrive; yDrive.target += vy * Mathf.Rad2Deg * dt; body.yDrive = yDrive; var zDrive = body.zDrive; zDrive.target += vz * Mathf.Rad2Deg * dt; body.zDrive = zDrive; }
+
+                var body = _r_bodies[i];
+                var type = r_jointTypes[i];
+
+                // get velocity for this joint
+                float velocity = (float)dq[idx];
+
+                // increment axis based on DoF
+                if (type == Kinematics.JointType.HingeXY) idx += 2;
+                else if (type == Kinematics.JointType.Ball) idx += 3;
+                else idx += 1;
+
+                if (body == null) continue;
+
+                if (body.jointType == ArticulationJointType.RevoluteJoint) {
+                    // URDF importer aligns rotation axis to xDrive
+                    float deltaDeg = velocity * velocityGain * Mathf.Rad2Deg * dt;
+
+                    var drive = body.xDrive;
+                    drive.target += deltaDeg;
+
+                    // clamp within limits
+                    //if (drive.upperLimit > drive.lowerLimit)
+                    //    drive.target = Mathf.Clamp(drive.target, drive.lowerLimit, drive.upperLimit);
+
+                    body.xDrive = drive;
+                }
             }
         }
 
-        private Matrix<double> PInv(Matrix<double> M) { var Mt = M.Transpose(); var I = Matrix<double>.Build.DenseIdentity(M.RowCount); return Mt * (M * Mt + damping*damping*I).Inverse(); }
-        private Matrix<double> PInvTall(Matrix<double> M) { var Mt = M.Transpose(); var I = Matrix<double>.Build.DenseIdentity(M.ColumnCount); return (Mt * M + damping*damping*I).Inverse() * Mt; }
-        void AssignSphereRefs() { if (h_sphere) h_sphere.referencePoints = h_refPoints; if (r_sphere) r_sphere.referencePoints = r_refPoints; }
-        void OnApplicationQuit() { _active = false; _stream?.Close(); _client?.Close(); if (_netThread != null && _netThread.IsAlive) _netThread.Join(500); }
+        private Matrix<double> PInv(Matrix<double> M) {
+            var Mt = M.Transpose(); 
+            var I = Matrix<double>.Build.DenseIdentity(M.RowCount); 
+            return Mt * (M * Mt + damping*damping*I).Inverse(); 
+        }
+        
+        private Matrix<double> PInvTall(Matrix<double> M) { 
+            var Mt = M.Transpose(); 
+            var I = Matrix<double>.Build.DenseIdentity(M.ColumnCount); 
+            return (Mt * M + damping*damping*I).Inverse() * Mt; 
+        }
+
+        void AssignSphereRefs() { 
+            if (h_sphere) h_sphere.referencePoints = h_refPoints; 
+            if (r_sphere) r_sphere.referencePoints = r_refPoints; 
+        }
+
+        void OnApplicationQuit() { 
+            _active = false; 
+            _stream?.Close(); 
+            _client?.Close(); 
+            if (_netThread != null && _netThread.IsAlive) 
+                _netThread.Join(500); 
+        }
     }
 }

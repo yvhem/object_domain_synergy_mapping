@@ -116,7 +116,7 @@ def main():
                             break
 
                         # process input
-                        input_array = np.frombuffer(data, dtype=np.float32)
+                        input_array = np.frombuffer(data, dtype=np.float32).copy()
                         input_tensor = torch.FloatTensor(input_array.reshape(1, -1)).to(device)
 
                         # inference

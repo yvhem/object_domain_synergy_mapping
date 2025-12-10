@@ -9,6 +9,7 @@ public class Test : MonoBehaviour
     [Header("References")]
     [Tooltip("Human Virtual Sphere")]
     public VirtualSphere h_sphere;
+    public Transform h_palm;
     [Tooltip("Robot Virtual Sphere")]
     public VirtualSphere r_sphere;
     
@@ -17,12 +18,14 @@ public class Test : MonoBehaviour
     public float springStiffness = 1.0f;
     [Tooltip("File name for the CSV report.")]
     public string fileName = "GraspValidationReport.csv";
+    [SerializeField]
+    public string saveDirectory;
 
     // Internal state
     private bool _isRecording = false;
     private float _initialRadiusH;
     private float _initialRadiusR;
-    private float _scalingFactor; // k_sc = r_h / r_r
+    private float _scalingFactor;
 
     // Data storage for CSV
     private StringBuilder _csvContent = new StringBuilder();
@@ -30,7 +33,8 @@ public class Test : MonoBehaviour
     void Start()
     {
         // Initialize CSV header
-        _csvContent.AppendLine("Time,HumanRadius,RobotRadius,ScalingFactor,HumanEnergy,RobotEnergy,EnergyErrorPercent");
+        _csvContent.AppendLine("Time,HumanRadius,RobotRadius,ScalingFactor,HumanEnergy,RobotEnergy,"+
+                                "hPos_x,hPos_y,hPos_z,rPos_x,rPos_y,rPos_z");
     }
 
     void Update()
@@ -60,16 +64,24 @@ public class Test : MonoBehaviour
             return;
         }
 
-        _initialRadiusH = h_sphere.Radius;
+        float h_globalScale = Mathf.Abs(h_palm.lossyScale.x);
+        _initialRadiusH = h_sphere.Radius * h_globalScale; 
         _initialRadiusR = r_sphere.Radius;
 
-        if (_initialRadiusH > 0)
-            _scalingFactor = _initialRadiusR / _initialRadiusH;
-        else
+        if (_initialRadiusH < 0.001f)
+        {
+            Debug.LogWarning($"Human Radius too small ({_initialRadiusH}). Defaulting Scale to 1.");
             _scalingFactor = 1.0f;
+        }
+        else
+            _scalingFactor = _initialRadiusR / _initialRadiusH;
+        
 
         _csvContent.Clear();
-        _csvContent.AppendLine("Time,HumanRadius,RobotRadius,ScalingFactor,HumanEnergy,RobotEnergy,EnergyErrorPercent");
+        _csvContent.AppendLine("Time,HumanRadius,RobotRadius,ScalingFactor,HumanEnergy,RobotEnergy,"+
+                                "hPos_x,hPos_y,hPos_z,rPos_x,rPos_y,rPos_z");
+
+            
         _isRecording = true;
         Debug.Log($"<color=green>VALIDATION STARTED.</color> Baseline H: {_initialRadiusH:F4}, Baseline R: {_initialRadiusR:F4}, Scaling Factor: {_scalingFactor:F4}");
     }
@@ -77,17 +89,24 @@ public class Test : MonoBehaviour
     void StopRecording()
     {
         _isRecording = false;
-        
-        string directory;
-        directory = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
-        
+
+        string directory = saveDirectory;
+
+        if (string.IsNullOrEmpty(directory))
+        {
+            Debug.LogError("Save directory is not set in the Inspector.");
+            return;
+        }
+
+        if (!Directory.Exists(directory))
+            Directory.CreateDirectory(directory);
 
         string filePath = Path.Combine(directory, fileName);
-        
-        try 
+
+        try
         {
             File.WriteAllText(filePath, _csvContent.ToString());
-            Debug.Log($"<color=red>VALIDATION STOPPED.</color> Report saved to: {filePath}");
+            Debug.Log($"<color=red>VALIDATION STOPPED.</color> Report salvato in: {filePath}");
         }
         catch (System.Exception e)
         {
@@ -97,31 +116,32 @@ public class Test : MonoBehaviour
 
     void PerformValidationStep()
     {
-        //  Get current radii
-        float currentRadiusH = h_sphere.Radius;
+        float h_globalScale = Mathf.Abs(h_palm.lossyScale.x);
+        
+        // Radius
+        float currentRadiusH = h_sphere.Radius * h_globalScale;
         float currentRadiusR = r_sphere.Radius;
 
-        // Calculate Deformation 
-        float deformationH = Mathf.Max(0, _initialRadiusH - currentRadiusH);
-        float deformationR = Mathf.Max(0, _initialRadiusR - currentRadiusR);
+        // Position
+        Vector3 hPos = h_sphere.transform.position; 
+        Vector3 rPos = r_sphere.transform.position;
 
-        // Calculate Elastic Energy
-        // E = 0.5 * k * (delta_x)^2
-        float energyH = 0.5f * springStiffness * (deformationH * deformationH);
-        float energyR = 0.5f * springStiffness * (deformationR * deformationR);
+        float deformationH = Mathf.Abs(_initialRadiusH - currentRadiusH);
+        float deformationR = Mathf.Abs(_initialRadiusR - currentRadiusR);
+        float normDefH = (_initialRadiusH > 0) ? deformationH / _initialRadiusH : 0;
+        float normDefR = (_initialRadiusR > 0) ? deformationR / _initialRadiusR : 0;
 
-        // Normalize Robot Energy for comparison
-        float expectedEnergyR = energyH * (_scalingFactor * _scalingFactor);
-        
-        // Avoid division by zero
-        float errorPercent = 0f;
-        if (expectedEnergyR > 1e-6f)
-        {
-            errorPercent = Mathf.Abs(energyR - expectedEnergyR) / expectedEnergyR * 100.0f;
-        }
+        // Energy
+        float _ncpH = (h_sphere.referencePoints != null) ? h_sphere.referencePoints.Length : 1;
+        float _ncpR = (r_sphere.referencePoints != null) ? r_sphere.referencePoints.Length : 1;
+        float cp_scalingFactor = (_ncpR > 0) ? _ncpH / _ncpR : 1;
+        float energyHnorm = 0.5f * springStiffness * normDefH * normDefH;
+        float energyRnorm = 0.5f * cp_scalingFactor * springStiffness * normDefR * normDefR;
 
-        // Log Data
-        string line = $"{Time.time},{currentRadiusH},{currentRadiusR},{_scalingFactor},{energyH},{energyR},{errorPercent}";
+        // Log data
+        string line = $"{Time.time},{currentRadiusH},{currentRadiusR},{_scalingFactor},{energyHnorm},{energyRnorm}," +
+                    $"{hPos.x},{hPos.y},{hPos.z},{rPos.x},{rPos.y},{rPos.z}";
+
         _csvContent.AppendLine(line);
     }
 
@@ -131,21 +151,10 @@ public class Test : MonoBehaviour
         if (_isRecording)
         {
             GUI.Label(new Rect(10, 10, 300, 20), $"Recording Validation... (Press S to Stop)");
-            GUI.Label(new Rect(10, 30, 300, 20), $"Current Energy Error: {GetCurrentError():F2}%");
         }
         else
         {
             GUI.Label(new Rect(10, 10, 300, 20), "Press R to Start Validation Recording");
         }
-    }
-
-    float GetCurrentError() // for display only
-    {
-        float dH = Mathf.Max(0, _initialRadiusH - h_sphere.Radius);
-        float dR = Mathf.Max(0, _initialRadiusR - r_sphere.Radius);
-        float eH = 0.5f * (dH * dH);
-        float eR = 0.5f * (dR * dR);
-        float expected = eH * (_scalingFactor * _scalingFactor);
-        return expected > 1e-5f ? Mathf.Abs(eR - expected) / expected * 100f : 0f;
     }
 }

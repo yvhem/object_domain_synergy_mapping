@@ -3,7 +3,15 @@
 In this chapter, we present the mathematical formulation of the proposed motion retargeting framework. We detail the definition of the virtual sphere, the construction of the interaction matrix that relates hand motion to object deformation, and the derivation of the control law used to drive the robotic hand. Finally, we describe the redundancy resolution strategy employed to optimize the configuration of the robotic hand during manipulation task.
 
 \section{Reference points and sphere definition}
-The core concept of the object-based mapping is to abstract the hand's motion into the motion of a virtual object. We model this object as a \textit{virtual sphere} defined by a set of reference points on the hand.
+The core concept of the object-based mapping is to abstract the hand's motion into the motion of a virtual object. We model this object as a \textit{virtual sphere} defined by a set of reference points on the hand (see Figure \ref{fig:vsm_reference_points} for an example). These reference points can include fingertips, the palm center, or any other significant point that captures the motion of the hand while grasping.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.4\textwidth]{images/vsm_reference_points}
+    \caption{Example of virtual spheres defined by reference points on the human (left, blue dots) and robotic (right, red dots) hands.}
+    \label{fig:vsm_reference_points}
+\end{figure}
+
 
 Let $\bs{p}_h\in\mathbb{R}^{3N_h}$ be the vector of the Cartesian positions of $N_h$ reference points on the human hand. Similarly, let $\bs{p}_r\in\mathbb{R}^{3N_r}$ be the vector of $N_r$ reference points on the robotic hand. At any time step $t$, the virtual sphere is defined as the \textit{minimum enclosing ball}, i.e., the sphere of smallest radius that contains all reference points. Such a sphere is characterized by its center $\bs{o}\in\mathbb{R}^3$ and radius $r\in\mathbb{R}$.
 
@@ -78,7 +86,7 @@ The final control law for the robot joint velocities is obtained by inverting th
 where $\bs{J}_r^\#$ is the \textit{Damped Least Squares} (DLS) inverse of the robot Jacobian, which ensures numerical stability even when the robot is near singular configurations.
 
 \section{Redundancy resolution}
-In those scenarios where dexterous robotic hands are employed, one can exploit their kinematic redundancy to optimize their internal configuration while performing grasping tasks.
+In those scenarios where particularly dexterous robotic hands are employed, one can exploit their kinematic redundancy to optimize their internal configuration while performing grasping tasks.
 
 To achieve this, we can augment the control law derived in Eq. \ref{eq:robot_control_law} with a secondary objective using the \textit{null-space projection} method: we exploit the null space of the Jacobian to perform secondary tasks without affecting the primary goal of tracking the virtual sphere motion. The modified control law becomes:
 \begin{equation}\label{eq:redundant_control_law}
