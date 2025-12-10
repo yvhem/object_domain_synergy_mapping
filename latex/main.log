@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2025.8.12)  10 DEC 2025 09:14
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2025.8.12)  10 DEC 2025 17:31
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1084,103 +1084,103 @@ LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 25
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 ) [19]) (./sections/5_results.tex [20]
 Chapter 5.
-<images/VirtualSpheres/Barrett_Virtual_Sphere.png, id=481, 242.9075pt x 231.86626pt>
+<images/VirtualSpheres/Barrett_Virtual_Sphere.png, id=481, 1130.2225pt x 873.2625pt>
 File: images/VirtualSpheres/Barrett_Virtual_Sphere.png Graphic file (type png)
 <use images/VirtualSpheres/Barrett_Virtual_Sphere.png>
 Package pdftex.def Info: images/VirtualSpheres/Barrett_Virtual_Sphere.png  used on input line 11.
-(pdftex.def)             Requested size: 136.57462pt x 130.36429pt.
-<images/VirtualSpheres/Mia_Virtual_Sphere.png, id=482, 229.85875pt x 215.80624pt>
+(pdftex.def)             Requested size: 136.57462pt x 105.51984pt.
+<images/VirtualSpheres/Mia_Virtual_Sphere.png, id=482, 1080.035pt x 779.91376pt>
 File: images/VirtualSpheres/Mia_Virtual_Sphere.png Graphic file (type png)
 <use images/VirtualSpheres/Mia_Virtual_Sphere.png>
 Package pdftex.def Info: images/VirtualSpheres/Mia_Virtual_Sphere.png  used on input line 17.
-(pdftex.def)             Requested size: 136.57462pt x 128.23013pt.
-<images/VirtualSpheres/Shadow_Virtual_Sphere.png, id=483, 355.3275pt x 431.6125pt>
+(pdftex.def)             Requested size: 136.57462pt x 98.61952pt.
+<images/VirtualSpheres/Shadow_Virtual_Sphere.png, id=483, 1284.8pt x 1329.96875pt>
 File: images/VirtualSpheres/Shadow_Virtual_Sphere.png Graphic file (type png)
 <use images/VirtualSpheres/Shadow_Virtual_Sphere.png>
 Package pdftex.def Info: images/VirtualSpheres/Shadow_Virtual_Sphere.png  used on input line 23.
-(pdftex.def)             Requested size: 136.57462pt x 165.89801pt.
-[21
-
- <./images/VirtualSpheres/Barrett_Virtual_Sphere.png> <./images/VirtualSpheres/Mia_Virtual_Sphere.png> <./images/VirtualSpheres/Shadow_Virtual_Sphere.png>]
-<images/Test/Barrett_GraspValidation.png, id=489, 1600.7805pt x 950.5914pt>
+(pdftex.def)             Requested size: 136.57462pt x 141.36565pt.
+<images/Test/Barrett_GraspValidation.png, id=484, 1600.7805pt x 950.5914pt>
 File: images/Test/Barrett_GraspValidation.png Graphic file (type png)
 <use images/Test/Barrett_GraspValidation.png>
 Package pdftex.def Info: images/Test/Barrett_GraspValidation.png  used on input line 38.
 (pdftex.def)             Requested size: 455.24411pt x 270.34117pt.
- [22 <./images/Test/Barrett_GraspValidation.png>]
-<images/Test/Mia_GraspValidation.png, id=501, 1581.2676pt x 950.5914pt>
+[21
+
+ <./images/VirtualSpheres/Barrett_Virtual_Sphere.png> <./images/VirtualSpheres/Mia_Virtual_Sphere.png> <./images/VirtualSpheres/Shadow_Virtual_Sphere.png>] [22 <./images/Test/Barrett_GraspValidation.png>]
+<images/Test/Mia_GraspValidation.png, id=505, 1581.2676pt x 950.5914pt>
 File: images/Test/Mia_GraspValidation.png Graphic file (type png)
 <use images/Test/Mia_GraspValidation.png>
 Package pdftex.def Info: images/Test/Mia_GraspValidation.png  used on input line 58.
 (pdftex.def)             Requested size: 455.24411pt x 273.66278pt.
  [23 <./images/Test/Mia_GraspValidation.png>]
-<images/Test/Shadow_GraspValidation.png, id=511, 1581.2676pt x 950.5914pt>
+<images/Test/Shadow_GraspValidation.png, id=515, 1581.2676pt x 950.5914pt>
 File: images/Test/Shadow_GraspValidation.png Graphic file (type png)
 <use images/Test/Shadow_GraspValidation.png>
 Package pdftex.def Info: images/Test/Shadow_GraspValidation.png  used on input line 78.
 (pdftex.def)             Requested size: 455.24411pt x 273.66278pt.
- [24] [25 <./images/Test/Shadow_GraspValidation.png>]
-<images/Grasp/Barrett/Barrett_Grasp_Ball.png, id=531, 220.825pt x 202.7575pt>
+ [24 <./images/Test/Shadow_GraspValidation.png>] [25]
+<images/Grasp/Barrett/Barrett_Grasp_Ball.png, id=534, 343.2825pt x 356.33125pt>
 File: images/Grasp/Barrett/Barrett_Grasp_Ball.png Graphic file (type png)
 <use images/Grasp/Barrett/Barrett_Grasp_Ball.png>
 Package pdftex.def Info: images/Grasp/Barrett/Barrett_Grasp_Ball.png  used on input line 106.
-(pdftex.def)             Requested size: 136.57462pt x 125.40515pt.
+(pdftex.def)             Requested size: 136.57462pt x 141.76332pt.
 
 Underfull \hbox (badness 1661) in paragraph at lines 107--107
 []\OT1/ptm/m/n/10.95 (a) |Bar-rett Hand grasp-ing a
  []
 
-<images/Grasp/Barrett/Barrett_Grasp_Cube.png, id=532, 225.84375pt x 209.78375pt>
+<images/Grasp/Barrett/Barrett_Grasp_Cube.png, id=535, 377.41pt x 371.3875pt>
 File: images/Grasp/Barrett/Barrett_Grasp_Cube.png Graphic file (type png)
 <use images/Grasp/Barrett/Barrett_Grasp_Cube.png>
 Package pdftex.def Info: images/Grasp/Barrett/Barrett_Grasp_Cube.png  used on input line 112.
-(pdftex.def)             Requested size: 136.57462pt x 126.86993pt.
+(pdftex.def)             Requested size: 136.57462pt x 134.39075pt.
 
 Underfull \hbox (badness 1484) in paragraph at lines 113--113
 []\OT1/ptm/m/n/10.95 (b) |Bar-rett Hand grasp-ing a
  []
 
-<images/Grasp/Barrett/Barrett_Grasp_Cylinder.png, id=533, 222.8325pt x 214.8025pt>
+<images/Grasp/Barrett/Barrett_Grasp_Cylinder.png, id=536, 376.40625pt x 384.43625pt>
 File: images/Grasp/Barrett/Barrett_Grasp_Cylinder.png Graphic file (type png)
 <use images/Grasp/Barrett/Barrett_Grasp_Cylinder.png>
 Package pdftex.def Info: images/Grasp/Barrett/Barrett_Grasp_Cylinder.png  used on input line 118.
-(pdftex.def)             Requested size: 136.57462pt x 131.65207pt.
+(pdftex.def)             Requested size: 136.57462pt x 139.48802pt.
 
 Underfull \hbox (badness 1661) in paragraph at lines 119--119
 []\OT1/ptm/m/n/10.95 (c) |Bar-rett Hand grasp-ing a
  []
 
-<images/Grasp/Mia/Mia_Grasp_Ball.png, id=535, 215.80624pt x 211.79124pt>
+<images/Grasp/Mia/Mia_Grasp_Ball.png, id=538, 320.19624pt x 315.1775pt>
 File: images/Grasp/Mia/Mia_Grasp_Ball.png Graphic file (type png)
 <use images/Grasp/Mia/Mia_Grasp_Ball.png>
 Package pdftex.def Info: images/Grasp/Mia/Mia_Grasp_Ball.png  used on input line 132.
-(pdftex.def)             Requested size: 136.57462pt x 134.03674pt.
-<images/Grasp/Mia/Mia_Grasp_Cube.png, id=536, 224.84pt x 222.8325pt>
+(pdftex.def)             Requested size: 136.57462pt x 134.4368pt.
+<images/Grasp/Mia/Mia_Grasp_Cube.png, id=539, 339.2675pt x 341.275pt>
 File: images/Grasp/Mia/Mia_Grasp_Cube.png Graphic file (type png)
 <use images/Grasp/Mia/Mia_Grasp_Cube.png>
 Package pdftex.def Info: images/Grasp/Mia/Mia_Grasp_Cube.png  used on input line 138.
-(pdftex.def)             Requested size: 136.57462pt x 135.3598pt.
-<images/Grasp/Mia/Mia_Grasp_Cylinder.png, id=537, 244.915pt x 228.855pt>
+(pdftex.def)             Requested size: 136.57462pt x 137.38242pt.
+<images/Grasp/Mia/Mia_Grasp_Cylinder.png, id=540, 363.3575pt x 327.2225pt>
 File: images/Grasp/Mia/Mia_Grasp_Cylinder.png Graphic file (type png)
 <use images/Grasp/Mia/Mia_Grasp_Cylinder.png>
 Package pdftex.def Info: images/Grasp/Mia/Mia_Grasp_Cylinder.png  used on input line 144.
-(pdftex.def)             Requested size: 136.57462pt x 127.62015pt.
-<images/Grasp/Shadow/Shadow_Grasp_Ball.png, id=539, 282.05376pt x 359.3425pt>
+(pdftex.def)             Requested size: 136.57462pt x 122.99274pt.
+[26 <./images/Grasp/Barrett/Barrett_Grasp_Ball.png> <./images/Grasp/Barrett/Barrett_Grasp_Cube.png> <./images/Grasp/Barrett/Barrett_Grasp_Cylinder.png> <./images/Grasp/Mia/Mia_Grasp_Ball.png> <./images/Grasp/Mia/Mia_Grasp_Cube.png> <./images/Grasp/Mia/Mia_Grasp_Cylinder.png>]
+<images/Grasp/Shadow/Shadow_Grasp_Ball.png, id=554, 694.595pt x 714.67pt>
 File: images/Grasp/Shadow/Shadow_Grasp_Ball.png Graphic file (type png)
 <use images/Grasp/Shadow/Shadow_Grasp_Ball.png>
 Package pdftex.def Info: images/Grasp/Shadow/Shadow_Grasp_Ball.png  used on input line 158.
-(pdftex.def)             Requested size: 136.57462pt x 174.00125pt.
-<images/Grasp/Shadow/Shadow_Grasp_Cube.png, id=540, 279.0425pt x 364.36125pt>
+(pdftex.def)             Requested size: 136.57462pt x 140.52145pt.
+<images/Grasp/Shadow/Shadow_Grasp_Cube.png, id=555, 659.46375pt x 665.48625pt>
 File: images/Grasp/Shadow/Shadow_Grasp_Cube.png Graphic file (type png)
 <use images/Grasp/Shadow/Shadow_Grasp_Cube.png>
 Package pdftex.def Info: images/Grasp/Shadow/Shadow_Grasp_Cube.png  used on input line 164.
-(pdftex.def)             Requested size: 136.57462pt x 178.33841pt.
-<images/Grasp/Shadow/Shadow_Grasp_Cylinder.png, id=541, 304.13625pt x 372.39125pt>
+(pdftex.def)             Requested size: 136.57462pt x 137.81673pt.
+<images/Grasp/Shadow/Shadow_Grasp_Cylinder.png, id=556, 595.22375pt x 614.295pt>
 File: images/Grasp/Shadow/Shadow_Grasp_Cylinder.png Graphic file (type png)
 <use images/Grasp/Shadow/Shadow_Grasp_Cylinder.png>
 Package pdftex.def Info: images/Grasp/Shadow/Shadow_Grasp_Cylinder.png  used on input line 170.
-(pdftex.def)             Requested size: 136.57462pt x 167.22789pt.
-) (./sections/6_conclusion.tex [26 <./images/Grasp/Barrett/Barrett_Grasp_Ball.png> <./images/Grasp/Barrett/Barrett_Grasp_Cube.png> <./images/Grasp/Barrett/Barrett_Grasp_Cylinder.png>] [27 <./images/Grasp/Mia/Mia_Grasp_Ball.png> <./images/Grasp/Mia/Mia_Grasp_Cube.png> <./images/Grasp/Mia/Mia_Grasp_Cylinder.png> <./images/Grasp/Shadow/Shadow_Grasp_Ball.png> <./images/Grasp/Shadow/Shadow_Grasp_Cube.png> <./images/Grasp/Shadow/Shadow_Grasp_Cylinder.png>]
+(pdftex.def)             Requested size: 136.57462pt x 140.94743pt.
+) (./sections/6_conclusion.tex [27 <./images/Grasp/Shadow/Shadow_Grasp_Ball.png> <./images/Grasp/Shadow/Shadow_Grasp_Cube.png> <./images/Grasp/Shadow/Shadow_Grasp_Cylinder.png>]
 Chapter 6.
 [28
 
@@ -1196,15 +1196,15 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 Here is how much of TeX's memory you used:
  33897 strings out of 480247
  670207 string characters out of 5896151
- 1360585 words of memory out of 5000000
+ 1360641 words of memory out of 5000000
  51067 multiletter control sequences out of 15000+600000
  507279 words of font info for 102 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  84i,13n,83p,1373b,1306s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on main.pdf (31 pages, 6601873 bytes).
+Output written on main.pdf (31 pages, 9003212 bytes).
 PDF statistics:
- 685 PDF objects out of 1000 (max. 8388607)
+ 697 PDF objects out of 1000 (max. 8388607)
  556 compressed objects within 6 object streams
  157 named destinations out of 1000 (max. 500000)
  574 words of extra memory for PDF output out of 10000 (max. 10000000)
