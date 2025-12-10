@@ -1,11 +1,10 @@
 # Fdb version 3
-["biber main"] 1765221469 "main.bcf" "main.bbl" "main" 1765224509
-  "main.bcf" 1765224509 107718 e40a286d1794a2b203b7f4da76cef3b9 "pdflatex"
-  "ref.bib" 1764403684 2180 c044f1565368df4e4320696d3233f94e ""
+["biber main"] 1765221469 "main.bcf" "main.bbl" "main" 1765349219
+  "main.bcf" 1765349219 107718 e40a286d1794a2b203b7f4da76cef3b9 "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
-["pdflatex"] 1765224500 "/home/yvhem/OneDrive/Uni/AIRO/Medical Robotics/object_domain_synergy_mapping/latex/main.tex" "main.pdf" "main" 1765224509
+["pdflatex"] 1765349208 "/home/yvhem/OneDrive/Uni/AIRO/Medical Robotics/object_domain_synergy_mapping/latex/main.tex" "main.pdf" "main" 1765349219
   "/etc/texmf/web2c/texmf.cnf" 1754997670 475 c0e671620eb5563b2130f56340a5fde8 ""
   "/home/yvhem/OneDrive/Uni/AIRO/Medical Robotics/object_domain_synergy_mapping/latex/main.tex" 1764277576 1193 9f339d40a47575ca9a5f426c24a0c726 ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
@@ -262,9 +261,9 @@
   "images/Grasp/Shadow/Shadow_Grasp_Ball.png" 1765221549 56731 4eaeca2bbeb7cf9a11d2aff6fb28e46c ""
   "images/Grasp/Shadow/Shadow_Grasp_Cube.png" 1765221569 56305 fd9977116f6826d3391cae56b4b1c36e ""
   "images/Grasp/Shadow/Shadow_Grasp_Cylinder.png" 1765221589 60969 ff419acc0d70d8ff8824a6444113b47f ""
-  "images/Test/Barrett_GraspValidation.png" 1765209738 829700 fe7c9379febfc1b7d5f87f718d20850c ""
-  "images/Test/Mia_GraspValidation.png" 1765209738 818972 e0fcf21129faa02dd67179d83a49286b ""
-  "images/Test/Shadow_GraspValidation.png" 1765209738 770962 de0f4bf85348748b98b08cffc1f26d18 ""
+  "images/Test/Barrett_GraspValidation.png" 1765343088 599905 a445edcef156965001649f8faca7fa98 ""
+  "images/Test/Mia_GraspValidation.png" 1765343088 644574 905b8526e6c8acd4841c0806b3632c5f ""
+  "images/Test/Shadow_GraspValidation.png" 1765343088 632823 42c0611b1f7231189ebedfa9df43ffc6 ""
   "images/VirtualSpheres/Barrett_Virtual_Sphere.png" 1765221183 36095 3b04a63d9389cc58a6f39ec1c3adb4aa ""
   "images/VirtualSpheres/Mia_Virtual_Sphere.png" 1765221211 30338 a017236e3c8f0a2b03c6c442e97beb05 ""
   "images/VirtualSpheres/Shadow_Virtual_Sphere.png" 1765220417 88458 7472416fc198b082b502cc95f4bb00ab ""
@@ -282,18 +281,18 @@
   "images/synergy_control_robotic_hand.png" 1764306884 318286 9166043dbb0939d7785e4c1573717bdb ""
   "images/vsm_reference_points.jpg" 1764306890 176306 2434de209c2d73ab23fd4c9518d5b87d ""
   "images/weart_glove.png" 1764140056 121548 8eb4dfa1d94b5061138002b8b6ddfa33 ""
-  "main.aux" 1765224509 20190 607fdaed35b88ffc7317f3280126dfbd "pdflatex"
+  "main.aux" 1765349219 20190 610f842ef808c900c8d30fab77647576 "pdflatex"
   "main.bbl" 1765221470 10151 fb43f184ae6de327e4ff9f87ef74f498 "biber main"
-  "main.out" 1765224509 5724 2c6abd13d36955a97978409f23dfaf9f "pdflatex"
-  "main.run.xml" 1765224509 2395 1575f6bbc0c6be1b1dbf4e9f7ecaa5c6 "pdflatex"
+  "main.out" 1765349219 5724 2c6abd13d36955a97978409f23dfaf9f "pdflatex"
+  "main.run.xml" 1765349219 2395 1575f6bbc0c6be1b1dbf4e9f7ecaa5c6 "pdflatex"
   "main.tex" 1764277576 1193 9f339d40a47575ca9a5f426c24a0c726 ""
-  "main.toc" 1765224509 4659 f51c93db7e8287c85de16dd515f95246 "pdflatex"
+  "main.toc" 1765349219 4659 c7ddf0d043a4c3f87c17b16de0176ef2 "pdflatex"
   "sections/0_titlePage.tex" 1764310664 776 ddcb4c6dd4a6bf2dd0f97cd116677504 ""
   "sections/1_intro.tex" 1764911500 5913 2e170cbed704bb887d403746bf56c9a7 ""
   "sections/2_background.tex" 1764403684 7337 997503c56f463f5e87f85720b81dc6e1 ""
   "sections/3_framework.tex" 1764403683 10004 01ef9e6bbb3418f13ed831db8193e73b ""
-  "sections/4_setup.tex" 1765189316 22426 46de1b4414b8d34a632c92844ad47a9e ""
-  "sections/5_results.tex" 1765222149 12567 1990a11c8759e0026996d5e6550c1a55 ""
+  "sections/4_setup.tex" 1765345086 22625 7aac769675680d8ae3d931611ca6f4cc ""
+  "sections/5_results.tex" 1765349195 15332 a946b44802475703636f9d64d309bd70 ""
   "sections/6_conclusion.tex" 1765224490 2425 c5be5af74944a6a779107321bf2b4d6f ""
   (generated)
   "main.aux"

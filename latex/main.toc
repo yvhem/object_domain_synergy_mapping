@@ -44,16 +44,16 @@
 \contentsline {section}{\numberline {5.1}Quantitative analysis}{22}{section.5.1}%
 \contentsline {subsection}{\numberline {5.1.1}Barrett Hand}{22}{subsection.5.1.1}%
 \contentsline {paragraph}{Radius comparison}{22}{section*.29}%
-\contentsline {paragraph}{Position variation}{23}{section*.30}%
+\contentsline {paragraph}{Position variation}{22}{section*.30}%
 \contentsline {paragraph}{Elastic energy}{23}{section*.31}%
 \contentsline {subsection}{\numberline {5.1.2}Mia Hand}{23}{subsection.5.1.2}%
 \contentsline {paragraph}{Radius comparison}{23}{section*.33}%
-\contentsline {paragraph}{Position variation}{23}{section*.34}%
-\contentsline {paragraph}{Elastic energy}{23}{section*.35}%
-\contentsline {subsection}{\numberline {5.1.3}Shadow Dexterous Hand}{23}{subsection.5.1.3}%
+\contentsline {paragraph}{Position variation}{24}{section*.34}%
+\contentsline {paragraph}{Elastic energy}{24}{section*.35}%
+\contentsline {subsection}{\numberline {5.1.3}Shadow Dexterous Hand}{24}{subsection.5.1.3}%
 \contentsline {paragraph}{Radius comparison}{24}{section*.37}%
 \contentsline {paragraph}{Position variation}{24}{section*.38}%
-\contentsline {paragraph}{Elastic energy}{24}{section*.39}%
+\contentsline {paragraph}{Elastic energy}{25}{section*.39}%
 \contentsline {section}{\numberline {5.2}Impact of redundancy resolution}{25}{section.5.2}%
 \contentsline {section}{\numberline {5.3}Qualitative validation}{26}{section.5.3}%
 \contentsline {subsection}{\numberline {5.3.1}Barrett Hand}{26}{subsection.5.3.1}%

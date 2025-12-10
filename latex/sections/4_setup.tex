@@ -212,30 +212,32 @@ These metrics evaluate how accurately the robotic hand tracks the translation an
     e_\text{rad}(t) = |r_R(t) - k_{sc}r_H(t)|
 \end{equation}
 
-\paragraph{Position variation error} This metric assesses the "drift" of the object within the hand. Ideally, if the human hand translates the sphere by a certain vector, the robot should replicate that same displacement vector. We therefore compare the displacement relative to the initial position at $t_0$ to account for different starting offsets in the workspace.
+\paragraph{Position variation error} This metric assesses the "drift" of the object within the hand. Ideally, if the human hand translates the sphere by a certain vector, the robot should replicate that same displacement vector, scaled according to the workspace dimensions defined by the hand size ratio $k_{sc}$. We therefore compare the displacement relative to the initial position at $t_0$.
 
 Let $\bs{p}(t) = [x,y,z]^T$ be the position of the sphere center. The relative displacement is defined as:
 \[ \Delta \bs{p}(t) = \bs{p}(t) - \bs{p}(t_0) \]
 
-The position variation error $e_\text{pos}(t)$ is then obtained as the magnitude of the difference between the human and robot relative displacements:
+The position variation error $e_\text{pos}(t)$ is then obtained as the magnitude of the difference between the scaled human displacement and the robot displacement:
 \begin{equation}
-    e_\text{pos}(t) = ||\Delta \bs{p}_H(t) - \Delta \bs{p}_R(t)||
+    e_\text{pos}(t) = ||k_{sc}\Delta \bs{p}_H(t) - \Delta \bs{p}_R(t)||
 \end{equation}
 
 \subsection{Energy metrics}
-Besides the geometry of the virtual sphere, we are also interested in evaluating the \textit{intensity} of the grasp. In the virtual sphere framework, the squeezing of the object corresponds to an accumulation of elastic potential energy in the virtual stiffness model.
+Besides the geometry of the virtual sphere, we are also interested in evaluating the \textit{intensity} of the grasp. In the virtual sphere framework, the deformation of the object corresponds to an accumulation of elastic potential energy in the virtual stiffness model.
 
-\paragraph{Elastic energy error} $R_H^{(t)}$ and $R_R^{(t)}$ be the human and robotic hand virtual sphere radius, respectively, at a generic time $t$. The deformation is then computed as the normalized difference between the current radius and the initial one:
+\paragraph{Elastic energy error} Let $r_t$ and $r(t_0)$ be the virtual sphere radius at time $t$ and the initial radius, respectively. The normalized deformation $\Delta(t)$ is computed as the absolute relative change in radius. For the human and robot spheres, this is defined respectively as:
 \begin{equation}
-    \Delta_{H/R} = \frac{\max(0, R_{H/R}^0 - R_{H/R}^{(t)})}{R_{H/R}^0}
+    \Delta_H(t) = \frac{|r_H(t) - r_H(t_0)|}{r_H(t_0)}, \quad \Delta_R(t) = \frac{|r_R(t) - r_R(t_0)|}{r_R(t_0)}
 \end{equation}
-Since the final aim is to evaluate a grasping task, the deformation is only relevant when the sphere is compressed, namely when $R_{H/R}^0 - R_{H/R}^{(t)} > 0$, thus its value is clamped to be non-negative. 
+Unlike the radius error, this metric considers the normalized strain on the object regardless of its absolute size.
 
-Let $N_H$ be the number of contact points on the human virtual sphere, and $N_R$ be the one on the robotic virtual sphere. Let's define the ratio between them as the constant $k_{cp} = \frac{N_H}{N_R}$. The elastic energy is then computed as: 
+To compare the energy stored by hands with different numbers of fingers, and thus different numbers of reference points on the sphere, we introduce a contact point ratio $k_{cp} = N_H/N_R$, where $N_H$ and $N_R$ are the number of reference points for the human and the robot, respectively.
+
+The elastic potential energy for the human ($U_H$) and the normalized energy for the robot ($U_R$) are computed as:
 \begin{equation}
-    U_{H/R}(t) = \frac{1}{2} k_{cp} k_s (\Delta_{H/R}(t))^2
+    U_H(t) = \frac{1}{2} k_s \Delta^2_H(t), \quad U_R(t) = \frac{1}{2} k_{cp} k_s \Delta^2_R(t)
 \end{equation}
-where $k_s$ is the spring stiffness, for simplicity set to 1. Having now both human and robotic energy, the absolute error is:
+where $k_s$ is the spring stiffness constant. The absolute energy error is finally defined as:
 \begin{equation}
     e_\text{energy}(t) = |U_R(t) - U_H(t)|
 \end{equation}
