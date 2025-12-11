@@ -12,7 +12,7 @@ patterns of more frequent use). The system pipeline is the following:
 
 ---
 ## Project Video
-[![Project Video](docs/SynergyGraspThumbnail.jpg)](https://drive.google.com/file/d/18Njlz_k2ivAYb39_Or-6fZv68Q3YLAvA/view?usp=sharing)
+[![Project Video](docs/SynergyGraspThumbnail.jpg)](https://drive.google.com/file/d/1V8OGd-k81jxoCVZ-074GZUjJqAH8pa38/view?usp=sharing)
 
 ---
 ## Dataset 
